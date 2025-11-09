@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TrippyTheme {
-                AppNavigation(viewModel = viewModel)
+                MainScreen(viewModel = viewModel)
             }
         }
     }

@@ -27,7 +27,6 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun CustomSplashScreen(
-    onNavigateToAuth: () -> Unit,
     onNavigateToHome: () -> Unit,
     viewModel: MainViewModel = viewModel()
 ) {
@@ -36,19 +35,8 @@ fun CustomSplashScreen(
 
     LaunchedEffect(navState) {
         when (navState) {
-            is SplashNavState.ReadyToNavigate -> {
-
-                delay(VISIBLE_TIME_AFTER_LOAD)
-                val isLoggedIn = false
-                viewModel.startFinalNavigation(isLoggedIn)
-
-            }
-
-            is SplashNavState.NavigateToAuth -> {
-                onNavigateToAuth()
-            }
-
             is SplashNavState.NavigateToHome -> {
+                delay(VISIBLE_TIME_AFTER_LOAD)
                 onNavigateToHome()
             }
 
@@ -73,7 +61,7 @@ fun CustomSplashScreen(
     ) {
         Image(
             painter = painterResource(id = R.drawable.splash),
-            contentDescription = "Trippy Logo",
+            contentDescription = "Viary Logo",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()

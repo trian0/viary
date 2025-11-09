@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 
 sealed class SplashNavState {
     data object Loading : SplashNavState()
-    data object ReadyToNavigate : SplashNavState()
-    data object NavigateToAuth : SplashNavState()
     data object NavigateToHome : SplashNavState()
 }
 
@@ -38,14 +36,6 @@ class MainViewModel : ViewModel() {
 
     private suspend fun checkInitialSetup() {
         delay(50)
-        _navState.value = SplashNavState.ReadyToNavigate
-    }
-
-    fun startFinalNavigation(isLoggedIn: Boolean) {
-        _navState.value = if (isLoggedIn) {
-            SplashNavState.NavigateToHome
-        } else {
-            SplashNavState.NavigateToAuth
-        }
+        _navState.value = SplashNavState.NavigateToHome
     }
 }

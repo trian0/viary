@@ -5,13 +5,13 @@ import androidx.compose.ui.graphics.Color
 // Cores Primárias (Baseadas no Azul Ciano do Viary)
 val ViaryPrimary = Color(0xFF00BFFF)     // Ciano Vibrante
 val ViaryOnPrimary = Color(0xFFFFFFFF)   // Texto sobre Ciano (Branco)
-val ViaryPrimaryContainer = Color(0xFFB0E0E6) // Container de Primária (Ciano Claro)
+val ViaryPrimaryContainer = Color(0xFFE0F7FA) // Container de Primária (Ciano Claro)
 val ViaryOnPrimaryContainer = Color(0xFF001F25) // Texto sobre Container (Quase Preto)
 
 // Cores Secundárias/Acentuação (Baseadas no Laranja/Vermelho e Roxo)
 val ViarySecondary = Color(0xFFFF6347)   // Laranja Avermelhado (Accent)
 val ViaryOnSecondary = Color(0xFFFFFFFF) // Texto sobre Laranja (Branco)
-val ViarySecondaryContainer = Color(0xFFFFCCBC) // Um tom claro de Laranja para containers
+val ViarySecondaryContainer = Color(0xFFFFEBEE) // Um tom claro de Laranja para containers
 val ViaryOnSecondaryContainer = Color(0xFF410000) // Texto sobre Laranja Claro
 
 // Cores de Destaque (Terciárias)
