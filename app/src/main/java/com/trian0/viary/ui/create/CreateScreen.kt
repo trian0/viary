@@ -1,5 +1,6 @@
 package com.trian0.viary.ui.create
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
 import com.trian0.viary.ui.components.ImagePicker
 import com.trian0.viary.ui.theme.ViaryOnPrimary
@@ -104,6 +107,35 @@ fun CreateScreen(
         )
     }
 
+    CreateScreenView(
+        viaryNameState,
+        uiState.viaryNameError,
+        locateState,
+        uiState.departureLocationError,
+        kmState,
+        uiState.currentKmError,
+        onCoverImageSelected = { uri ->
+            viewModel.onIntent(CreateContract.CreateIntent.OnCoverImageSelected(uri))
+        },
+        onStartTripClicked = {
+            viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
+        },
+        uiState.isLoading
+    )
+}
+
+@Composable
+fun CreateScreenView(
+    viaryName: TextFieldState = rememberTextFieldState(),
+    viaryNameError: String? = null,
+    locate: TextFieldState = rememberTextFieldState(),
+    locateError: String? = null,
+    km: TextFieldState = rememberTextFieldState(),
+    kmError: String? = null,
+    onCoverImageSelected: (Uri) -> Unit = {},
+    onStartTripClicked: () -> Unit = {},
+    isLoading: Boolean = false,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,13 +169,13 @@ fun CreateScreen(
             )
 
             ElevatedOutlinedTextField(
-                state = viaryNameState,
+                state = viaryName,
                 modifier = Modifier.padding(top = 10.dp)
             )
 
-            if (uiState.viaryNameError != null) {
+            if (viaryNameError != null) {
                 Text(
-                    text = uiState.viaryNameError!!,
+                    text = viaryNameError,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
@@ -157,13 +189,13 @@ fun CreateScreen(
             )
 
             ElevatedOutlinedTextField(
-                state = locateState,
+                state = locate,
                 modifier = Modifier.padding(top = 10.dp)
             )
 
-            if (uiState.departureLocationError != null) {
+            if (locateError != null) {
                 Text(
-                    text = uiState.departureLocationError!!,
+                    text = locateError,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
@@ -177,14 +209,14 @@ fun CreateScreen(
             )
 
             ElevatedOutlinedTextField(
-                state = kmState,
+                state = km,
                 modifier = Modifier.padding(top = 10.dp),
                 keyboardType = KeyboardType.Number
             )
 
-            if (uiState.currentKmError != null) {
+            if (kmError != null) {
                 Text(
-                    text = uiState.currentKmError!!,
+                    text = kmError,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
@@ -195,7 +227,7 @@ fun CreateScreen(
                 modifier = Modifier.padding(top = 20.dp),
                 label = "Escolha a capa",
                 onImageSelected = {
-                    viewModel.onIntent(CreateContract.CreateIntent.OnCoverImageSelected(it))
+                    onCoverImageSelected
                 }
             )
 
@@ -209,16 +241,16 @@ fun CreateScreen(
                         shape = RoundedCornerShape(20.dp)
                     ),
                 onClick = {
-                    viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
+                    onStartTripClicked
                 },
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = ViaryPrimary,
                     contentColor = ViaryOnPrimary
                 ),
-                enabled = !uiState.isLoading
+                enabled = isLoading
             ) {
-                if (uiState.isLoading) {
+                if (isLoading) {
                     CircularProgressIndicator(
                         color = ViaryOnPrimary,
                         modifier = Modifier.height(24.dp)
@@ -238,5 +270,5 @@ fun CreateScreen(
 @Preview
 @Composable
 fun CreateScreenPreview() {
-    CreateScreen()
+    CreateScreenView()
 }

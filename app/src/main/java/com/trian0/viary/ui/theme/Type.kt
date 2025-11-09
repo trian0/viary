@@ -25,6 +25,14 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
+    headlineMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 30.sp,
+        letterSpacing = 0.sp
+    ),
+
     bodyMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.SemiBold,

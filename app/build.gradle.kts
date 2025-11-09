@@ -73,6 +73,11 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 
+    // Test
+    testImplementation(libs.bundles.unit.testing)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
     configurations.all {
         exclude(group = "com.intellij", module = "annotations")
     }

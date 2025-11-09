@@ -6,6 +6,8 @@ import com.trian0.viary.data.database.dao.ViaryDao
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.saveImageToInternalStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ViaryRepository(
     private val dao: ViaryDao,
@@ -13,6 +15,10 @@ class ViaryRepository(
 ) {
 
     val viarys get() = dao.getAll()
+
+    suspend fun getViaryInProgress() = withContext(Dispatchers.IO) {
+        dao.getByStatus(Viary.ViaryStatus.IN_PROGRESS)
+    }
 
     suspend fun create(viary: Viary, imageUri: Uri?) {
         var finalImagePath: String? = null
