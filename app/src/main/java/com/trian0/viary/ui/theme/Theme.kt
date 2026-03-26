@@ -8,18 +8,27 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = ViaryPrimary,
-    secondary = ViarySecondary,
-    tertiary = ViaryTertiary
+    primary = Primary,
+    secondary = Secondary,
+    tertiary = Tertiary
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = ViaryPrimary,
-    secondary = ViarySecondary,
-    tertiary = ViaryTertiary
+    primary = Primary,
+    secondary = Secondary,
+    tertiary = Tertiary
+)
+
+val ActionOrangeGradient = Brush.linearGradient(
+    colors = listOf(Primary, Primary30),
+    start = Offset(0f, 0f),
+    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
 )
 
 @Composable

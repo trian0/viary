@@ -3,29 +3,36 @@ package com.trian0.viary.ui.create
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.RocketLaunch
+import androidx.compose.material.icons.outlined.SentimentVerySatisfied
+import androidx.compose.material.icons.outlined.TravelExplore
+import androidx.compose.material.icons.outlined.WaterDrop
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,21 +42,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.trian0.viary.ui.components.ClimateViary
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
 import com.trian0.viary.ui.components.ImagePicker
-import com.trian0.viary.ui.theme.ViaryOnPrimary
-import com.trian0.viary.ui.theme.ViaryPrimary
+import com.trian0.viary.ui.components.ViaryButton
+import com.trian0.viary.ui.theme.Primary10
+import com.trian0.viary.ui.theme.Primary20
+import com.trian0.viary.ui.theme.Secondary90
+import com.trian0.viary.ui.theme.Tertiary90
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
 
 @Composable
 fun CreateScreen(
@@ -108,6 +114,7 @@ fun CreateScreen(
     }
 
     CreateScreenView(
+        modifier = Modifier,
         viaryNameState,
         uiState.viaryNameError,
         locateState,
@@ -120,12 +127,14 @@ fun CreateScreen(
         onStartTripClicked = {
             viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
         },
+        onNavigateBack,
         uiState.isLoading
     )
 }
 
 @Composable
 fun CreateScreenView(
+    modifier: Modifier,
     viaryName: TextFieldState = rememberTextFieldState(),
     viaryNameError: String? = null,
     locate: TextFieldState = rememberTextFieldState(),
@@ -134,43 +143,77 @@ fun CreateScreenView(
     kmError: String? = null,
     onCoverImageSelected: (Uri) -> Unit = {},
     onStartTripClicked: () -> Unit = {},
+    onNavigateBack: () -> Unit = {},
     isLoading: Boolean = false,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(horizontal = 24.dp, vertical = 16.dp)
-            .border(
-                width = 2.dp,
-                color = ViaryOnPrimary,
-                shape = RoundedCornerShape(30.dp)
-            )
-            .clip(RoundedCornerShape(30.dp))
-            .background(Color.Transparent)
             .verticalScroll(rememberScrollState())
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Icon(
+                Icons.Outlined.Close,
+                contentDescription = null,
+                tint = Primary10,
+                modifier = Modifier
+                    .size(20.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable{ onNavigateBack() },
+            )
+
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 9.dp),
+                text = "Viary",
+                style = MaterialTheme.typography.headlineMedium
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 20.dp)
+                .padding(bottom = 20.dp, top = 64.dp)
                 .background(Color.Transparent),
         ) {
             Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "Criar Viagem",
+                text = "Nova Viary",
                 style = MaterialTheme.typography.headlineLarge
             )
 
             Text(
+                text = "Documente as rotas, capture os momentos",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Primary20
+            )
+
+            ImagePicker(
                 modifier = Modifier.padding(top = 40.dp),
-                text = "Nome da sua Viary",
-                style = MaterialTheme.typography.bodyMedium
+                label = "Escolha a Capa",
+                onImageSelected = {
+                    onCoverImageSelected(it)
+                }
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 40.dp),
+                text = "NOME VIARY",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = Primary10
             )
 
             ElevatedOutlinedTextField(
                 state = viaryName,
-                modifier = Modifier.padding(top = 10.dp)
+                modifier = Modifier.padding(top = 10.dp),
+                icon = Icons.Outlined.TravelExplore,
+                label = "Que nome você dá a essa viagem?"
             )
 
             if (viaryNameError != null) {
@@ -184,13 +227,17 @@ fun CreateScreenView(
 
             Text(
                 modifier = Modifier.padding(top = 20.dp),
-                text = "Localização de Saída",
-                style = MaterialTheme.typography.bodyMedium
+                text = "ORIGEM",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = Primary10
             )
 
             ElevatedOutlinedTextField(
                 state = locate,
-                modifier = Modifier.padding(top = 10.dp)
+                modifier = Modifier.padding(top = 10.dp),
+                icon = Icons.Outlined.LocationOn,
+                label = "Onde você está começando?"
             )
 
             if (locateError != null) {
@@ -202,67 +249,70 @@ fun CreateScreenView(
                 )
             }
 
-            Text(
-                modifier = Modifier.padding(top = 20.dp),
-                text = "Kilometragem Atual (Km)",
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            ElevatedOutlinedTextField(
-                state = km,
-                modifier = Modifier.padding(top = 10.dp),
-                keyboardType = KeyboardType.Number
-            )
-
-            if (kmError != null) {
-                Text(
-                    text = kmError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
-
-            ImagePicker(
-                modifier = Modifier.padding(top = 20.dp),
-                label = "Escolha a capa",
-                onImageSelected = {
-                    onCoverImageSelected
-                }
-            )
-
-            Button(
+            Card(
                 modifier = Modifier
-                    .padding(top = 30.dp)
                     .fillMaxWidth()
-                    .height(55.dp)
-                    .shadow(
-                        elevation = 6.dp,
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                onClick = {
-                    onStartTripClicked
-                },
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = ViaryPrimary,
-                    contentColor = ViaryOnPrimary
+                    .padding(top = 40.dp),
+                colors = CardColors(
+                    containerColor = Secondary90,
+                    contentColor = Primary20,
+                    disabledContainerColor = Secondary90,
+                    disabledContentColor = Primary20
                 ),
-                enabled = isLoading
+                shape = RoundedCornerShape(20.dp)
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        color = ViaryOnPrimary,
-                        modifier = Modifier.height(24.dp)
-                    )
-                } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp)
+                ) {
                     Text(
-                        text = "Iniciar Viagem",
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodyMedium
+                        text = "Clima Viary",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.ExtraBold
                     )
+
+                    Text(
+                        text = "Como a jornada está iniciando?",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Primary20
+                    )
+
+                    var selectedWeather by remember { mutableStateOf("Sol") }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, bottom = 32.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        val options = listOf(
+                            Icons.Outlined.WbSunny to "Sol",
+                            Icons.Outlined.Cloud to "Nublado",
+                            Icons.Outlined.WaterDrop to "Chuva",
+                            Icons.Outlined.SentimentVerySatisfied to "Feliz"
+                        )
+
+                        options.forEach { (icon, label) ->
+                            ClimateViary(
+                                icon = icon,
+                                label = label,
+                                isSelected = selectedWeather == label,
+                                onClick = { selectedWeather = label }
+                            )
+                        }
+                    }
                 }
             }
+
+            ViaryButton(
+                label = "Começar Sua Viagem",
+                icon = Icons.Outlined.RocketLaunch,
+                onStartTripClicked = {
+                    onStartTripClicked()
+                },
+                isLoading = isLoading
+            )
         }
     }
 }
@@ -270,5 +320,5 @@ fun CreateScreenView(
 @Preview
 @Composable
 fun CreateScreenPreview() {
-    CreateScreenView()
+    CreateScreenView(modifier = Modifier.background(Tertiary90.copy(0.3f)), isLoading = false)
 }

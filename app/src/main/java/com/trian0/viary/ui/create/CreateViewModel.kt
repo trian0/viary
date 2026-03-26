@@ -1,17 +1,12 @@
 package com.trian0.viary.ui.create
 
-import android.net.Uri
 import android.util.Log
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.viewModelScope
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.mvi.BaseViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-import kotlin.concurrent.atomics.update
 
 class CreateViewModel(
     private val repository: ViaryRepository

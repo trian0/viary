@@ -1,63 +1,216 @@
 package com.trian0.viary.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults.colors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.trian0.viary.ui.theme.ViaryPrimaryContainer
+import androidx.compose.ui.unit.sp
+import com.trian0.viary.ui.theme.ActionOrangeGradient
+import com.trian0.viary.ui.theme.Neutral90
+import com.trian0.viary.ui.theme.Primary20
+import com.trian0.viary.ui.theme.Primary30
+import com.trian0.viary.ui.theme.White
 
 @Composable
 fun ElevatedOutlinedTextField(
     modifier: Modifier = Modifier,
     state: TextFieldState,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    icon: ImageVector,
+    label: String = ""
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = 5.dp,
-                shape = RoundedCornerShape(20.dp),
-            )
             .clip(RoundedCornerShape(20.dp))
-            .background(containerColor)
             .height(60.dp),
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxSize(),
+            leadingIcon = {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Primary30
+                )
+            },
             state = state,
             lineLimits = TextFieldLineLimits.SingleLine,
             shape = RoundedCornerShape(20.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType
             ),
-            textStyle = MaterialTheme.typography.labelLarge,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = ViaryPrimaryContainer,
-                unfocusedBorderColor = ViaryPrimaryContainer,
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = Primary20,
+                fontWeight = FontWeight.Normal
+            ),
+            placeholder = {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Primary20.copy(0.5f)
+                )
+            },
+            colors = colors(
+                focusedBorderColor = Primary30,
+                unfocusedBorderColor = Color.Transparent,
+                unfocusedContainerColor = Neutral90,
+                focusedContainerColor = Neutral90,
             ),
             enabled = enabled,
             readOnly = readOnly
         )
+    }
+}
+
+@Composable
+fun ViaryButton(
+    label: String,
+    icon: ImageVector,
+    onStartTripClicked: () -> Unit = {},
+    isLoading: Boolean = false
+) {
+    Button(
+        modifier = Modifier
+            .padding(top = 30.dp)
+            .fillMaxWidth()
+            .height(55.dp)
+            .shadow(
+                elevation = 6.dp,
+                shape = RoundedCornerShape(20.dp)
+            )
+            .background(ActionOrangeGradient, RoundedCornerShape(20.dp)),
+        onClick = {
+            onStartTripClicked()
+        },
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = White
+        ),
+        enabled = !isLoading
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = White,
+                modifier = Modifier.height(24.dp)
+            )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = White,
+                    modifier = Modifier.size(20.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = label,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = White
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ClimateViary(
+    icon: ImageVector,
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .width(65.dp)
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick() }
+            .border(
+                width = 2.dp,
+                color = if (isSelected) Primary20 else Color.Transparent,
+                shape = RoundedCornerShape(16.dp)
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = Neutral90,
+            contentColor = Primary20,
+            disabledContainerColor = Neutral90,
+            disabledContentColor = Primary20
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    vertical = 18.dp
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                modifier = Modifier.size(25.dp),
+                imageVector = icon,
+                contentDescription = null,
+                tint = Primary20
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 8.dp),
+                text = label,
+                color = Primary20,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+        }
     }
 }

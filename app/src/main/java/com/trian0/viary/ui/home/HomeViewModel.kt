@@ -25,7 +25,7 @@ class HomeViewModel(
         Log.d(TAG, "init: ")
 
         viewModelScope.launch {
-            val viary = repository.getViaryInProgress().toViary()
+            //val viary = repository.getViaryInProgress().toViary()
             setState {
                 copy(
                     viary = viary

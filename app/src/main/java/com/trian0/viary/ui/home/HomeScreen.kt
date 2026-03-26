@@ -1,6 +1,5 @@
 package com.trian0.viary.ui.home
 
-import android.R.attr.text
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,8 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.trian0.viary.ui.theme.ViaryPrimary
-import com.trian0.viary.ui.theme.ViarySecondary
+import com.trian0.viary.ui.theme.Primary
+import com.trian0.viary.ui.theme.Secondary
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.text.SimpleDateFormat
@@ -109,7 +108,7 @@ fun HomeScreen(
                             imageVector = Icons.Outlined.LocationOn,
                             contentDescription = "",
                             modifier = Modifier.size(20.dp).align(Alignment.CenterVertically),
-                            tint = ViaryPrimary
+                            tint = Primary
                         )
                         Column(modifier = Modifier.padding(start = 12.dp)) {
                             Text(
@@ -129,7 +128,7 @@ fun HomeScreen(
                             imageVector = Icons.Outlined.DateRange,
                             contentDescription = "",
                             modifier = Modifier.size(20.dp).align(Alignment.CenterVertically),
-                            tint = ViarySecondary
+                            tint = Secondary
                         )
                         Column(modifier = Modifier.padding(start = 12.dp)) {
                             Text(
