@@ -55,7 +55,7 @@ fun ImagePicker(modifier: Modifier = Modifier, label: String, onImageSelected: (
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(24.dp),
             colors = CardColors(
                 containerColor = Secondary90,
                 contentColor = Primary20,

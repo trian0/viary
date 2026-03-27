@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.trian0.viary.ui.theme.ActionOrangeGradient
@@ -60,8 +61,8 @@ fun ElevatedOutlinedTextField(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .height(60.dp),
+            .clip(RoundedCornerShape(12.dp))
+            .height(56.dp),
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxSize(),
@@ -89,7 +90,10 @@ fun ElevatedOutlinedTextField(
                     style = MaterialTheme.typography.labelLarge,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Primary20.copy(0.5f)
+                    color = Primary20.copy(0.5f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    softWrap = false
                 )
             },
             colors = colors(
@@ -99,7 +103,7 @@ fun ElevatedOutlinedTextField(
                 focusedContainerColor = Neutral90,
             ),
             enabled = enabled,
-            readOnly = readOnly
+            readOnly = readOnly,
         )
     }
 }
@@ -178,14 +182,14 @@ fun ClimateViary(
             .clickable { onClick() }
             .border(
                 width = 2.dp,
-                color = if (isSelected) Primary20 else Color.Transparent,
+                color = if (isSelected) Primary30 else Color.Transparent,
                 shape = RoundedCornerShape(16.dp)
             ),
         colors = CardDefaults.cardColors(
             containerColor = Neutral90,
-            contentColor = Primary20,
+            contentColor = Primary30,
             disabledContainerColor = Neutral90,
-            disabledContentColor = Primary20
+            disabledContentColor = Primary30
         )
     ) {
         Column(
@@ -200,13 +204,13 @@ fun ClimateViary(
                 modifier = Modifier.size(25.dp),
                 imageVector = icon,
                 contentDescription = null,
-                tint = Primary20
+                tint = Primary30
             )
 
             Text(
                 modifier = Modifier.padding(top = 8.dp),
                 text = label,
-                color = Primary20,
+                color = Primary30,
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.RocketLaunch
 import androidx.compose.material.icons.outlined.SentimentVerySatisfied
+import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material.icons.outlined.WbSunny
@@ -45,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.trian0.viary.ui.components.ClimateViary
@@ -53,7 +56,9 @@ import com.trian0.viary.ui.components.ImagePicker
 import com.trian0.viary.ui.components.ViaryButton
 import com.trian0.viary.ui.theme.Primary10
 import com.trian0.viary.ui.theme.Primary20
+import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
+import com.trian0.viary.ui.theme.Tertiary10
 import com.trian0.viary.ui.theme.Tertiary90
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -165,7 +170,7 @@ fun CreateScreenView(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.CenterVertically)
-                    .clickable{ onNavigateBack() },
+                    .clickable { onNavigateBack() },
             )
 
             Text(
@@ -259,7 +264,7 @@ fun CreateScreenView(
                     disabledContainerColor = Secondary90,
                     disabledContentColor = Primary20
                 ),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(24.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -278,19 +283,19 @@ fun CreateScreenView(
                         color = Primary20
                     )
 
-                    var selectedWeather by remember { mutableStateOf("Sol") }
+                    var selectedWeather by remember { mutableStateOf("SOL") }
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp, bottom = 32.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         val options = listOf(
-                            Icons.Outlined.WbSunny to "Sol",
-                            Icons.Outlined.Cloud to "Nublado",
-                            Icons.Outlined.WaterDrop to "Chuva",
-                            Icons.Outlined.SentimentVerySatisfied to "Feliz"
+                            Icons.Outlined.WbSunny to "SOL",
+                            Icons.Outlined.Cloud to "NUBLADO",
+                            Icons.Outlined.WaterDrop to "CHUVA",
+                            Icons.Outlined.SentimentVerySatisfied to "FELIZ"
                         )
 
                         options.forEach { (icon, label) ->
@@ -299,6 +304,51 @@ fun CreateScreenView(
                                 label = label,
                                 isSelected = selectedWeather == label,
                                 onClick = { selectedWeather = label }
+                            )
+                        }
+                    }
+
+                    Text(
+                        modifier = Modifier.padding(top = 26.dp),
+                        text = "KILOMETRAGEM INICIAL",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Primary10
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ElevatedOutlinedTextField(
+                            state = km,
+                            modifier = Modifier.weight(0.6f),
+                            keyboardType = KeyboardType.Number,
+                            icon = Icons.Outlined.Speed
+                        )
+
+                        Card(
+                            modifier = Modifier
+                                .height(56.dp)
+                                .padding(start = 28.dp),
+                            colors = CardColors(
+                                containerColor = Secondary80,
+                                contentColor = Tertiary10,
+                                disabledContainerColor = Secondary80,
+                                disabledContentColor = Tertiary10
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                text = "KM",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Tertiary10
                             )
                         }
                     }
