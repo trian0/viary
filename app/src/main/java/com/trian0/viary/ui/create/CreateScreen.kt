@@ -46,10 +46,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.trian0.viary.R
 import com.trian0.viary.ui.components.ClimateViary
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
 import com.trian0.viary.ui.components.ImagePicker
@@ -177,7 +179,7 @@ fun CreateScreenView(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(start = 9.dp),
-                text = "Viary",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium
             )
         }
@@ -188,19 +190,19 @@ fun CreateScreenView(
                 .background(Color.Transparent),
         ) {
             Text(
-                text = "Nova Viary",
+                text = stringResource(R.string.create_screen_title),
                 style = MaterialTheme.typography.headlineLarge
             )
 
             Text(
-                text = "Documente as rotas, capture os momentos",
+                text = stringResource(R.string.create_screen_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Primary20
             )
 
             ImagePicker(
                 modifier = Modifier.padding(top = 40.dp),
-                label = "Escolha a Capa",
+                label = stringResource(R.string.create_screen_image_picker_title),
                 onImageSelected = {
                     onCoverImageSelected(it)
                 }
@@ -208,7 +210,7 @@ fun CreateScreenView(
 
             Text(
                 modifier = Modifier.padding(top = 40.dp),
-                text = "NOME VIARY",
+                text = stringResource(R.string.create_screen_name_label),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = Primary10
@@ -218,7 +220,7 @@ fun CreateScreenView(
                 state = viaryName,
                 modifier = Modifier.padding(top = 10.dp),
                 icon = Icons.Outlined.TravelExplore,
-                label = "Que nome você dá a essa viagem?"
+                label = stringResource(R.string.create_screen_name_placeholder)
             )
 
             if (viaryNameError != null) {
@@ -232,7 +234,7 @@ fun CreateScreenView(
 
             Text(
                 modifier = Modifier.padding(top = 20.dp),
-                text = "ORIGEM",
+                text = stringResource(R.string.create_screen_origin_name_label),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = Primary10
@@ -242,7 +244,7 @@ fun CreateScreenView(
                 state = locate,
                 modifier = Modifier.padding(top = 10.dp),
                 icon = Icons.Outlined.LocationOn,
-                label = "Onde você está começando?"
+                label = stringResource(R.string.create_screen_origin_name_placeholder)
             )
 
             if (locateError != null) {
@@ -272,18 +274,20 @@ fun CreateScreenView(
                         .padding(32.dp)
                 ) {
                     Text(
-                        text = "Clima Viary",
+                        text = stringResource(R.string.create_screen_climate_title),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.ExtraBold
                     )
 
                     Text(
-                        text = "Como a jornada está iniciando?",
+                        text = stringResource(R.string.create_screen_climate_subtitle),
                         style = MaterialTheme.typography.labelLarge,
                         color = Primary20
                     )
 
-                    var selectedWeather by remember { mutableStateOf("SOL") }
+                    val startWeather = stringResource(R.string.create_screen_climate_sunny)
+
+                    var selectedWeather by remember { mutableStateOf(startWeather) }
 
                     Row(
                         modifier = Modifier
@@ -292,10 +296,10 @@ fun CreateScreenView(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         val options = listOf(
-                            Icons.Outlined.WbSunny to "SOL",
-                            Icons.Outlined.Cloud to "NUBLADO",
-                            Icons.Outlined.WaterDrop to "CHUVA",
-                            Icons.Outlined.SentimentVerySatisfied to "FELIZ"
+                            Icons.Outlined.WbSunny to stringResource(R.string.create_screen_climate_sunny),
+                            Icons.Outlined.Cloud to stringResource(R.string.create_screen_climate_cloudy),
+                            Icons.Outlined.WaterDrop to stringResource(R.string.create_screen_climate_rainy),
+                            Icons.Outlined.SentimentVerySatisfied to stringResource(R.string.create_screen_climate_chill)
                         )
 
                         options.forEach { (icon, label) ->
@@ -310,7 +314,7 @@ fun CreateScreenView(
 
                     Text(
                         modifier = Modifier.padding(top = 26.dp),
-                        text = "KILOMETRAGEM INICIAL",
+                        text = stringResource(R.string.create_screen_mileage_label),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = Primary10
@@ -345,7 +349,7 @@ fun CreateScreenView(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text = "KM",
+                                text = stringResource(R.string.create_screen_km_hint),
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Bold,
                                 color = Tertiary10
@@ -356,7 +360,7 @@ fun CreateScreenView(
             }
 
             ViaryButton(
-                label = "Começar Sua Viagem",
+                label = stringResource(R.string.create_screen_start_viary_button),
                 icon = Icons.Outlined.RocketLaunch,
                 onStartTripClicked = {
                     onStartTripClicked()
@@ -367,7 +371,10 @@ fun CreateScreenView(
     }
 }
 
-@Preview
+@Preview(showBackground = true, name = "Português", locale = "pt")
+@Preview(showBackground = true, name = "Español", locale = "es")
+@Preview(showBackground = true, name = "Français", locale = "fr")
+@Preview(showBackground = true)
 @Composable
 fun CreateScreenPreview() {
     CreateScreenView(modifier = Modifier.background(Tertiary90.copy(0.3f)), isLoading = false)

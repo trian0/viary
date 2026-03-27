@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">Viary</string>
+    <string name="app_name" translatable="false">Viary</string>
+
+    <!-- Create Screen -->
+    <string name="create_screen_title">New Viary</string>
+    <string name="create_screen_subtitle">Document the miles, capture the moments.</string>
+    <string name="create_screen_image_picker_title">Upload Cover Photo</string>
+    <string name="create_screen_image_picker_subtitle">Tap to select your road trip vibe</string>
+    <string name="create_screen_name_label">VIARY NAME</string>
+    <string name="create_screen_name_placeholder">Que nome você dá a essa viagem?</string>
+    <string name="create_screen_origin_name_label">ORIGIN</string>
+    <string name="create_screen_origin_name_placeholder">Where are you starting?</string>
+    <string name="create_screen_climate_title">Viary Vibe</string>
+    <string name="create_screen_climate_subtitle">How\'s the journey starting?</string>
+    <string name="create_screen_climate_sunny">SUNNY</string>
+    <string name="create_screen_climate_cloudy">CLOUDY</string>
+    <string name="create_screen_climate_rainy">RAINY</string>
+    <string name="create_screen_climate_chill">CHILL</string>
+    <string name="create_screen_mileage_label">STARTING MILEAGE</string>
+    <string name="create_screen_km_hint">KM</string>
+    <string name="create_screen_start_viary_button">Start Your Viary</string>
+    <!-- Create Screen -->
 </resources>

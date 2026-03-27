@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Create Screen -->
+    <string name="create_screen_title">Nuevo Viary</string>
+    <string name="create_screen_subtitle">Documenta los kilómetros, captura los momentos.</string>
+    <string name="create_screen_image_picker_title">Subir Foto de Portada</string>
+    <string name="create_screen_image_picker_subtitle">Toca para elegir el estilo de tu viaje</string>
+    <string name="create_screen_name_label">NOMBRE DEL VIARY</string>
+    <string name="create_screen_name_placeholder">¿Qué nombre le das a este viaje?</string>
+    <string name="create_screen_origin_name_label">ORIGEN</string>
+    <string name="create_screen_origin_name_placeholder">¿Dónde empiezas?</string>
+    <string name="create_screen_climate_title">Vibe del Viary</string>
+    <string name="create_screen_climate_subtitle">¿Cómo empieza el viaje?</string>
+    <string name="create_screen_climate_sunny">SOL</string>
+    <string name="create_screen_climate_cloudy">NUBLADO</string>
+    <string name="create_screen_climate_rainy">LLUVIA</string>
+    <string name="create_screen_climate_chill">FELIZ</string>
+    <string name="create_screen_mileage_label">KILOMETRAJE INICIAL</string>
+    <string name="create_screen_km_hint">KM</string>
+    <string name="create_screen_start_viary_button">Empezar tu Viary</string>
+    <!-- Create Screen -->
+</resources>
