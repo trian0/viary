@@ -28,8 +28,6 @@ import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material.icons.outlined.WbSunny
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -37,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,9 +51,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.trian0.viary.R
+import com.trian0.viary.data.models.Viary
 import com.trian0.viary.ui.components.ClimateViary
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
 import com.trian0.viary.ui.components.ImagePicker
+import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.components.ViaryButton
 import com.trian0.viary.ui.theme.Primary10
 import com.trian0.viary.ui.theme.Primary20
@@ -75,6 +76,7 @@ fun CreateScreen(
     val viaryNameState = rememberTextFieldState()
     val locateState = rememberTextFieldState()
     val kmState = rememberTextFieldState()
+    val climateSate = remember { mutableStateOf("")}
 
     LaunchedEffect(viaryNameState.text) {
         viewModel.onIntent(CreateContract.CreateIntent.OnViaryNameChanged(viaryNameState.text.toString()))
@@ -88,11 +90,17 @@ fun CreateScreen(
         viewModel.onIntent(CreateContract.CreateIntent.OnCurrentKmChanged(kmState.text.toString()))
     }
 
+    LaunchedEffect(climateSate.value) {
+        viewModel.onIntent(CreateContract.CreateIntent.OnClimateChanged(climateSate.value))
+    }
+
+    val tripSuccessMessage = stringResource(R.string.create_screen_trip_started_message)
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CreateContract.CreateEffect.TripCreatedSuccessfully -> {
-                    Toast.makeText(context, "Viagem iniciada com sucesso!", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, tripSuccessMessage, Toast.LENGTH_SHORT)
                         .show()
                 }
 
@@ -104,20 +112,9 @@ fun CreateScreen(
     }
 
     if (uiState.showSuccessDialog) {
-        AlertDialog(
-            onDismissRequest = {},
-            title = { Text(text = "Sucesso!") },
-            text = { Text(text = "Sua viagem foi iniciada com sucesso. Boa jornada!") },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        onNavigateBack()
-                    }
-                ) {
-                    Text("OK")
-                }
-            }
-        )
+        SuccessDialog(stringResource(R.string.dialog_success_create_screen_button_message)) {
+            onNavigateBack()
+        }
     }
 
     CreateScreenView(
@@ -135,7 +132,8 @@ fun CreateScreen(
             viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
         },
         onNavigateBack,
-        uiState.isLoading
+        uiState.isLoading,
+        climateSate
     )
 }
 
@@ -143,16 +141,19 @@ fun CreateScreen(
 fun CreateScreenView(
     modifier: Modifier,
     viaryName: TextFieldState = rememberTextFieldState(),
-    viaryNameError: String? = null,
+    viaryNameError: Boolean = false,
     locate: TextFieldState = rememberTextFieldState(),
-    locateError: String? = null,
+    locateError: Boolean = false,
     km: TextFieldState = rememberTextFieldState(),
-    kmError: String? = null,
+    kmError: Boolean = false,
     onCoverImageSelected: (Uri) -> Unit = {},
     onStartTripClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
     isLoading: Boolean = false,
+    climateState: MutableState<String> = mutableStateOf(""),
 ) {
+    var selectedWeather by remember { mutableStateOf(Viary.ViaryClimate.SUNNY) }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -220,17 +221,9 @@ fun CreateScreenView(
                 state = viaryName,
                 modifier = Modifier.padding(top = 10.dp),
                 icon = Icons.Outlined.TravelExplore,
-                label = stringResource(R.string.create_screen_name_placeholder)
+                label = stringResource(R.string.create_screen_name_placeholder),
+                isError = viaryNameError
             )
-
-            if (viaryNameError != null) {
-                Text(
-                    text = viaryNameError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
 
             Text(
                 modifier = Modifier.padding(top = 20.dp),
@@ -244,17 +237,9 @@ fun CreateScreenView(
                 state = locate,
                 modifier = Modifier.padding(top = 10.dp),
                 icon = Icons.Outlined.LocationOn,
-                label = stringResource(R.string.create_screen_origin_name_placeholder)
+                label = stringResource(R.string.create_screen_origin_name_placeholder),
+                isError = locateError
             )
-
-            if (locateError != null) {
-                Text(
-                    text = locateError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                )
-            }
 
             Card(
                 modifier = Modifier
@@ -285,29 +270,28 @@ fun CreateScreenView(
                         color = Primary20
                     )
 
-                    val startWeather = stringResource(R.string.create_screen_climate_sunny)
-
-                    var selectedWeather by remember { mutableStateOf(startWeather) }
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp, bottom = 32.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        val options = listOf(
-                            Icons.Outlined.WbSunny to stringResource(R.string.create_screen_climate_sunny),
-                            Icons.Outlined.Cloud to stringResource(R.string.create_screen_climate_cloudy),
-                            Icons.Outlined.WaterDrop to stringResource(R.string.create_screen_climate_rainy),
-                            Icons.Outlined.SentimentVerySatisfied to stringResource(R.string.create_screen_climate_chill)
+                        val weatherOptions = listOf(
+                            Viary.ViaryClimate.SUNNY to Icons.Outlined.WbSunny,
+                            Viary.ViaryClimate.CLOUDY to Icons.Outlined.Cloud,
+                            Viary.ViaryClimate.RAINY to Icons.Outlined.WaterDrop,
+                            Viary.ViaryClimate.CHILLY to Icons.Outlined.SentimentVerySatisfied
                         )
 
-                        options.forEach { (icon, label) ->
+                        weatherOptions.forEach { (climate, icon) ->
                             ClimateViary(
                                 icon = icon,
-                                label = label,
-                                isSelected = selectedWeather == label,
-                                onClick = { selectedWeather = label }
+                                label = stringResource(climate.labelRes),
+                                isSelected = selectedWeather == climate,
+                                onClick = {
+                                    selectedWeather = climate
+                                    climateState.value = climate.name
+                                }
                             )
                         }
                     }
@@ -330,7 +314,8 @@ fun CreateScreenView(
                             state = km,
                             modifier = Modifier.weight(0.6f),
                             keyboardType = KeyboardType.Number,
-                            icon = Icons.Outlined.Speed
+                            icon = Icons.Outlined.Speed,
+                            isError = kmError
                         )
 
                         Card(
@@ -362,7 +347,7 @@ fun CreateScreenView(
             ViaryButton(
                 label = stringResource(R.string.create_screen_start_viary_button),
                 icon = Icons.Outlined.RocketLaunch,
-                onStartTripClicked = {
+                onClicked = {
                     onStartTripClicked()
                 },
                 isLoading = isLoading

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel">Cancelar</string>
+
     <!-- Create Screen -->
     <string name="create_screen_title">Novo Viary</string>
     <string name="create_screen_subtitle">Registre os quilômetros, capture os momentos.</string>
@@ -18,5 +20,10 @@
     <string name="create_screen_mileage_label">QUILOMETRAGEM INICIAL</string>
     <string name="create_screen_km_hint">KM</string>
     <string name="create_screen_start_viary_button">Começar Sua Viary</string>
+    <string name="create_screen_trip_started_message">Viagem iniciada com sucesso!</string>
+
+    <string name="dialog_success_create_screen_title">Viary iniciada!</string>
+    <string name="dialog_success_create_screen_subtitle">Tudo pronto para sua nova aventura. Aproveite o caminho!</string>
+    <string name="dialog_success_create_screen_button_message">Vamos lá!</string>
     <!-- Create Screen -->
 </resources>

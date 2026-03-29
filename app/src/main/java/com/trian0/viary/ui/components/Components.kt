@@ -15,10 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,17 +39,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.trian0.viary.R
 import com.trian0.viary.ui.theme.ActionOrangeGradient
 import com.trian0.viary.ui.theme.Neutral90
+import com.trian0.viary.ui.theme.Primary
+import com.trian0.viary.ui.theme.Primary10
+import com.trian0.viary.ui.theme.Primary100
 import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary30
+import com.trian0.viary.ui.theme.Primary50
+import com.trian0.viary.ui.theme.Primary80
 import com.trian0.viary.ui.theme.White
 
 @Composable
@@ -56,7 +69,8 @@ fun ElevatedOutlinedTextField(
     readOnly: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     icon: ImageVector,
-    label: String = ""
+    label: String = "",
+    isError: Boolean = false,
 ) {
     Box(
         modifier = modifier
@@ -104,6 +118,7 @@ fun ElevatedOutlinedTextField(
             ),
             enabled = enabled,
             readOnly = readOnly,
+            isError = isError
         )
     }
 }
@@ -111,8 +126,8 @@ fun ElevatedOutlinedTextField(
 @Composable
 fun ViaryButton(
     label: String,
-    icon: ImageVector,
-    onStartTripClicked: () -> Unit = {},
+    icon: ImageVector? = null,
+    onClicked: () -> Unit = {},
     isLoading: Boolean = false
 ) {
     Button(
@@ -126,7 +141,7 @@ fun ViaryButton(
             )
             .background(ActionOrangeGradient, RoundedCornerShape(20.dp)),
         onClick = {
-            onStartTripClicked()
+            onClicked()
         },
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(
@@ -146,12 +161,14 @@ fun ViaryButton(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = White,
-                    modifier = Modifier.size(20.dp)
-                )
+                icon?.let {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -172,7 +189,7 @@ fun ClimateViary(
     icon: ImageVector,
     label: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -217,4 +234,75 @@ fun ClimateViary(
             )
         }
     }
+}
+
+@Composable
+fun SuccessDialog(
+    labelConfirm: String,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { },
+        shape = RoundedCornerShape(24.dp),
+        containerColor = White,
+        tonalElevation = 8.dp,
+        icon = {
+            val shadowColor = Primary80
+            val shadowElevation = 12.dp
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(80.dp)
+                    .padding(shadowElevation)
+                    .graphicsLayer {
+                        this.shadowElevation = shadowElevation.toPx()
+                        this.shape = CircleShape
+                        this.ambientShadowColor = shadowColor
+                        this.spotShadowColor = shadowColor
+                    }
+                    .clip(CircleShape)
+                    .background(Primary100)
+            ) {
+                Icon(
+                    Icons.Filled.CheckCircle,
+                    contentDescription = null,
+                    tint = Primary50,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+        },
+
+        title = {
+            Text(
+                text = stringResource(R.string.dialog_success_create_screen_title),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        },
+
+        text = {
+            Text(
+                text = stringResource(R.string.dialog_success_create_screen_subtitle),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Primary20
+            )
+        },
+
+        confirmButton = {
+            ViaryButton(labelConfirm, onClicked = onConfirm)
+        },
+    )
+}
+
+@Preview
+@Composable
+fun SuccessDialogPreview() {
+    SuccessDialog(stringResource(R.string.ok)) { }
+}
+
+@Composable
+fun ErrorDialog() {
+
 }

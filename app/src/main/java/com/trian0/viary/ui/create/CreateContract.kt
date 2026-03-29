@@ -11,10 +11,11 @@ interface CreateContract {
         val currentKm: String = "",
         val coverImageUri: Uri? = null,
         val isLoading: Boolean = false,
-        val viaryNameError: String? = null,
-        val departureLocationError: String? = null,
-        val currentKmError: String? = null,
+        val viaryNameError: Boolean = false,
+        val departureLocationError: Boolean = false,
+        val currentKmError: Boolean = false,
         val showSuccessDialog: Boolean = false,
+        val climate: String = "",
     ) : MviInterfaces.UiState
 
     sealed class CreateIntent : MviInterfaces.UiIntent {
@@ -22,6 +23,7 @@ interface CreateContract {
         data class OnDepartureLocationChanged(val location: String) : CreateIntent()
         data class OnCurrentKmChanged(val km: String) : CreateIntent()
         data class OnCoverImageSelected(val uri: Uri?) : CreateIntent()
+        data class OnClimateChanged(val climate: String) : CreateIntent()
         object OnStartTripClicked : CreateIntent()
     }
 

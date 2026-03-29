@@ -1,6 +1,5 @@
 package com.trian0.viary.data.database.entities
 
-import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.trian0.viary.data.models.Viary

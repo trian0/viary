@@ -26,7 +26,7 @@ class CreateViewModel(
                 setState {
                     copy(
                         viaryName = intent.name,
-                        viaryNameError = null
+                        viaryNameError = false
                     )
                 }
             }
@@ -35,7 +35,7 @@ class CreateViewModel(
                 setState {
                     copy(
                         departureLocation = intent.location,
-                        departureLocationError = null
+                        departureLocationError = false
                     )
                 }
             }
@@ -44,7 +44,7 @@ class CreateViewModel(
                 setState {
                     copy(
                         currentKm = intent.km,
-                        currentKmError = null
+                        currentKmError = false
                     )
                 }
             }
@@ -57,6 +57,12 @@ class CreateViewModel(
 
             is CreateContract.CreateIntent.OnStartTripClicked -> {
                 startTrip()
+            }
+
+            is CreateContract.CreateIntent.OnClimateChanged -> {
+                setState {
+                    copy(climate = intent.climate)
+                }
             }
         }
     }
@@ -108,22 +114,22 @@ class CreateViewModel(
         var isValid = true
 
         if (state.viaryName.isBlank()) {
-            setState { copy(viaryNameError = "Nome é obrigatório") }
+            setState { copy(viaryNameError = true) }
             isValid = false
         }
 
         if (state.departureLocation.isBlank()) {
-            setState { copy(departureLocationError = "Localização é obrigatória") }
+            setState { copy(departureLocationError = true) }
             isValid = false
         }
 
         if (state.currentKm.isBlank()) {
-            setState { copy(currentKmError = "Kilometragem é obrigatória") }
+            setState { copy(currentKmError = true) }
             isValid = false
         } else {
             val km = state.currentKm.toDoubleOrNull()
             if (km == null || km < 0) {
-                setState { copy(currentKmError = "Kilometragem inválida") }
+                setState { copy(currentKmError = true) }
                 isValid = false
             }
         }

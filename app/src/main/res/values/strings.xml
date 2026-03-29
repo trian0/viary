@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Viary</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Create Screen -->
     <string name="create_screen_title">New Viary</string>
@@ -7,7 +9,7 @@
     <string name="create_screen_image_picker_title">Upload Cover Photo</string>
     <string name="create_screen_image_picker_subtitle">Tap to select your road trip vibe</string>
     <string name="create_screen_name_label">VIARY NAME</string>
-    <string name="create_screen_name_placeholder">Que nome você dá a essa viagem?</string>
+    <string name="create_screen_name_placeholder">What name would you give this trip?</string>
     <string name="create_screen_origin_name_label">ORIGIN</string>
     <string name="create_screen_origin_name_placeholder">Where are you starting?</string>
     <string name="create_screen_climate_title">Viary Vibe</string>
@@ -19,5 +21,10 @@
     <string name="create_screen_mileage_label">STARTING MILEAGE</string>
     <string name="create_screen_km_hint">KM</string>
     <string name="create_screen_start_viary_button">Start Your Viary</string>
+    <string name="create_screen_trip_started_message">Trip started successfully!</string>
+
+    <string name="dialog_success_create_screen_title">Viary begun!</string>
+    <string name="dialog_success_create_screen_subtitle">Everything is ready for your new adventure. Enjoy the journey!</string>
+    <string name="dialog_success_create_screen_button_message">Let\'s go!</string>
     <!-- Create Screen -->
 </resources>

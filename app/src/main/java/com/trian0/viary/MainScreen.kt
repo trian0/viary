@@ -3,8 +3,11 @@ package com.trian0.viary
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,30 +35,34 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     )
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Tertiary90.copy(alpha = 0.3f))
-        .graphicsLayer { clip = false }
-    ) {
-        AppNavigation(
-            viewModel = viewModel,
-            navController = navController,
-            paddingValues = PaddingValues(
-                bottom = if (showBottomBar) 96.dp else 0.dp
-            )
-        )
-
-        if (showBottomBar) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(start = 24.dp, end = 24.dp, bottom = 16.dp, top = 0.dp)
-                    .graphicsLayer { clip = false }
-            ) {
-                BottomNavigation(
-                    navController = navController,
-                    modifier = Modifier
+    Scaffold(contentWindowInsets = WindowInsets.ime) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(Tertiary90.copy(alpha = 0.3f))
+                .graphicsLayer { clip = false }
+        ) {
+            AppNavigation(
+                viewModel = viewModel,
+                navController = navController,
+                paddingValues = PaddingValues(
+                    bottom = if (showBottomBar) 96.dp else 0.dp
                 )
+            )
+
+            if (showBottomBar) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(start = 24.dp, end = 24.dp, bottom = 16.dp, top = 0.dp)
+                        .graphicsLayer { clip = false }
+                ) {
+                    BottomNavigation(
+                        navController = navController,
+                        modifier = Modifier
+                    )
+                }
             }
         }
     }
