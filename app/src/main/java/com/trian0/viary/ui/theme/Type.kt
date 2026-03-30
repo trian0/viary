@@ -64,10 +64,19 @@ val Typography = Typography(
 
     labelLarge = TextStyle(
         fontFamily = PlusJakartaSans,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
+        color = Neutral10
+    ),
+
+    labelMedium = TextStyle(
+        fontFamily = PlusJakartaSans,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 1.2.sp,
         color = Neutral10
     ),
 

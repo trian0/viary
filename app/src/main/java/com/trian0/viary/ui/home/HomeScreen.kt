@@ -1,160 +1,281 @@
 package com.trian0.viary.ui.home
 
-import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.OutlinedFlag
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.trian0.viary.ui.theme.Primary
-import com.trian0.viary.ui.theme.Secondary
+import com.trian0.viary.R
+import com.trian0.viary.data.models.Viary
+import com.trian0.viary.ui.components.ViaryButton
+import com.trian0.viary.ui.components.ViarySecondaryButton
+import com.trian0.viary.ui.theme.Primary10
+import com.trian0.viary.ui.theme.Primary20
+import com.trian0.viary.ui.theme.Primary50
+import com.trian0.viary.ui.theme.Secondary90
 import org.koin.androidx.compose.koinViewModel
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.Date
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.init()
     }
 
+    HomeScreenView(
+        uiState.viaryInProgress,
+        uiState.totalViary
+    )
+}
+
+@Composable
+fun HomeScreenView(viaryInProgress: Viary?, totalViary: Int = 0) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp, vertical = 16.dp)
     ) {
         Text(
-            modifier = Modifier.padding(bottom = 16.dp),
-            text = "Viary em Progresso",
+            text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Card(
+        Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp)),
-            colors = CardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black,
-                disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.DarkGray
-            )
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(top = 30.dp)
         ) {
-            uiState.viary?.let { viary ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(10.dp)
-                ) {
-                    if (viary.selectedImage != null) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .shadow(
-                                    elevation = 5.dp,
-                                    shape = RoundedCornerShape(20.dp)
-                                )
-                                .height(150.dp)
-                        ) {
-                            AsyncImage(
-                                model = Uri.fromFile(File(viary.selectedImage!!)),
-                                contentDescription = "Imagem selecionada",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    }
+            viaryInProgress?.let { viary ->
+                InProgressViary(
+                    viaryName = viary.name
+                )
+            } ?: HomeTitle(totalViary)
+        }
+    }
+}
 
-                    Text(
-                        modifier = Modifier.padding(10.dp).align(Alignment.CenterHorizontally),
-                        text = viary.name,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+@Composable
+fun HomeTitle(
+    totalViary: Int
+) {
+    Text(
+        text = stringResource(R.string.home_screen_title),
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Bold,
+        color = Primary50
+    )
 
-                    Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        Icon(
-                            imageVector = Icons.Outlined.LocationOn,
-                            contentDescription = "",
-                            modifier = Modifier.size(20.dp).align(Alignment.CenterVertically),
-                            tint = Primary
-                        )
-                        Column(modifier = Modifier.padding(start = 12.dp)) {
-                            Text(
-                                modifier = Modifier.padding(bottom = 2.dp),
-                                text = "Origem",
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                            Text(
-                                text = viary.origin,
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
-                    }
+    Text(
+        modifier = Modifier.padding(top = 8.dp),
+        text = stringResource(R.string.home_screen_subtitle),
+        style = MaterialTheme.typography.headlineLarge,
+        fontWeight = FontWeight.ExtraBold
+    )
 
-                    Row(modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)) {
-                        Icon(
-                            imageVector = Icons.Outlined.DateRange,
-                            contentDescription = "",
-                            modifier = Modifier.size(20.dp).align(Alignment.CenterVertically),
-                            tint = Secondary
-                        )
-                        Column(modifier = Modifier.padding(start = 12.dp)) {
-                            Text(
-                                modifier = Modifier.padding(bottom = 2.dp),
-                                text = "Data de Partida",
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                            val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                            Text(
-                                text = format.format(viary.departureTime!!),
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
-                    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 40.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        Card(
+            modifier = Modifier.weight(1f),
+            colors = CardColors(
+                containerColor = Secondary90,
+                contentColor = Primary20,
+                disabledContainerColor = Secondary90,
+                disabledContentColor = Primary20
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = "Trips",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Primary10,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = totalViary.toString(),
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
 
-                    Row() {
-                        Column() { }
-                    }
-                }
+        Spacer(modifier = Modifier.weight(0.1f))
+
+        Card(
+            modifier = Modifier.weight(1f),
+            colors = CardColors(
+                containerColor = Secondary90,
+                contentColor = Primary20,
+                disabledContainerColor = Secondary90,
+                disabledContentColor = Primary20
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = "Greater distance",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Primary10,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = "421",
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen()
+fun InProgressViary(
+    viaryName: String,
+) {
+    Text(
+        text = stringResource(R.string.home_viary_in_progress_title),
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Bold,
+        color = Primary50
+    )
+
+    Text(
+        modifier = Modifier.padding(top = 8.dp),
+        text = viaryName,
+        style = MaterialTheme.typography.headlineLarge,
+        fontWeight = FontWeight.ExtraBold
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp),
+    ) {
+        Card(
+            modifier = Modifier.weight(1f),
+            colors = CardColors(
+                containerColor = Secondary90,
+                contentColor = Primary20,
+                disabledContainerColor = Secondary90,
+                disabledContentColor = Primary20
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = "Tempo Decorrido",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Primary10,
+                )
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = "04:22:15",
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(0.1f))
+
+        Card(
+            modifier = Modifier.weight(1f),
+            colors = CardColors(
+                containerColor = Secondary90,
+                contentColor = Primary20,
+                disabledContainerColor = Secondary90,
+                disabledContentColor = Primary20
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = "Distância Percorrida",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Primary10,
+                )
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = "128.4",
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+            }
+        }
+    }
+
+    ViaryButton(
+        label = "Adicionar Checkpoint",
+        icon = Icons.Filled.AddCircle
+    )
+
+    ViarySecondaryButton(
+        label = "Encerrar Viagem",
+        icon = Icons.Filled.OutlinedFlag,
+        modifier = Modifier.padding(top = 12.dp)
+    )
+}
+
+@Preview(showBackground = true, locale = "pt")
+@Preview(showBackground = true, locale = "es")
+@Preview(showBackground = true, locale = "fr")
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenWithViaryPreview() {
+    HomeScreenView(
+        Viary(
+            name = "Rota do Sol",
+            origin = "Salvador",
+            departureTime = Date(),
+            kmStart = 0.0,
+            kmEnd = 0.0,
+            status = Viary.ViaryStatus.IN_PROGRESS,
+            selectedImage = null
+        )
+    )
+}
+
+@Preview(showBackground = true, locale = "pt")
+@Preview(showBackground = true, locale = "es")
+@Preview(showBackground = true, locale = "fr")
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenWithoutViaryPreview() {
+    HomeScreenView(
+        null
+    )
 }

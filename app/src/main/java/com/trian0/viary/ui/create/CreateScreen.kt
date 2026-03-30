@@ -112,7 +112,11 @@ fun CreateScreen(
     }
 
     if (uiState.showSuccessDialog) {
-        SuccessDialog(stringResource(R.string.dialog_success_create_screen_button_message)) {
+        SuccessDialog(
+            labelTitle = stringResource(R.string.dialog_success_create_screen_title),
+            labelSubtitle = stringResource(R.string.dialog_success_create_screen_subtitle),
+            labelConfirm = stringResource(R.string.dialog_success_create_screen_button_message)
+        ) {
             onNavigateBack()
         }
     }

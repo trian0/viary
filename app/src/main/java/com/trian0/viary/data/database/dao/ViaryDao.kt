@@ -17,7 +17,7 @@ interface ViaryDao {
     fun getById(id: String): Flow<ViaryEntity>
 
     @Query("SELECT * FROM ViaryEntity WHERE status = :status LIMIT 1")
-    suspend fun getByStatus(status: Viary.ViaryStatus): ViaryEntity
+    suspend fun getByStatus(status: Viary.ViaryStatus): ViaryEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(viary: ViaryEntity)

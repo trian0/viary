@@ -3,6 +3,18 @@
     <string name="ok" translatable="false">OK</string>
     <string name="cancel">Cancel</string>
 
+    <!-- Main Screen -->
+    <string name="dialog_location_title">Where the adventure begins</string>
+    <string name="dialog_location_subtitle">To accurately log your trips, calculate distances, and mark your favorite landmarks, Viary needs to access your location while you are traveling.</string>
+    <string name="dialog_location_confirm">Enable Location</string>
+    <!-- Main Screen -->
+
+    <!-- Home Screen -->
+    <string name="home_screen_title">JOURNAL DASHBOARD</string>
+    <string name="home_screen_subtitle">Your wanderlust, neatly archived.</string>
+    <string name="home_viary_in_progress_title">In Progress</string>
+    <!-- Home Screen -->
+
     <!-- Create Screen -->
     <string name="create_screen_title">New Viary</string>
     <string name="create_screen_subtitle">Document the miles, capture the moments.</string>

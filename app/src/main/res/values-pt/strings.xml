@@ -2,6 +2,12 @@
 <resources>
     <string name="cancel">Cancelar</string>
 
+    <!-- Main Screen -->
+    <string name="dialog_location_title">Onde a aventura começa</string>
+    <string name="dialog_location_subtitle">Para registrar as suas viagens com precisão, calcular distâncias e marcar os seus pontos de referência favoritos, o Viary precisa acessar a sua localização enquanto você estiver viajando.</string>
+    <string name="dialog_location_confirm">Ativar Localização</string>
+    <!-- Main Screen -->
+
     <!-- Create Screen -->
     <string name="create_screen_title">Novo Viary</string>
     <string name="create_screen_subtitle">Registre os quilômetros, capture os momentos.</string>

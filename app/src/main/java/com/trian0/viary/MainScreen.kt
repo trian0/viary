@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,10 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.navigation.AppNavigation
 import com.trian0.viary.ui.navigation.BottomNavigation
 import com.trian0.viary.ui.navigation.NavigationItem
-import com.trian0.viary.ui.theme.Neutral70
 import com.trian0.viary.ui.theme.Tertiary90
 
 @Composable
@@ -33,6 +38,8 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val screensWithoutBottomBar = listOf(
         NavigationItem.Splash.route,
     )
+
+    RequestLocationPermission()
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
     Scaffold(contentWindowInsets = WindowInsets.ime) { innerPadding ->
@@ -64,6 +71,27 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestLocationPermission() {
+    val permissionState = rememberPermissionState(
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    val showPermissionDialog = !permissionState.status.isGranted
+
+    if (showPermissionDialog) {
+        SuccessDialog(
+            icon = Icons.Filled.LocationOff,
+            labelTitle = "Onde a aventura começa",
+            labelSubtitle = "Para registrar suas viagens com precisão, calcular distâncias e marcar seus pontos de referência favoritos, o Viary precisa acessar sua localização enquanto você estiver viajando.",
+            labelConfirm = "Ativar Localização"
+        ) {
+            permissionState.launchPermissionRequest()
         }
     }
 }

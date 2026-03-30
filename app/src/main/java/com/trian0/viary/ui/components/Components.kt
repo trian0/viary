@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,18 +42,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.trian0.viary.R
 import com.trian0.viary.ui.theme.ActionOrangeGradient
 import com.trian0.viary.ui.theme.Neutral90
-import com.trian0.viary.ui.theme.Primary
 import com.trian0.viary.ui.theme.Primary10
 import com.trian0.viary.ui.theme.Primary100
 import com.trian0.viary.ui.theme.Primary20
@@ -87,6 +84,16 @@ fun ElevatedOutlinedTextField(
                     contentDescription = null,
                     tint = Primary30
                 )
+            },
+            trailingIcon = {
+                if (isError) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        imageVector = Icons.Filled.Error,
+                        tint = Color.Red,
+                        contentDescription = null
+                    )
+                }
             },
             state = state,
             lineLimits = TextFieldLineLimits.SingleLine,
@@ -137,7 +144,7 @@ fun ViaryButton(
             .height(55.dp)
             .shadow(
                 elevation = 6.dp,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(30.dp)
             )
             .background(ActionOrangeGradient, RoundedCornerShape(20.dp)),
         onClick = {
@@ -177,7 +184,65 @@ fun ViaryButton(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.ExtraBold,
-                    color = White
+                    color = White,
+                    maxLines = 1
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ViarySecondaryButton(
+    modifier: Modifier,
+    label: String,
+    icon: ImageVector? = null,
+    onClicked: () -> Unit = {},
+    isLoading: Boolean = false
+) {
+    Button(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(55.dp),
+        onClick = {
+            onClicked()
+        },
+        shape = RoundedCornerShape(30.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Neutral90,
+            contentColor = Primary10
+        ),
+        enabled = !isLoading
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = White,
+                modifier = Modifier.height(24.dp)
+            )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                icon?.let {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = Primary10,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = label,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Primary10,
+                    maxLines = 1
                 )
             }
         }
@@ -238,6 +303,9 @@ fun ClimateViary(
 
 @Composable
 fun SuccessDialog(
+    icon: ImageVector = Icons.Filled.CheckCircle,
+    labelTitle: String,
+    labelSubtitle: String,
     labelConfirm: String,
     onConfirm: () -> Unit
 ) {
@@ -265,7 +333,7 @@ fun SuccessDialog(
                     .background(Primary100)
             ) {
                 Icon(
-                    Icons.Filled.CheckCircle,
+                    icon,
                     contentDescription = null,
                     tint = Primary50,
                     modifier = Modifier.size(40.dp)
@@ -275,14 +343,15 @@ fun SuccessDialog(
 
         title = {
             Text(
-                text = stringResource(R.string.dialog_success_create_screen_title),
+                textAlign = TextAlign.Center,
+                text = labelTitle,
                 style = MaterialTheme.typography.headlineMedium
             )
         },
 
         text = {
             Text(
-                text = stringResource(R.string.dialog_success_create_screen_subtitle),
+                text = labelSubtitle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.bodyMedium,
@@ -294,12 +363,6 @@ fun SuccessDialog(
             ViaryButton(labelConfirm, onClicked = onConfirm)
         },
     )
-}
-
-@Preview
-@Composable
-fun SuccessDialogPreview() {
-    SuccessDialog(stringResource(R.string.ok)) { }
 }
 
 @Composable

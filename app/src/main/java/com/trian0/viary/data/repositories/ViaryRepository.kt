@@ -7,6 +7,7 @@ import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.saveImageToInternalStorage
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.withContext
 
 class ViaryRepository(
@@ -36,6 +37,10 @@ class ViaryRepository(
             status = status
         ).toViaryEntity()
         dao.save(entity)
+    }
+
+    suspend fun getTotalViary() = withContext(Dispatchers.IO) {
+        dao.getAll().count()
     }
 }
 

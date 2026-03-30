@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.compose.material.icons)
     implementation(libs.coil.compose)
+    implementation(libs.google.accompanist.permissions)
 
     // Room
     implementation(libs.room.runtime)
