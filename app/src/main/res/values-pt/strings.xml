@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Cancelar</string>
+
+    <!-- Main Screen -->
+    <string name="dialog_location_title">Onde a aventura começa</string>
+    <string name="dialog_location_subtitle">Para registrar as suas viagens com precisão, calcular distâncias e marcar os seus pontos de referência favoritos, o Viary precisa acessar a sua localização enquanto você estiver viajando.</string>
+    <string name="dialog_location_confirm">Ativar Localização</string>
+    <!-- Main Screen -->
+
+    <!-- Create Screen -->
+    <string name="create_screen_title">Novo Viary</string>
+    <string name="create_screen_subtitle">Registre os quilômetros, capture os momentos.</string>
+    <string name="create_screen_image_picker_title">Enviar Foto de Capa</string>
+    <string name="create_screen_image_picker_subtitle">Toque para escolher a vibe da viagem</string>
+    <string name="create_screen_name_label">NOME DA VIARY</string>
+    <string name="create_screen_name_placeholder">Que nome você dá a essa viagem?</string>
+    <string name="create_screen_origin_name_label">ORIGEM</string>
+    <string name="create_screen_origin_name_placeholder">Onde você está começando?</string>
+    <string name="create_screen_climate_title">Vibe da Viary</string>
+    <string name="create_screen_climate_subtitle">Como a jornada está começando?</string>
+    <string name="create_screen_climate_sunny">SOL</string>
+    <string name="create_screen_climate_cloudy">NUBLADO</string>
+    <string name="create_screen_climate_rainy">CHUVA</string>
+    <string name="create_screen_climate_chill">FELIZ</string>
+    <string name="create_screen_mileage_label">QUILOMETRAGEM INICIAL</string>
+    <string name="create_screen_km_hint">KM</string>
+    <string name="create_screen_start_viary_button">Começar Sua Viary</string>
+    <string name="create_screen_trip_started_message">Viagem iniciada com sucesso!</string>
+
+    <string name="dialog_success_create_screen_title">Viary iniciada!</string>
+    <string name="dialog_success_create_screen_subtitle">Tudo pronto para sua nova aventura. Aproveite o caminho!</string>
+    <string name="dialog_success_create_screen_button_message">Vamos lá!</string>
+    <!-- Create Screen -->
+</resources>
