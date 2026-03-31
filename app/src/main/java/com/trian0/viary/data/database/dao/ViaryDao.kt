@@ -16,6 +16,9 @@ interface ViaryDao {
     @Query("SELECT * FROM ViaryEntity WHERE id = :id")
     fun getById(id: String): Flow<ViaryEntity>
 
+    @Query("SELECT COUNT(*) FROM ViaryEntity")
+    suspend fun getCount(): Int
+
     @Query("SELECT * FROM ViaryEntity WHERE status = :status LIMIT 1")
     suspend fun getByStatus(status: Viary.ViaryStatus): ViaryEntity?
 

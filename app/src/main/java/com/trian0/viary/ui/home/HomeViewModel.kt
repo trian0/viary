@@ -31,6 +31,7 @@ class HomeViewModel(
                 copy(
                     viaryInProgress = viary,
                     totalViary = totalViary,
+                    isLoading = false,
                 )
             }
         }

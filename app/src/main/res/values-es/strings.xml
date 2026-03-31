@@ -8,6 +8,18 @@
     <string name="dialog_location_confirm">Activar Ubicación</string>
     <!-- Main Screen -->
 
+    <!-- Home Screen -->
+    <string name="home_screen_title">PANEL DEL DIARIO</string>
+    <string name="home_screen_subtitle">Tus aventuras, perfectamente archivadas.</string>
+    <string name="home_screen_viary_in_progress_title">En Progreso</string>
+    <string name="home_screen_total_viary_title">Viajes</string>
+    <string name="home_screen_greater_distance_title">Mayor Distancia</string>
+    <string name="home_screen_elapsed_time_title">Tiempo Transcurrido</string>
+    <string name="home_screen_distance_traveled_title">Distancia Recorrida</string>
+    <string name="home_screen_add_checkpoint_button">Agregar Checkpoint</string>
+    <string name="home_screen_end_viary_button">Finalizar Viaje</string>
+    <!-- Home Screen -->
+
     <!-- Create Screen -->
     <string name="create_screen_title">Nuevo Viary</string>
     <string name="create_screen_subtitle">Documenta los kilómetros, captura los momentos.</string>

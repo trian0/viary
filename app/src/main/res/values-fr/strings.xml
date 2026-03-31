@@ -8,6 +8,18 @@
     <string name="dialog_location_confirm">Activer la Localisation</string>
     <!-- Main Screen -->
 
+    <!-- Home Screen -->
+    <string name="home_screen_title">TABLEAU DE BORD</string>
+    <string name="home_screen_subtitle">Vos aventures, soigneusement archivées.</string>
+    <string name="home_screen_viary_in_progress_title">En Cours</string>
+    <string name="home_screen_total_viary_title">Voyages</string>
+    <string name="home_screen_greater_distance_title">Plus Grande Distance</string>
+    <string name="home_screen_elapsed_time_title">Temps Écoulé</string>
+    <string name="home_screen_distance_traveled_title">Distance Parcourue</string>
+    <string name="home_screen_add_checkpoint_button">Ajouter un Checkpoint</string>
+    <string name="home_screen_end_viary_button">Terminer le Voyage</string>
+    <!-- Home Screen -->
+
     <!-- Create Screen -->
     <string name="create_screen_title">Nouveau Viary</string>
     <string name="create_screen_subtitle">Documentez les kilomètres, capturez les moments.</string>

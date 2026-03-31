@@ -14,9 +14,6 @@ class ViaryRepository(
     private val dao: ViaryDao,
     private val context: Context,
 ) {
-
-    val viarys get() = dao.getAll()
-
     suspend fun getViaryInProgress() = withContext(Dispatchers.IO) {
         dao.getByStatus(Viary.ViaryStatus.IN_PROGRESS)
     }
@@ -40,7 +37,7 @@ class ViaryRepository(
     }
 
     suspend fun getTotalViary() = withContext(Dispatchers.IO) {
-        dao.getAll().count()
+        dao.getCount()
     }
 }
 
