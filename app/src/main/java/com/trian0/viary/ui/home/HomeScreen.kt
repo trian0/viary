@@ -315,6 +315,7 @@ fun HomeScreenWithViaryPreview() {
             kmStart = 0.0,
             kmEnd = 0.0,
             status = Viary.ViaryStatus.IN_PROGRESS,
+            climate = "CLOUDY",
             selectedImage = null
         )
     )

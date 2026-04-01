@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.trian0.viary.ui.components.RequestLocationPermission
 import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.navigation.AppNavigation
 import com.trian0.viary.ui.navigation.BottomNavigation
@@ -71,27 +72,6 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                     )
                 }
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun RequestLocationPermission() {
-    val permissionState = rememberPermissionState(
-        android.Manifest.permission.ACCESS_FINE_LOCATION
-    )
-
-    val showPermissionDialog = !permissionState.status.isGranted
-
-    if (showPermissionDialog) {
-        SuccessDialog(
-            icon = Icons.Filled.LocationOff,
-            labelTitle = "Onde a aventura começa",
-            labelSubtitle = "Para registrar suas viagens com precisão, calcular distâncias e marcar seus pontos de referência favoritos, o Viary precisa acessar sua localização enquanto você estiver viajando.",
-            labelConfirm = "Ativar Localização"
-        ) {
-            permissionState.launchPermissionRequest()
         }
     }
 }

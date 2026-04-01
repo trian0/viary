@@ -2,14 +2,17 @@ package com.trian0.viary.ui.create
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.LocationServices
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
+import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.mvi.BaseViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
 
 class CreateViewModel(
-    private val repository: ViaryRepository
+    private val repository: ViaryRepository,
+    private val locationHelper: LocationHelper,
 ) : BaseViewModel<CreateContract.CreateIntent, CreateContract.CreateUiState, CreateContract.CreateEffect>() {
 
     companion object {
@@ -80,6 +83,8 @@ class CreateViewModel(
 
                 val kmStart = state.currentKm.toDoubleOrNull() ?: 0.0
 
+                val location = locationHelper.getCurrentLocation()
+
                 val viary = Viary(
                     name = state.viaryName,
                     origin = state.departureLocation,
@@ -88,6 +93,9 @@ class CreateViewModel(
                     status = Viary.ViaryStatus.IN_PROGRESS,
                     kmEnd = 0.0,
                     selectedImage = null,
+                    climate = state.climate,
+                    latitude = location?.latitude,
+                    longitude = location?.longitude,
                 )
 
                 repository.create(viary, state.coverImageUri)

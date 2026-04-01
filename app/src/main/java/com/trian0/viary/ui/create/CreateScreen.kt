@@ -1,5 +1,7 @@
 package com.trian0.viary.ui.create
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -50,11 +52,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.trian0.viary.R
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.ui.components.ClimateViary
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
 import com.trian0.viary.ui.components.ImagePicker
+import com.trian0.viary.ui.components.RequestLocationPermission
 import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.components.ViaryButton
 import com.trian0.viary.ui.theme.Primary10
@@ -77,6 +81,14 @@ fun CreateScreen(
     val locateState = rememberTextFieldState()
     val kmState = rememberTextFieldState()
     val climateSate = remember { mutableStateOf("")}
+
+    var showPermissionDialog by remember { mutableStateOf(false) }
+
+    if (showPermissionDialog) {
+        RequestLocationPermission(
+            onDismiss = { showPermissionDialog = false }
+        )
+    }
 
     LaunchedEffect(viaryNameState.text) {
         viewModel.onIntent(CreateContract.CreateIntent.OnViaryNameChanged(viaryNameState.text.toString()))
@@ -115,10 +127,9 @@ fun CreateScreen(
         SuccessDialog(
             labelTitle = stringResource(R.string.dialog_success_create_screen_title),
             labelSubtitle = stringResource(R.string.dialog_success_create_screen_subtitle),
-            labelConfirm = stringResource(R.string.dialog_success_create_screen_button_message)
-        ) {
-            onNavigateBack()
-        }
+            labelConfirm = stringResource(R.string.dialog_success_create_screen_button_message),
+            onConfirm = onNavigateBack
+        )
     }
 
     CreateScreenView(
@@ -133,7 +144,16 @@ fun CreateScreen(
             viewModel.onIntent(CreateContract.CreateIntent.OnCoverImageSelected(uri))
         },
         onStartTripClicked = {
-            viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (hasPermission) {
+                viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
+            } else {
+                showPermissionDialog = true
+            }
         },
         onNavigateBack,
         uiState.isLoading,

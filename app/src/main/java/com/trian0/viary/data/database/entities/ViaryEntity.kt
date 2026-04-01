@@ -16,4 +16,7 @@ data class ViaryEntity (
     val status: Viary.ViaryStatus,
     val kmEnd: Double,
     val selectedImage: String?,
+    val climate: String?,
+    val latitude: Double?,
+    val longitude: Double?,
 )

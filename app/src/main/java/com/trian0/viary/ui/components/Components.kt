@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -57,6 +58,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.trian0.viary.ui.theme.ActionOrangeGradient
 import com.trian0.viary.ui.theme.Neutral90
 import com.trian0.viary.ui.theme.Primary10
@@ -316,10 +320,11 @@ fun SuccessDialog(
     labelTitle: String,
     labelSubtitle: String,
     labelConfirm: String,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit = {},
 ) {
     AlertDialog(
-        onDismissRequest = { },
+        onDismissRequest = { onDismiss },
         shape = RoundedCornerShape(24.dp),
         containerColor = White,
         tonalElevation = 8.dp,
@@ -409,4 +414,29 @@ fun ShimmerEffect(
             .clip(RoundedCornerShape(12.dp))
             .background(brush)
     )
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestLocationPermission(
+    onDismiss: () -> Unit = {}
+) {
+    val permissionState = rememberPermissionState(
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    val showPermissionDialog = !permissionState.status.isGranted
+
+    if (showPermissionDialog) {
+        SuccessDialog(
+            icon = Icons.Filled.LocationOff,
+            labelTitle = "Onde a aventura começa",
+            labelSubtitle = "Para registrar suas viagens com precisão, calcular distâncias e marcar seus pontos de referência favoritos, o Viary precisa acessar sua localização enquanto você estiver viajando.",
+            labelConfirm = "Ativar Localização",
+            onDismiss = onDismiss,
+            onConfirm = {
+                permissionState.launchPermissionRequest()
+            }
+        )
+    }
 }

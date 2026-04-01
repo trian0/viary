@@ -50,6 +50,9 @@ fun Viary.toViaryEntity() = ViaryEntity(
     kmStart = this.kmStart,
     kmEnd = this.kmEnd,
     selectedImage = this.selectedImage,
+    climate = this.climate,
+    latitude = this.latitude,
+    longitude = this.longitude,
 )
 
 fun ViaryEntity.toViary() = Viary(
@@ -61,4 +64,7 @@ fun ViaryEntity.toViary() = Viary(
     kmStart = this.kmStart,
     kmEnd = this.kmEnd,
     selectedImage = this.selectedImage,
+    climate = this.climate,
+    longitude = this.longitude,
+    latitude = this.latitude,
 )

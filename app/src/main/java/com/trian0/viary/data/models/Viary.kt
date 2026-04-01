@@ -15,6 +15,9 @@ data class Viary (
     val status: ViaryStatus,
     val kmEnd: Double,
     val selectedImage: String?,
+    val climate: String?,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
 ) {
     enum class ViaryStatus {
         IN_PROGRESS,
