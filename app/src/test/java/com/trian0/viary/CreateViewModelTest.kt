@@ -3,6 +3,7 @@ package com.trian0.viary
 import android.util.Log
 import app.cash.turbine.test
 import com.trian0.viary.data.repositories.ViaryRepository
+import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.ui.create.CreateContract
 import com.trian0.viary.ui.create.CreateViewModel
 import io.mockk.every
@@ -20,6 +21,7 @@ class CreateViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository = mockk<ViaryRepository>(relaxed = true)
+    private val locationHelper = mockk<LocationHelper>(relaxed = true)
     private lateinit var viewModel: CreateViewModel
 
     @Before
@@ -27,7 +29,7 @@ class CreateViewModelTest {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
-        viewModel = CreateViewModel(repository)
+        viewModel = CreateViewModel(repository, locationHelper)
     }
 
     @Test
@@ -55,10 +57,37 @@ class CreateViewModelTest {
     fun `quando o nome da viagem estiver vazio, deve retornar erro de validacao`() = runTest {
         viewModel.uiState.test {
             awaitItem()
+
             viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
             val stateWithError = awaitItem()
 
-            assertEquals("Nome é obrigatório", stateWithError.viaryNameError)
+            assert(stateWithError.viaryNameError)
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `quando a localização inicial estiver vazia, deve retornar erro de validacao`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+
+            viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
+            val stateWithError = awaitItem()
+
+            assert(stateWithError.departureLocationError)
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `quando a quilometragem inicial estiver vazia, deve retornar erro de validacao`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+
+            viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
+            val stateWithError = awaitItem()
+
+            assert(stateWithError.currentKmError)
             expectNoEvents()
         }
     }
