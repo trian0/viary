@@ -15,6 +15,7 @@ interface CreateContract {
         val departureLocationError: Boolean = false,
         val currentKmError: Boolean = false,
         val showSuccessDialog: Boolean = false,
+        val showErrorDialog: Boolean = false,
         val climate: String = "",
     ) : MviInterfaces.UiState
 
@@ -25,6 +26,7 @@ interface CreateContract {
         data class OnCoverImageSelected(val uri: Uri?) : CreateIntent()
         data class OnClimateChanged(val climate: String) : CreateIntent()
         object OnStartTripClicked : CreateIntent()
+        object OnDismissErrorDialog : CreateIntent()
     }
 
     sealed class CreateEffect : MviInterfaces.UiEffect {

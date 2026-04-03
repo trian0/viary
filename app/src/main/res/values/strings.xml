@@ -2,6 +2,8 @@
     <string name="app_name" translatable="false">Viary</string>
     <string name="ok" translatable="false">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="dialog_error_title">An error occurred</string>
+    <string name="dialog_error_button_label">Try Again</string>
 
     <!-- Main Screen -->
     <string name="dialog_location_title">Where the adventure begins</string>
@@ -20,6 +22,9 @@
     <string name="home_screen_add_checkpoint_button">Add Checkpoint</string>
     <string name="home_screen_end_viary_button">End Viary</string>
     <string name="home_screen_distance" translatable="false">%.1f km</string>
+    
+    <string name="dialog_error_finish_home_screen_subtitle">Error finishing viary.</string>
+    <string name="dialog_error_init_home_screen_subtitle">Error loading information.</string>
     <!-- Home Screen -->
 
     <!-- Create Screen -->
@@ -45,6 +50,8 @@
     <string name="dialog_success_create_screen_title">Viary begun!</string>
     <string name="dialog_success_create_screen_subtitle">Everything is ready for your new adventure. Enjoy the journey!</string>
     <string name="dialog_success_create_screen_button_message">Let\'s go!</string>
+
+    <string name="dialog_error_create_screen_subtitle">Error creating viary.</string>
     <!-- Create Screen -->
 
     <!-- Date Formats -->

@@ -1,5 +1,6 @@
 package com.trian0.viary.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.LocationOff
+import androidx.compose.material.icons.outlined.LocationOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -52,15 +54,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.trian0.viary.R
 import com.trian0.viary.ui.theme.ActionOrangeGradient
 import com.trian0.viary.ui.theme.Neutral90
 import com.trian0.viary.ui.theme.Primary10
@@ -324,7 +329,7 @@ fun SuccessDialog(
     onDismiss: () -> Unit = {},
 ) {
     AlertDialog(
-        onDismissRequest = { onDismiss },
+        onDismissRequest = onDismiss,
         shape = RoundedCornerShape(24.dp),
         containerColor = White,
         tonalElevation = 8.dp,
@@ -380,8 +385,67 @@ fun SuccessDialog(
 }
 
 @Composable
-fun ErrorDialog() {
+fun ErrorDialog(
+    icon: ImageVector = Icons.Outlined.LocationOff,
+    labelTitle: Int = R.string.dialog_error_title,
+    labelSubtitle: Int,
+    labelConfirm: Int = R.string.dialog_error_button_label,
+    onDismiss: () -> Unit = {},
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(24.dp),
+        containerColor = White,
+        tonalElevation = 8.dp,
+        icon = {
+            val shadowColor = Primary80
+            val shadowElevation = 12.dp
 
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(80.dp)
+                    .padding(shadowElevation)
+                    .graphicsLayer {
+                        this.shadowElevation = shadowElevation.toPx()
+                        this.shape = CircleShape
+                        this.ambientShadowColor = shadowColor
+                        this.spotShadowColor = shadowColor
+                    }
+                    .clip(CircleShape)
+                    .background(Primary100)
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = Primary50,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        },
+
+        title = {
+            Text(
+                textAlign = TextAlign.Center,
+                text = stringResource(labelTitle),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        },
+
+        text = {
+            Text(
+                text = stringResource(labelSubtitle),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Primary20
+            )
+        },
+
+        confirmButton = {
+            ViaryButton(stringResource(labelConfirm), onClicked = onDismiss)
+        },
+    )
 }
 
 @Composable

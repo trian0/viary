@@ -17,6 +17,8 @@ data class ViaryEntity (
     val kmEnd: Float,
     val selectedImage: String?,
     val climate: String?,
-    val latitude: Double?,
-    val longitude: Double?,
+    val latitudeOrigin: Double,
+    val longitudeOrigin: Double,
+    val latitudeArrival: Double,
+    val longitudeArrival: Double,
 )

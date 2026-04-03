@@ -67,6 +67,10 @@ class CreateViewModel(
                     copy(climate = intent.climate)
                 }
             }
+
+            is CreateContract.CreateIntent.OnDismissErrorDialog -> {
+                setState { copy(showErrorDialog = false) }
+            }
         }
     }
 
@@ -94,8 +98,8 @@ class CreateViewModel(
                     kmEnd = 0f,
                     selectedImage = null,
                     climate = state.climate,
-                    latitude = location?.latitude,
-                    longitude = location?.longitude,
+                    latitudeOrigin = location?.latitude ?: 0.0,
+                    longitudeOrigin = location?.longitude ?: 0.0,
                 )
 
                 repository.create(viary, state.coverImageUri)
@@ -104,10 +108,9 @@ class CreateViewModel(
                 setEffect { CreateContract.CreateEffect.TripCreatedSuccessfully }
 
                 Log.d(TAG, "Viagem criada com sucesso: $viary")
-
             } catch (e: Exception) {
                 Log.e(TAG, "Erro ao criar viagem", e)
-                setState { copy(isLoading = false) }
+                setState { copy(isLoading = false, showErrorDialog = true) }
                 setEffect {
                     CreateContract.CreateEffect.ShowError(
                         e.message ?: "Erro ao criar viagem"

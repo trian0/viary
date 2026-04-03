@@ -57,6 +57,7 @@ import com.trian0.viary.R
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.ui.components.ClimateViary
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
+import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ImagePicker
 import com.trian0.viary.ui.components.RequestLocationPermission
 import com.trian0.viary.ui.components.SuccessDialog
@@ -129,6 +130,15 @@ fun CreateScreen(
             labelSubtitle = stringResource(R.string.dialog_success_create_screen_subtitle),
             labelConfirm = stringResource(R.string.dialog_success_create_screen_button_message),
             onConfirm = onNavigateBack
+        )
+    }
+
+    if (uiState.showErrorDialog) {
+        ErrorDialog(
+            labelSubtitle = R.string.dialog_error_create_screen_subtitle,
+            onDismiss = {
+                viewModel.onIntent(CreateContract.CreateIntent.OnDismissErrorDialog)
+            }
         )
     }
 

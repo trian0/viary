@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.trian0.viary.R
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.elapsedTime
+import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.ViaryButton
 import com.trian0.viary.ui.components.ViarySecondaryButton
@@ -55,12 +56,33 @@ fun HomeScreen(
         viewModel.init()
     }
 
+    if (uiState.showFinishErrorDialog) {
+        ErrorDialog(
+            labelSubtitle = R.string.dialog_error_finish_home_screen_subtitle,
+            onDismiss = {
+                viewModel.onIntent(HomeContract.HomeIntent.OnDismissFinishErrorDialog)
+            }
+        )
+    }
+
+    if (uiState.showInitErrorDialog) {
+        ErrorDialog(
+            labelSubtitle = R.string.dialog_error_init_home_screen_subtitle,
+            onDismiss = {
+                viewModel.onIntent(HomeContract.HomeIntent.OnDismissInitErrorDialog)
+            }
+        )
+    }
+
     HomeScreenView(
         uiState.viaryInProgress,
         uiState.totalViary,
         uiState.isLoading,
         uiState.distanceTraveled,
         uiState.greaterDistance,
+        onFinishViary = {
+            viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
+        }
     )
 }
 
@@ -71,6 +93,7 @@ fun HomeScreenView(
     isLoading: Boolean = true,
     distanceTraveled: Float? = 0f,
     greaterDistance: Float? = 0f,
+    onFinishViary: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +118,8 @@ fun HomeScreenView(
                     InProgressViary(
                         viaryName = viary.name,
                         viaryDepartureTime = viary.departureTime ?: Date(),
-                        distanceTraveled = distanceTraveled
+                        distanceTraveled = distanceTraveled,
+                        onFinishViary = onFinishViary
                     )
                 } ?: HomeTitle(totalViary, greaterDistance)
             }
@@ -193,6 +217,7 @@ fun InProgressViary(
     viaryName: String,
     viaryDepartureTime: Date = Date(),
     distanceTraveled: Float? = 0f,
+    onFinishViary: () -> Unit = {},
 ) {
     var elapsed by remember { mutableStateOf(viaryDepartureTime.elapsedTime()) }
 
@@ -281,7 +306,8 @@ fun InProgressViary(
     ViarySecondaryButton(
         label = stringResource(R.string.home_screen_end_viary_button),
         icon = Icons.Filled.OutlinedFlag,
-        modifier = Modifier.padding(top = 12.dp)
+        modifier = Modifier.padding(top = 12.dp),
+        onClicked = onFinishViary
     )
 }
 

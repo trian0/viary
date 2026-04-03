@@ -48,6 +48,10 @@ class ViaryRepository(
     suspend fun getGreaterDistance() = withContext(Dispatchers.IO) {
         dao.getGreaterDistance()
     }
+
+    suspend fun finishViary(viaryId: String, status: Viary.ViaryStatus, latitude: Double, longitude: Double) = withContext(Dispatchers.IO) {
+        dao.finishViary(viaryId, status, latitude, longitude)
+    }
 }
 
 fun Viary.toViaryEntity() = ViaryEntity(
@@ -60,8 +64,10 @@ fun Viary.toViaryEntity() = ViaryEntity(
     kmEnd = this.kmEnd,
     selectedImage = this.selectedImage,
     climate = this.climate,
-    latitude = this.latitude,
-    longitude = this.longitude,
+    latitudeOrigin = this.latitudeOrigin,
+    longitudeOrigin = this.longitudeOrigin,
+    latitudeArrival = this.latitudeArrival,
+    longitudeArrival = this.longitudeArrival
 )
 
 fun ViaryEntity.toViary() = Viary(
@@ -74,6 +80,8 @@ fun ViaryEntity.toViary() = Viary(
     kmEnd = this.kmEnd,
     selectedImage = this.selectedImage,
     climate = this.climate,
-    longitude = this.longitude,
-    latitude = this.latitude,
+    latitudeOrigin = this.latitudeOrigin,
+    longitudeOrigin = this.longitudeOrigin,
+    latitudeArrival = this.latitudeArrival,
+    longitudeArrival = this.longitudeArrival
 )

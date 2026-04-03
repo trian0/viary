@@ -25,9 +25,18 @@ interface ViaryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(viary: ViaryEntity)
+
     @Query("UPDATE ViaryEntity SET kmEnd = :distance WHERE id = :viaryId")
     suspend fun updateDistanceTraveled(viaryId: String, distance: Float)
 
     @Query("SELECT MAX(kmEnd) FROM ViaryEntity")
     suspend fun getGreaterDistance(): Float
+
+    @Query("UPDATE ViaryEntity SET status = :status, latitudeArrival = :latitude, longitudeArrival = :longitude WHERE id = :viaryId")
+    suspend fun finishViary(
+        viaryId: String,
+        status: Viary.ViaryStatus,
+        latitude: Double,
+        longitude: Double
+    )
 }

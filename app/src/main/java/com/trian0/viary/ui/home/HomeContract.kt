@@ -13,9 +13,15 @@ interface HomeContract {
         val timeElapsed: Date? = null,
         val distanceTraveled: Float? = 0f,
         val greaterDistance: Float? = 0f,
+        val showFinishErrorDialog: Boolean = false,
+        val showInitErrorDialog: Boolean = false,
     ) : MviInterfaces.UiState
 
-    sealed class HomeIntent : MviInterfaces.UiIntent {}
+    sealed class HomeIntent : MviInterfaces.UiIntent {
+        object OnFinishViary : HomeIntent()
+        object OnDismissFinishErrorDialog : HomeIntent()
+        object OnDismissInitErrorDialog : HomeIntent()
+    }
 
     sealed class HomeEffect : MviInterfaces.UiEffect {}
 }
