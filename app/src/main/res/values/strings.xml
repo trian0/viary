@@ -19,7 +19,7 @@
     <string name="home_screen_distance_traveled_title">Distance Traveled</string>
     <string name="home_screen_add_checkpoint_button">Add Checkpoint</string>
     <string name="home_screen_end_viary_button">End Viary</string>
-    <string name="home_screen_distance_traveled" translatable="false">%.1f km</string>
+    <string name="home_screen_distance" translatable="false">%.1f km</string>
     <!-- Home Screen -->
 
     <!-- Create Screen -->

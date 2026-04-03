@@ -32,12 +32,14 @@ class HomeViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val viary = repository.getViaryInProgress()?.toViary()
             val totalViary = repository.getTotalViary()
+            val greaterDistance = repository.getGreaterDistance()
 
             setState {
                 copy(
                     viaryInProgress = viary,
                     totalViary = totalViary,
                     isLoading = false,
+                    greaterDistance = greaterDistance,
                 )
             }
 

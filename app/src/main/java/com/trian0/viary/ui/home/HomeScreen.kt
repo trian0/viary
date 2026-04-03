@@ -60,6 +60,7 @@ fun HomeScreen(
         uiState.totalViary,
         uiState.isLoading,
         uiState.distanceTraveled,
+        uiState.greaterDistance,
     )
 }
 
@@ -69,6 +70,7 @@ fun HomeScreenView(
     totalViary: Int = 0,
     isLoading: Boolean = true,
     distanceTraveled: Float? = 0f,
+    greaterDistance: Float? = 0f,
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +97,7 @@ fun HomeScreenView(
                         viaryDepartureTime = viary.departureTime ?: Date(),
                         distanceTraveled = distanceTraveled
                     )
-                } ?: HomeTitle(totalViary)
+                } ?: HomeTitle(totalViary, greaterDistance)
             }
         }
     }
@@ -103,7 +105,8 @@ fun HomeScreenView(
 
 @Composable
 fun HomeTitle(
-    totalViary: Int
+    totalViary: Int,
+    greaterDistance: Float?,
 ) {
     Text(
         text = stringResource(R.string.home_screen_title),
@@ -175,7 +178,7 @@ fun HomeTitle(
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = "421",
+                    text = stringResource(R.string.home_screen_distance, greaterDistance ?: 0f),
                     style = MaterialTheme.typography.headlineMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -263,7 +266,7 @@ fun InProgressViary(
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = stringResource(R.string.home_screen_distance_traveled, distanceTraveled ?: 0f),
+                    text = stringResource(R.string.home_screen_distance, distanceTraveled ?: 0f),
                     style = MaterialTheme.typography.headlineMedium,
                 )
             }

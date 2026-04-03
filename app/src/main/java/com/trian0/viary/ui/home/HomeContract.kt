@@ -12,6 +12,7 @@ interface HomeContract {
         val isLoading: Boolean = true,
         val timeElapsed: Date? = null,
         val distanceTraveled: Float? = 0f,
+        val greaterDistance: Float? = 0f,
     ) : MviInterfaces.UiState
 
     sealed class HomeIntent : MviInterfaces.UiIntent {}

@@ -44,6 +44,10 @@ class ViaryRepository(
     suspend fun getTotalViary() = withContext(Dispatchers.IO) {
         dao.getCount()
     }
+
+    suspend fun getGreaterDistance() = withContext(Dispatchers.IO) {
+        dao.getGreaterDistance()
+    }
 }
 
 fun Viary.toViaryEntity() = ViaryEntity(
