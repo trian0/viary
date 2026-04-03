@@ -494,9 +494,9 @@ fun RequestLocationPermission(
     if (showPermissionDialog) {
         SuccessDialog(
             icon = Icons.Filled.LocationOff,
-            labelTitle = "Onde a aventura começa",
-            labelSubtitle = "Para registrar suas viagens com precisão, calcular distâncias e marcar seus pontos de referência favoritos, o Viary precisa acessar sua localização enquanto você estiver viajando.",
-            labelConfirm = "Ativar Localização",
+            labelTitle = stringResource(R.string.dialog_location_title),
+            labelSubtitle = stringResource(R.string.dialog_location_subtitle),
+            labelConfirm = stringResource(R.string.dialog_location_confirm),
             onDismiss = onDismiss,
             onConfirm = {
                 permissionState.launchPermissionRequest()

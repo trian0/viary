@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel">Annuler</string>
+    <string name="dialog_error_title">Une erreur est survenue</string>
+    <string name="dialog_error_button_label">Réessayer</string>
 
     <!-- Main Screen -->
     <string name="dialog_location_title">Là où l\'aventure commence</string>
@@ -18,6 +20,9 @@
     <string name="home_screen_distance_traveled_title">Distance Parcourue</string>
     <string name="home_screen_add_checkpoint_button">Ajouter un Checkpoint</string>
     <string name="home_screen_end_viary_button">Terminer le Voyage</string>
+
+    <string name="dialog_error_finish_home_screen_subtitle">Erreur lors de la fin du voyage.</string>
+    <string name="dialog_error_init_home_screen_subtitle">Erreur lors du chargement des informations.</string>
     <!-- Home Screen -->
 
     <!-- Create Screen -->
@@ -43,5 +48,7 @@
     <string name="dialog_success_create_screen_title">Viary commencé !</string>
     <string name="dialog_success_create_screen_subtitle">Tout est prêt pour votre nouvelle aventure. Profitez bien du voyage !</string>
     <string name="dialog_success_create_screen_button_message">C\'est parti !</string>
+
+    <string name="dialog_error_create_screen_subtitle">Erreur lors de la création du voyage.</string>
     <!-- Create Screen -->
 </resources>

@@ -55,6 +55,6 @@
     <!-- Create Screen -->
 
     <!-- Date Formats -->
-    <string name="date_format_hh_mm_ss">"HH:mm:ss"</string>
+    <string name="date_format_hh_mm_ss" translatable="false">"HH:mm:ss"</string>
     <!-- Date Formats -->
 </resources>
