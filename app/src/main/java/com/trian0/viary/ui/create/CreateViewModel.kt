@@ -81,7 +81,7 @@ class CreateViewModel(
 
                 val state = currentState
 
-                val kmStart = state.currentKm.toDoubleOrNull() ?: 0.0
+                val kmStart = state.currentKm.toFloatOrNull() ?: 0F
 
                 val location = locationHelper.getCurrentLocation()
 
@@ -91,7 +91,7 @@ class CreateViewModel(
                     departureTime = Date(),
                     kmStart = kmStart,
                     status = Viary.ViaryStatus.IN_PROGRESS,
-                    kmEnd = 0.0,
+                    kmEnd = 0f,
                     selectedImage = null,
                     climate = state.climate,
                     latitude = location?.latitude,

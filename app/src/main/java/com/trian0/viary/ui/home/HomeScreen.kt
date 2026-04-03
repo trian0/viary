@@ -58,7 +58,8 @@ fun HomeScreen(
     HomeScreenView(
         uiState.viaryInProgress,
         uiState.totalViary,
-        uiState.isLoading
+        uiState.isLoading,
+        uiState.distanceTraveled,
     )
 }
 
@@ -67,6 +68,7 @@ fun HomeScreenView(
     viaryInProgress: Viary?,
     totalViary: Int = 0,
     isLoading: Boolean = true,
+    distanceTraveled: Float? = 0f,
 ) {
     Column(
         modifier = Modifier
@@ -90,7 +92,8 @@ fun HomeScreenView(
                 viaryInProgress?.let { viary ->
                     InProgressViary(
                         viaryName = viary.name,
-                        viaryDepartureTime = viary.departureTime ?: Date()
+                        viaryDepartureTime = viary.departureTime ?: Date(),
+                        distanceTraveled = distanceTraveled
                     )
                 } ?: HomeTitle(totalViary)
             }
@@ -186,6 +189,7 @@ fun HomeTitle(
 fun InProgressViary(
     viaryName: String,
     viaryDepartureTime: Date = Date(),
+    distanceTraveled: Float? = 0f,
 ) {
     var elapsed by remember { mutableStateOf(viaryDepartureTime.elapsedTime()) }
 
@@ -259,7 +263,7 @@ fun InProgressViary(
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = "128.4",
+                    text = stringResource(R.string.home_screen_distance_traveled, distanceTraveled ?: 0f),
                     style = MaterialTheme.typography.headlineMedium,
                 )
             }
@@ -312,8 +316,8 @@ fun HomeScreenWithViaryPreview() {
             name = "Rota do Sol",
             origin = "Salvador",
             departureTime = Date(),
-            kmStart = 0.0,
-            kmEnd = 0.0,
+            kmStart = 0f,
+            kmEnd = 0f,
             status = Viary.ViaryStatus.IN_PROGRESS,
             climate = "CLOUDY",
             selectedImage = null

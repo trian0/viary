@@ -1,6 +1,7 @@
 package com.trian0.viary.data.repositories
 
 import android.content.Context
+import android.location.Location
 import android.net.Uri
 import com.trian0.viary.data.database.dao.ViaryDao
 import com.trian0.viary.data.database.entities.ViaryEntity
@@ -34,6 +35,10 @@ class ViaryRepository(
             status = status
         ).toViaryEntity()
         dao.save(entity)
+    }
+
+    suspend fun updateDistanceTraveled(viaryId: String, distance: Float) {
+        dao.updateDistanceTraveled(viaryId, distance)
     }
 
     suspend fun getTotalViary() = withContext(Dispatchers.IO) {

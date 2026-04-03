@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
 import kotlinx.coroutines.flow.Flow
@@ -24,4 +25,6 @@ interface ViaryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(viary: ViaryEntity)
+    @Query("UPDATE ViaryEntity SET kmEnd = :distance WHERE id = :viaryId")
+    suspend fun updateDistanceTraveled(viaryId: String, distance: Float)
 }
