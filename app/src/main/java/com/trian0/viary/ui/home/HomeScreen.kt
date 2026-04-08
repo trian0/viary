@@ -48,6 +48,7 @@ import java.util.Date
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
+    onNavigateCheckpoint: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -82,6 +83,9 @@ fun HomeScreen(
         uiState.greaterDistance,
         onFinishViary = {
             viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
+        },
+        onNavigateCheckpoint = {
+            onNavigateCheckpoint()
         }
     )
 }
@@ -94,6 +98,7 @@ fun HomeScreenView(
     distanceTraveled: Float? = 0f,
     greaterDistance: Float? = 0f,
     onFinishViary: () -> Unit = {},
+    onNavigateCheckpoint: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -119,7 +124,8 @@ fun HomeScreenView(
                         viaryName = viary.name,
                         viaryDepartureTime = viary.departureTime ?: Date(),
                         distanceTraveled = distanceTraveled,
-                        onFinishViary = onFinishViary
+                        onFinishViary = onFinishViary,
+                        onNavigateCheckpoint = onNavigateCheckpoint
                     )
                 } ?: HomeTitle(totalViary, greaterDistance)
             }
@@ -218,6 +224,7 @@ fun InProgressViary(
     viaryDepartureTime: Date = Date(),
     distanceTraveled: Float? = 0f,
     onFinishViary: () -> Unit = {},
+    onNavigateCheckpoint: () -> Unit = {},
 ) {
     var elapsed by remember { mutableStateOf(viaryDepartureTime.elapsedTime()) }
 
@@ -300,7 +307,8 @@ fun InProgressViary(
 
     ViaryButton(
         label = stringResource(R.string.home_screen_add_checkpoint_button),
-        icon = Icons.Filled.AddCircle
+        icon = Icons.Filled.AddCircle,
+        onClicked = onNavigateCheckpoint
     )
 
     ViarySecondaryButton(

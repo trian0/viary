@@ -10,6 +10,7 @@ import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.mvi.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -39,6 +40,8 @@ class HomeViewModel(
                 setState { copy(showInitErrorDialog = false, isLoading = true) }
                 init()
             }
+
+
         }
     }
 
@@ -47,7 +50,7 @@ class HomeViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val viary = repository.getViaryInProgress()?.toViary()
+                val viary = repository.viaryInProgress.first()?.toViary()
                 val totalViary = repository.getTotalViary()
                 val greaterDistance = repository.getGreaterDistance()
 

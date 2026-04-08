@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Navigation
+import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -13,4 +14,5 @@ sealed class NavigationItem(val route: String, val icon: ImageVector, val title:
     object Home : NavigationItem("home", Icons.Outlined.Home, "Início")
     object Create : NavigationItem("create", Icons.Rounded.AddCircleOutline, "Criar")
     object Historical : NavigationItem("historical", Icons.Outlined.History, "Histórico")
+    object Checkpoint : NavigationItem("checkpoint", Icons.Rounded.AddCircle, "Checkpoint")
 }

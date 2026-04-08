@@ -30,6 +30,8 @@
     <string name="create_screen_subtitle">Documentez les kilomètres, capturez les moments.</string>
     <string name="create_screen_image_picker_title">Ajouter une Photo de Couverture</string>
     <string name="create_screen_image_picker_subtitle">Appuyez pour choisir l\'ambiance du voyage</string>
+    <string name="create_screen_image_picker_selected_title">Nouvelle Couverture</string>
+    <string name="create_screen_image_picker_selected_subtitle">Enregistrement de votre aventure actuelle</string>
     <string name="create_screen_name_label">NOM DU VIARY</string>
     <string name="create_screen_name_placeholder">Quel nom donnez-vous à ce voyage ?</string>
     <string name="create_screen_origin_name_label">ORIGINE</string>
@@ -51,4 +53,8 @@
 
     <string name="dialog_error_create_screen_subtitle">Erreur lors de la création du voyage.</string>
     <!-- Create Screen -->
+
+    <!-- Checkpoint Screen -->
+    <string name="checkpoint_screen_image_picker_title">Nouveau Point de Contrôle</string>
+    <!-- Checkpoint Screen -->
 </resources>

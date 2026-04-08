@@ -4,19 +4,20 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.trian0.viary.MainViewModel
+import com.trian0.viary.ui.checkpoint.CheckpointScreen
 import com.trian0.viary.ui.create.CreateScreen
 import com.trian0.viary.ui.historical.HistoricalScreen
 import com.trian0.viary.ui.home.HomeScreen
 import com.trian0.viary.ui.splash.CustomSplashScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppNavigation(
-    viewModel: MainViewModel = viewModel(),
+    viewModel: MainViewModel = koinViewModel(),
     navController: NavHostController,
     paddingValues: PaddingValues
 ) {
@@ -37,7 +38,13 @@ fun AppNavigation(
         }
 
         composable(NavigationItem.Home.route) {
-            HomeScreen()
+            HomeScreen(
+                onNavigateCheckpoint = {
+                    navController.navigate(NavigationItem.Checkpoint.route) {
+                        popUpTo(NavigationItem.Home.route) { inclusive = true }
+                    }
+                }
+            )
         }
         composable(NavigationItem.Create.route) {
             CreateScreen(
@@ -50,6 +57,9 @@ fun AppNavigation(
         }
         composable(NavigationItem.Historical.route) {
             HistoricalScreen()
+        }
+        composable(NavigationItem.Checkpoint.route) {
+            CheckpointScreen()
         }
     }
 }

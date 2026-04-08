@@ -1,9 +1,11 @@
 package com.trian0.viary.di
 
 import androidx.room.Room
+import com.trian0.viary.MainViewModel
 import com.trian0.viary.data.database.ViaryDatabase
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.helpers.LocationHelper
+import com.trian0.viary.ui.checkpoint.CheckpointViewModel
 import com.trian0.viary.ui.create.CreateViewModel
 import com.trian0.viary.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
@@ -16,6 +18,8 @@ val appModules = module {
     single { LocationHelper(androidContext()) }
     viewModelOf(::CreateViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::CheckpointViewModel)
+    viewModelOf(::MainViewModel)
 }
 
 val storageModule = module {

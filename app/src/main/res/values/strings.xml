@@ -32,6 +32,8 @@
     <string name="create_screen_subtitle">Document the miles, capture the moments.</string>
     <string name="create_screen_image_picker_title">Upload Cover Photo</string>
     <string name="create_screen_image_picker_subtitle">Tap to select your road trip vibe</string>
+    <string name="create_screen_image_picker_selected_title">New Cover</string>
+    <string name="create_screen_image_picker_selected_subtitle">Logging your current adventure</string>
     <string name="create_screen_name_label">VIARY NAME</string>
     <string name="create_screen_name_placeholder">What name would you give this trip?</string>
     <string name="create_screen_origin_name_label">ORIGIN</string>
@@ -54,7 +56,15 @@
     <string name="dialog_error_create_screen_subtitle">Error creating viary.</string>
     <!-- Create Screen -->
 
+    <!-- Checkpoint Screen -->
+    <string name="checkpoint_screen_image_picker_title">New Checkpoint</string>
+    <string name="checkpoint_screen_checkpoint_name_label">PLACE NAME</string>
+    <string name="checkpoint_screen_checkpoint_name_placeholder">Where are you now?</string>
+    <string name="checkpoint_screen_checkpoint_current_time_label">CURRENT TIME</string>
+    <!-- Checkpoint Screen -->
+
     <!-- Date Formats -->
     <string name="date_format_hh_mm_ss" translatable="false">"HH:mm:ss"</string>
+    <string name="date_format_hh_mm" translatable="false">"HH:mm"</string>
     <!-- Date Formats -->
 </resources>

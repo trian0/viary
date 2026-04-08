@@ -68,7 +68,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                 ) {
                     BottomNavigation(
                         navController = navController,
-                        modifier = Modifier
+                        modifier = Modifier,
                     )
                 }
             }

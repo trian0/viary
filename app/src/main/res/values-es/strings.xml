@@ -30,6 +30,8 @@
     <string name="create_screen_subtitle">Documenta los kilómetros, captura los momentos.</string>
     <string name="create_screen_image_picker_title">Subir Foto de Portada</string>
     <string name="create_screen_image_picker_subtitle">Toca para elegir el estilo de tu viaje</string>
+    <string name="create_screen_image_picker_selected_title">Nueva Portada</string>
+    <string name="create_screen_image_picker_selected_subtitle">Registrando tu aventura actual</string>
     <string name="create_screen_name_label">NOMBRE DEL VIARY</string>
     <string name="create_screen_name_placeholder">¿Qué nombre le das a este viaje?</string>
     <string name="create_screen_origin_name_label">ORIGEN</string>
@@ -51,4 +53,8 @@
 
     <string name="dialog_error_create_screen_subtitle">Error al crear el viaje.</string>
     <!-- Create Screen -->
+
+    <!-- Checkpoint Screen -->
+    <string name="checkpoint_screen_image_picker_title">Nuevo Punto de Control</string>
+    <!-- Checkpoint Screen -->
 </resources>

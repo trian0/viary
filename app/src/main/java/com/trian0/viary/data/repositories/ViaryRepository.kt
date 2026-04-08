@@ -15,9 +15,7 @@ class ViaryRepository(
     private val dao: ViaryDao,
     private val context: Context,
 ) {
-    suspend fun getViaryInProgress() = withContext(Dispatchers.IO) {
-        dao.getByStatus(Viary.ViaryStatus.IN_PROGRESS)
-    }
+    val viaryInProgress get() = dao.getByStatus(Viary.ViaryStatus.IN_PROGRESS)
 
     suspend fun create(viary: Viary, imageUri: Uri?) {
         var finalImagePath: String? = null

@@ -238,6 +238,8 @@ fun CreateScreenView(
             ImagePicker(
                 modifier = Modifier.padding(top = 40.dp),
                 label = stringResource(R.string.create_screen_image_picker_title),
+                imageSelectedTitle = stringResource(R.string.create_screen_image_picker_selected_title),
+                imageSelectedSubtitle = stringResource(R.string.create_screen_image_picker_selected_subtitle),
                 onImageSelected = {
                     onCoverImageSelected(it)
                 }
