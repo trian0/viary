@@ -10,14 +10,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -26,7 +30,6 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.RocketLaunch
 import androidx.compose.material.icons.outlined.SentimentVerySatisfied
-import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material.icons.outlined.WbSunny
@@ -53,13 +56,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.trian0.viary.MainViewModel
 import com.trian0.viary.R
 import com.trian0.viary.data.models.Viary
+import com.trian0.viary.data.utils.CurrencyOutputTransformation
 import com.trian0.viary.ui.components.ClimateViary
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
 import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ImagePicker
 import com.trian0.viary.ui.components.RequestLocationPermission
+import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.components.ViaryButton
 import com.trian0.viary.ui.theme.Primary10
@@ -73,15 +80,23 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateScreen(
     viewModel: CreateViewModel = koinViewModel(),
+    mainViewModel: MainViewModel = koinViewModel(),
     onNavigateBack: () -> Unit = {},
 ) {
+    val country by mainViewModel.country.collectAsStateWithLifecycle()
+
+    if (country.loading) {
+        CreateScreenSkeleton()
+        return
+    }
+
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     val viaryNameState = rememberTextFieldState()
     val locateState = rememberTextFieldState()
-    val kmState = rememberTextFieldState()
-    val climateSate = remember { mutableStateOf("")}
+    val budgetState = rememberTextFieldState()
+    val climateSate = remember { mutableStateOf("") }
 
     var showPermissionDialog by remember { mutableStateOf(false) }
 
@@ -99,8 +114,10 @@ fun CreateScreen(
         viewModel.onIntent(CreateContract.CreateIntent.OnDepartureLocationChanged(locateState.text.toString()))
     }
 
-    LaunchedEffect(kmState.text) {
-        viewModel.onIntent(CreateContract.CreateIntent.OnCurrentKmChanged(kmState.text.toString()))
+    LaunchedEffect(budgetState.text) {
+        viewModel.onIntent(
+            CreateContract.CreateIntent.OnCurrentBudgetChanged(budgetState.text.toString())
+        )
     }
 
     LaunchedEffect(climateSate.value) {
@@ -148,8 +165,8 @@ fun CreateScreen(
         uiState.viaryNameError,
         locateState,
         uiState.departureLocationError,
-        kmState,
-        uiState.currentKmError,
+        budgetState,
+        uiState.currentBudgetError,
         onCoverImageSelected = { uri ->
             viewModel.onIntent(CreateContract.CreateIntent.OnCoverImageSelected(uri))
         },
@@ -167,7 +184,9 @@ fun CreateScreen(
         },
         onNavigateBack,
         uiState.isLoading,
-        climateSate
+        climateSate,
+        countryCurrency = country.currency,
+        symbol = country.symbol
     )
 }
 
@@ -178,13 +197,15 @@ fun CreateScreenView(
     viaryNameError: Boolean = false,
     locate: TextFieldState = rememberTextFieldState(),
     locateError: Boolean = false,
-    km: TextFieldState = rememberTextFieldState(),
-    kmError: Boolean = false,
+    budget: TextFieldState = rememberTextFieldState(),
+    budgetError: Boolean = false,
     onCoverImageSelected: (Uri) -> Unit = {},
     onStartTripClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
     isLoading: Boolean = false,
     climateState: MutableState<String> = mutableStateOf(""),
+    countryCurrency: String = "",
+    symbol: String = "",
 ) {
     var selectedWeather by remember { mutableStateOf(Viary.ViaryClimate.SUNNY) }
 
@@ -334,7 +355,7 @@ fun CreateScreenView(
 
                     Text(
                         modifier = Modifier.padding(top = 26.dp),
-                        text = stringResource(R.string.create_screen_mileage_label),
+                        text = stringResource(R.string.create_screen_budget_label),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = Primary10
@@ -347,11 +368,12 @@ fun CreateScreenView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         ElevatedOutlinedTextField(
-                            state = km,
+                            state = budget,
                             modifier = Modifier.weight(0.6f),
                             keyboardType = KeyboardType.Number,
-                            icon = Icons.Outlined.Speed,
-                            isError = kmError
+                            inputTransformation = InputTransformation.maxLength(15),
+                            outputTransformation = CurrencyOutputTransformation(symbol),
+                            isError = budgetError
                         )
 
                         Card(
@@ -370,7 +392,7 @@ fun CreateScreenView(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text = stringResource(R.string.create_screen_km_hint),
+                                text = countryCurrency,
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Bold,
                                 color = Tertiary10
@@ -389,6 +411,61 @@ fun CreateScreenView(
                 isLoading = isLoading
             )
         }
+    }
+}
+
+@Composable
+fun CreateScreenSkeleton() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp, vertical = 16.dp)
+    ) {
+        ShimmerEffect(
+            modifier = Modifier
+                .width(150.dp)
+                .height(28.dp)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+        )
     }
 }
 

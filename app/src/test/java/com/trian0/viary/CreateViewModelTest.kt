@@ -43,7 +43,7 @@ class CreateViewModelTest {
             viewModel.onIntent(CreateContract.CreateIntent.OnDepartureLocationChanged("São Paulo"))
             assertEquals("São Paulo", awaitItem().departureLocation)
 
-            viewModel.onIntent(CreateContract.CreateIntent.OnCurrentKmChanged("100.5"))
+            viewModel.onIntent(CreateContract.CreateIntent.OnCurrentBudgetChanged("100.5"))
             assertEquals("100.5", awaitItem().currentKm)
 
             viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)

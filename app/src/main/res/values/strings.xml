@@ -44,8 +44,7 @@
     <string name="create_screen_climate_cloudy">CLOUDY</string>
     <string name="create_screen_climate_rainy">RAINY</string>
     <string name="create_screen_climate_chill">CHILL</string>
-    <string name="create_screen_mileage_label">STARTING MILEAGE</string>
-    <string name="create_screen_km_hint">KM</string>
+    <string name="create_screen_budget_label">STARTING BUDGET</string>
     <string name="create_screen_start_viary_button">Start Your Viary</string>
     <string name="create_screen_trip_started_message">Trip started successfully!</string>
 
@@ -61,6 +60,7 @@
     <string name="checkpoint_screen_checkpoint_name_label">PLACE NAME</string>
     <string name="checkpoint_screen_checkpoint_name_placeholder">Where are you now?</string>
     <string name="checkpoint_screen_checkpoint_current_time_label">CURRENT TIME</string>
+    <string name="checkpoint_screen_checkpoint_expenses_label">ACCUMULATED EXPENSE</string>
     <!-- Checkpoint Screen -->
 
     <!-- Date Formats -->

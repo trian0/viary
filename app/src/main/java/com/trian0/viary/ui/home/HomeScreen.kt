@@ -353,7 +353,7 @@ fun HomeScreenWithViaryPreview() {
             name = "Rota do Sol",
             origin = "Salvador",
             departureTime = Date(),
-            kmStart = 0f,
+            initialBudget = 0.0,
             kmEnd = 0f,
             status = Viary.ViaryStatus.IN_PROGRESS,
             climate = "CLOUDY",

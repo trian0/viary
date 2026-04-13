@@ -25,11 +25,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
@@ -66,6 +70,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -94,7 +99,9 @@ fun ElevatedOutlinedTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
-    icon: ImageVector,
+    inputTransformation: InputTransformation = InputTransformation.maxLength(50),
+    outputTransformation: OutputTransformation? = null,
+    icon: ImageVector? = null,
     label: String = "",
     isError: Boolean = false,
 ) {
@@ -106,16 +113,21 @@ fun ElevatedOutlinedTextField(
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxSize(),
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier.size(20.dp),
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = Primary30
-                )
-            },
-            trailingIcon = {
-                if (isError) {
+            scrollState = rememberScrollState(),
+            leadingIcon = if (icon != null) {
+                {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = Primary30
+                    )
+                }
+            } else null,
+            inputTransformation = inputTransformation,
+            outputTransformation = outputTransformation,
+            trailingIcon = if (isError) {
+                {
                     Icon(
                         modifier = Modifier.size(20.dp),
                         imageVector = Icons.Filled.Error,
@@ -123,7 +135,7 @@ fun ElevatedOutlinedTextField(
                         contentDescription = null
                     )
                 }
-            },
+            } else null,
             state = state,
             lineLimits = TextFieldLineLimits.SingleLine,
             shape = RoundedCornerShape(20.dp),
@@ -154,7 +166,7 @@ fun ElevatedOutlinedTextField(
             ),
             enabled = enabled,
             readOnly = readOnly,
-            isError = isError
+            isError = isError,
         )
     }
 }
@@ -189,7 +201,6 @@ fun ViaryButton(
         if (isLoading) {
             CircularProgressIndicator(
                 color = White,
-                modifier = Modifier.height(24.dp)
             )
         } else {
             Row(

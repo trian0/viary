@@ -2,7 +2,6 @@ package com.trian0.viary.ui.create
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.LocationServices
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.helpers.LocationHelper
@@ -43,11 +42,11 @@ class CreateViewModel(
                 }
             }
 
-            is CreateContract.CreateIntent.OnCurrentKmChanged -> {
+            is CreateContract.CreateIntent.OnCurrentBudgetChanged -> {
                 setState {
                     copy(
-                        currentKm = intent.km,
-                        currentKmError = false
+                        currentBudget = intent.budget,
+                        currentBudgetError = false
                     )
                 }
             }
@@ -85,7 +84,7 @@ class CreateViewModel(
 
                 val state = currentState
 
-                val kmStart = state.currentKm.toFloatOrNull() ?: 0F
+                val currentBudget = (state.currentBudget.filter { it.isDigit() }.toLongOrNull() ?: 0L) / 100.0
 
                 val location = locationHelper.getCurrentLocation()
 
@@ -93,7 +92,7 @@ class CreateViewModel(
                     name = state.viaryName,
                     origin = state.departureLocation,
                     departureTime = Date(),
-                    kmStart = kmStart,
+                    initialBudget = currentBudget,
                     status = Viary.ViaryStatus.IN_PROGRESS,
                     kmEnd = 0f,
                     selectedImage = null,
@@ -134,13 +133,14 @@ class CreateViewModel(
             isValid = false
         }
 
-        if (state.currentKm.isBlank()) {
-            setState { copy(currentKmError = true) }
+        if (state.currentBudget.isBlank()) {
+            setState { copy(currentBudgetError = true) }
             isValid = false
         } else {
-            val km = state.currentKm.toDoubleOrNull()
-            if (km == null || km < 0) {
-                setState { copy(currentKmError = true) }
+            val digits = state.currentBudget.filter { it.isDigit() }
+            val budget = digits.toLongOrNull()
+            if (budget == null || budget <= 0) {
+                setState { copy(currentBudgetError = true) }
                 isValid = false
             }
         }

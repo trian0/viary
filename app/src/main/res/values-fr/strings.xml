@@ -42,8 +42,7 @@
     <string name="create_screen_climate_cloudy">NUAGEUX</string>
     <string name="create_screen_climate_rainy">PLUIE</string>
     <string name="create_screen_climate_chill">HEUREUX</string>
-    <string name="create_screen_mileage_label">KILOMÉTRAGE DE DÉPART</string>
-    <string name="create_screen_km_hint">KM</string>
+    <string name="create_screen_budget_label">BUDGET DE DÉPART</string>
     <string name="create_screen_start_viary_button">Démarrer votre Viary</string>
     <string name="create_screen_trip_started_message">Voyage commencé avec succès !</string>
 

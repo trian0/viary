@@ -42,8 +42,7 @@
     <string name="create_screen_climate_cloudy">NUBLADO</string>
     <string name="create_screen_climate_rainy">CHUVA</string>
     <string name="create_screen_climate_chill">FELIZ</string>
-    <string name="create_screen_mileage_label">QUILOMETRAGEM INICIAL</string>
-    <string name="create_screen_km_hint">KM</string>
+    <string name="create_screen_budget_label">ORÇAMENTO INICIAL</string>
     <string name="create_screen_start_viary_button">Começar Sua Viary</string>
     <string name="create_screen_trip_started_message">Viagem iniciada com sucesso!</string>
 

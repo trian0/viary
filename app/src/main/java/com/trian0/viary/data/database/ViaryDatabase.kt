@@ -7,7 +7,7 @@ import com.trian0.viary.data.database.dao.ViaryDao
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.utils.Converters
 
-@Database(entities = [ViaryEntity::class], version = 3)
+@Database(entities = [ViaryEntity::class], version = 4)
 @TypeConverters(Converters::class)
 abstract class ViaryDatabase : RoomDatabase() {
     abstract fun viaryDao(): ViaryDao
