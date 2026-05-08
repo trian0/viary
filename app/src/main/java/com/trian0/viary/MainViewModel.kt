@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import java.net.URL
 import java.util.Currency
 
 sealed class SplashNavState {
@@ -87,6 +86,7 @@ class MainViewModel(
                     loading = false
                 )
             } catch (e: Exception) {
+                e.printStackTrace()
                 _currencyData.value = _currencyData.value.copy(loading = false)
             }
         }

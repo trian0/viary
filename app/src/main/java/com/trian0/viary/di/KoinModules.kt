@@ -14,7 +14,6 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModules = module {
-    single { ViaryRepository(get(), androidContext()) }
     single { LocationHelper(androidContext()) }
     viewModelOf(::CreateViewModel)
     viewModelOf(::HomeViewModel)
@@ -23,15 +22,14 @@ val appModules = module {
 }
 
 val storageModule = module {
-    singleOf(::ViaryRepository)
     single {
         Room.databaseBuilder(
-                context = androidContext(),
-                klass = ViaryDatabase::class.java,
-                name = "viary.db"
-            ).fallbackToDestructiveMigration(false).build()
+            context = androidContext(),
+            klass = ViaryDatabase::class.java,
+            name = "viary.db"
+        ).fallbackToDestructiveMigration(false).build()
     }
-    single {
-        get<ViaryDatabase>().viaryDao()
-    }
+    single { get<ViaryDatabase>().viaryDao() }
+    single { get<ViaryDatabase>().checkpointDao() }
+    single { ViaryRepository(get(), get(), androidContext()) }
 }

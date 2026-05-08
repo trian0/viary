@@ -61,6 +61,7 @@
     <string name="checkpoint_screen_checkpoint_name_placeholder">Where are you now?</string>
     <string name="checkpoint_screen_checkpoint_current_time_label">CURRENT TIME</string>
     <string name="checkpoint_screen_checkpoint_expenses_label">ACCUMULATED EXPENSE</string>
+    <string name="checkpoint_screen_checkpoint_stop_expenses_label">SPENDING AT THIS STOP</string>
     <!-- Checkpoint Screen -->
 
     <!-- Date Formats -->

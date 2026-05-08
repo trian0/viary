@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +41,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material.icons.outlined.AddAPhoto
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.LocationOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -173,13 +176,14 @@ fun ElevatedOutlinedTextField(
 
 @Composable
 fun ViaryButton(
+    modifier: Modifier = Modifier,
     label: String,
     icon: ImageVector? = null,
     onClicked: () -> Unit = {},
     isLoading: Boolean = false
 ) {
     Button(
-        modifier = Modifier
+        modifier = modifier
             .padding(top = 30.dp)
             .fillMaxWidth()
             .height(55.dp)
@@ -401,7 +405,7 @@ fun SuccessDialog(
         },
 
         confirmButton = {
-            ViaryButton(labelConfirm, onClicked = onConfirm)
+            ViaryButton(modifier = Modifier, labelConfirm, onClicked = onConfirm)
         },
     )
 }
@@ -465,7 +469,7 @@ fun ErrorDialog(
         },
 
         confirmButton = {
-            ViaryButton(stringResource(labelConfirm), onClicked = onDismiss)
+            ViaryButton(modifier = Modifier, stringResource(labelConfirm), onClicked = onDismiss)
         },
     )
 }
@@ -634,6 +638,83 @@ fun ImagePicker(
                             text = stringResource(R.string.create_screen_image_picker_subtitle),
                             style = MaterialTheme.typography.labelLarge,
                             color = Primary20
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CapturedMomentsRow(
+    images: List<Uri>,
+    onAddImage: (Uri) -> Unit,
+    onRemoveImage: (Uri) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let { onAddImage(it) }
+    }
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = "CAPTURED MOMENT",
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = Primary10
+        )
+
+        LazyRow(
+            modifier = Modifier.padding(top = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .size(106.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Secondary90)
+                        .clickable { launcher.launch("image/*") },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.AddAPhoto,
+                        contentDescription = null,
+                        tint = Primary30,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+            items(images) { uri ->
+                Box(modifier = Modifier.size(80.dp)) {
+                    AsyncImage(
+                        model = uri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(4.dp)
+                            .size(18.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.6f))
+                            .clickable { onRemoveImage(uri) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Close,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(10.dp)
                         )
                     }
                 }

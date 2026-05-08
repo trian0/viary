@@ -308,7 +308,7 @@ fun CreateScreenView(
                     disabledContainerColor = Secondary90,
                     disabledContentColor = Primary20
                 ),
-                shape = RoundedCornerShape(24.dp)
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
                     modifier = Modifier

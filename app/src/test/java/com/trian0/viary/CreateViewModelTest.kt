@@ -44,7 +44,7 @@ class CreateViewModelTest {
             assertEquals("São Paulo", awaitItem().departureLocation)
 
             viewModel.onIntent(CreateContract.CreateIntent.OnCurrentBudgetChanged("100.5"))
-            assertEquals("100.5", awaitItem().currentKm)
+            assertEquals("100.5", awaitItem().currentBudget)
 
             viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
 
@@ -80,14 +80,14 @@ class CreateViewModelTest {
     }
 
     @Test
-    fun `quando a quilometragem inicial estiver vazia, deve retornar erro de validacao`() = runTest {
+    fun `quando o orçamento inicial estiver vazio, deve retornar erro de validacao`() = runTest {
         viewModel.uiState.test {
             awaitItem()
 
             viewModel.onIntent(CreateContract.CreateIntent.OnStartTripClicked)
             val stateWithError = awaitItem()
 
-            assert(stateWithError.currentKmError)
+            assert(stateWithError.currentBudgetError)
             expectNoEvents()
         }
     }
