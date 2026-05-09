@@ -23,8 +23,10 @@
     <string name="home_screen_end_viary_button">End Viary</string>
     <string name="home_screen_distance" translatable="false">%.1f km</string>
     <string name="home_screen_checkpoints">Checkpoints</string>
-    <string name="home_screen_stops_number">%.1f Stops</string>
-    <string name="home_screen_photos_number">%.1f Photos</string>
+    <string name="home_screen_stops_number">%.1s Stops</string>
+    <string name="home_screen_photos_number">%.1s Photos</string>
+    <string name="home_screen_distance_label">DISTANCE</string>
+    <string name="home_screen_see_viary_button">See Viary</string>
 
     <string name="dialog_error_finish_home_screen_subtitle">Error finishing viary.</string>
     <string name="dialog_error_init_home_screen_subtitle">Error loading information.</string>

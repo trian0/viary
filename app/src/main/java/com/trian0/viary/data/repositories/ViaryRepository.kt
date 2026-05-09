@@ -76,6 +76,8 @@ class ViaryRepository(
     }
 
     val viaryInProgressWithCheckpoints get() = dao.getViaryInProgressWithCheckpoints()
+
+    val allCompleted get() = dao.getAllCompleted()
 }
 
 fun Viary.toViaryEntity() = ViaryEntity(

@@ -68,6 +68,20 @@ class HomeViewModel(
                     )
                 }
 
+                repository.allCompleted.collect { entities ->
+                    val completedViary = entities.map { it.toViary() }
+                    val lastCheckpoints = completedViary.associate { viary ->
+                        viary.id to repository.getCheckpointsByViaryId(viary.id).lastOrNull()
+                    }
+
+                    setState {
+                        copy(
+                            completedViary = completedViary,
+                            lastCheckpoints = lastCheckpoints
+                        )
+                    }
+                }
+
                 if (viary != null) {
                     startTrackingDistance(
                         viary.latitudeOrigin,

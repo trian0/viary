@@ -49,4 +49,7 @@ interface ViaryDao {
     @Transaction
     @Query("SELECT * FROM ViaryEntity WHERE status = 'IN_PROGRESS' LIMIT 1")
     fun getViaryInProgressWithCheckpoints(): Flow<ViaryWithCheckpoints?>
+
+    @Query("SELECT * FROM viaryentity WHERE status = 'COMPLETED' ORDER BY departureTime DESC")
+    fun getAllCompleted(): Flow<List<ViaryEntity>>
 }

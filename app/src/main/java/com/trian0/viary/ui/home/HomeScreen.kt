@@ -38,6 +38,7 @@ import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.elapsedTime
 import com.trian0.viary.ui.components.CheckpointTimeline
+import com.trian0.viary.ui.components.CompletedViaryList
 import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.ViaryButton
@@ -94,6 +95,8 @@ fun HomeScreen(
         uiState.greaterDistance,
         uiState.checkpoints,
         country.symbol,
+        uiState.completedViary,
+        uiState.lastCheckpoints,
         onFinishViary = {
             viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
         },
@@ -112,6 +115,8 @@ fun HomeScreenView(
     greaterDistance: Float? = 0f,
     checkpoints: List<Checkpoint> = emptyList(),
     symbol: String = "",
+    completedViary: List<Viary> = emptyList(),
+    lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
     onFinishViary: () -> Unit = {},
     onNavigateCheckpoint: () -> Unit = {}
 ) {
@@ -145,7 +150,12 @@ fun HomeScreenView(
                         checkpoints = checkpoints,
                         symbol = symbol,
                     )
-                } ?: HomeTitle(totalViary, greaterDistance)
+                } ?: HomeTitle(
+                    totalViary,
+                    greaterDistance,
+                    completedViary,
+                    lastCheckpoints,
+                )
             }
         }
     }
@@ -155,6 +165,8 @@ fun HomeScreenView(
 fun HomeTitle(
     totalViary: Int,
     greaterDistance: Float?,
+    completedViary: List<Viary> = emptyList(),
+    lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
 ) {
     Text(
         text = stringResource(R.string.home_screen_title),
@@ -233,6 +245,14 @@ fun HomeTitle(
                 )
             }
         }
+    }
+
+    if (completedViary.isNotEmpty()) {
+        CompletedViaryList(
+            viaryList = completedViary,
+            modifier = Modifier.padding(top = 40.dp),
+            lastCheckpoints = lastCheckpoints
+        )
     }
 }
 

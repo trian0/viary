@@ -21,8 +21,10 @@
     <string name="home_screen_add_checkpoint_button">Ajouter un Checkpoint</string>
     <string name="home_screen_end_viary_button">Terminer le Voyage</string>
     <string name="home_screen_checkpoints">Checkpoint</string>
-    <string name="home_screen_stops_number">%.1f Arrêts</string>
-    <string name="home_screen_photos_number">%.1f Photos</string>
+    <string name="home_screen_stops_number">%.1s Arrêts</string>
+    <string name="home_screen_photos_number">%.1s Photos</string>
+    <string name="home_screen_distance_label">DISTANCE</string>
+    <string name="home_screen_see_viary_button">Voir Viary</string>
 
     <string name="dialog_error_finish_home_screen_subtitle">Erreur lors de la fin du voyage.</string>
     <string name="dialog_error_init_home_screen_subtitle">Erreur lors du chargement des informations.</string>

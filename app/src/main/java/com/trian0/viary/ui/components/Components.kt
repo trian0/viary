@@ -52,6 +52,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -85,6 +86,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.trian0.viary.R
 import com.trian0.viary.data.models.Checkpoint
+import com.trian0.viary.data.models.Viary
 import com.trian0.viary.ui.theme.ActionOrangeGradient
 import com.trian0.viary.ui.theme.Neutral90
 import com.trian0.viary.ui.theme.Primary10
@@ -882,5 +884,160 @@ fun MetaTag(icon: ImageVector, label: String) {
             color = Primary20,
             modifier = Modifier.padding(start = 4.dp)
         )
+    }
+}
+
+@Composable
+fun CompletedViaryList(
+    modifier: Modifier = Modifier,
+    viaryList: List<Viary>,
+    lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        viaryList.forEachIndexed { index, viary ->
+            CompletedViaryItem(
+                viary = viary,
+                lastCheckpointName = lastCheckpoints[viary.id]?.placeName ?: "",
+                isLast = index == viaryList.lastIndex
+            )
+        }
+    }
+}
+
+@Composable
+fun CompletedViaryItem(
+    viary: Viary,
+    lastCheckpointName: String,
+    isLast: Boolean = false
+) {
+    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+
+    Row(modifier = Modifier.fillMaxWidth()) {
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(end = 16.dp, top = 4.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(Primary30)
+            )
+            if (!isLast) {
+                Box(
+                    modifier = Modifier
+                        .width(1.5.dp)
+                        .height(300.dp)
+                        .background(Secondary80)
+                )
+            }
+        }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            colors = CardColors(
+                containerColor = Secondary90,
+                contentColor = Primary20,
+                disabledContainerColor = Secondary90,
+                disabledContentColor = Primary20
+            ),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column {
+                viary.departureTime?.let {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+                        text = dateFormat.format(it),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Primary30,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                if (viary.selectedImage != null) {
+                    AsyncImage(
+                        model = viary.selectedImage,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Secondary80)
+                    )
+                }
+
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                    Text(
+                        text = viary.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Primary10
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(top = 4.dp),
+                        text = "${viary.origin} → $lastCheckpointName",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Primary20
+                    )
+
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        thickness = 1.dp,
+                        color = Primary20.copy(alpha = 0.1f)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = stringResource(R.string.home_screen_distance_label),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Primary20
+                            )
+                            Text(
+                                text = "${String.format("%.1f", viary.kmEnd)} km",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Primary10
+                            )
+                        }
+
+                        Card(
+                            colors = CardColors(
+                                containerColor = Secondary80,
+                                contentColor = Primary10,
+                                disabledContainerColor = Secondary80,
+                                disabledContentColor = Primary10
+                            ),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                text = stringResource(R.string.home_screen_see_viary_button),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ interface HomeContract {
 
     data class HomeUiState(
         val viaryInProgress: Viary? = null,
+        val completedViary: List<Viary> = emptyList(),
         val totalViary: Int = 0,
         val isLoading: Boolean = true,
         val timeElapsed: Date? = null,
@@ -17,6 +18,7 @@ interface HomeContract {
         val showFinishErrorDialog: Boolean = false,
         val showInitErrorDialog: Boolean = false,
         val checkpoints: List<Checkpoint> = emptyList(),
+        val lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
     ) : MviInterfaces.UiState
 
     sealed class HomeIntent : MviInterfaces.UiIntent {
