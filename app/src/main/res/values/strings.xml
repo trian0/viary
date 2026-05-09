@@ -22,7 +22,10 @@
     <string name="home_screen_add_checkpoint_button">Add Checkpoint</string>
     <string name="home_screen_end_viary_button">End Viary</string>
     <string name="home_screen_distance" translatable="false">%.1f km</string>
-    
+    <string name="home_screen_checkpoints">Checkpoints</string>
+    <string name="home_screen_stops_number">%.1f Stops</string>
+    <string name="home_screen_photos_number">%.1f Photos</string>
+
     <string name="dialog_error_finish_home_screen_subtitle">Error finishing viary.</string>
     <string name="dialog_error_init_home_screen_subtitle">Error loading information.</string>
     <!-- Home Screen -->

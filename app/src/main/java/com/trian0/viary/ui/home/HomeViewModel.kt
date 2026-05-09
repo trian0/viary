@@ -54,9 +54,14 @@ class HomeViewModel(
                 val totalViary = repository.getTotalViary()
                 val greaterDistance = repository.getGreaterDistance()
 
+                val checkpoints = if (viary != null) {
+                    repository.getCheckpointsByViaryId(viary.id)
+                } else emptyList()
+
                 setState {
                     copy(
                         viaryInProgress = viary,
+                        checkpoints = checkpoints,
                         totalViary = totalViary,
                         isLoading = false,
                         greaterDistance = greaterDistance,

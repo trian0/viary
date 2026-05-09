@@ -41,6 +41,8 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material.icons.outlined.AddAPhoto
+import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.LocationOff
 import androidx.compose.material3.AlertDialog
@@ -73,10 +75,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -84,6 +84,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.trian0.viary.R
+import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.ui.theme.ActionOrangeGradient
 import com.trian0.viary.ui.theme.Neutral90
 import com.trian0.viary.ui.theme.Primary10
@@ -92,8 +93,11 @@ import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary30
 import com.trian0.viary.ui.theme.Primary50
 import com.trian0.viary.ui.theme.Primary80
+import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
 import com.trian0.viary.ui.theme.White
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun ElevatedOutlinedTextField(
@@ -720,5 +724,163 @@ fun CapturedMomentsRow(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CheckpointTimeline(
+    checkpoints: List<Checkpoint>,
+    symbol: String,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.home_screen_checkpoints),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = Primary10
+            )
+            Text(
+                text = stringResource(R.string.home_screen_stops_number, checkpoints.size),
+                style = MaterialTheme.typography.labelMedium,
+                color = Primary20
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        checkpoints.forEachIndexed { index, checkpoint ->
+            Row(modifier = Modifier.fillMaxWidth()) {
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = 6.dp, end = 16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .clip(CircleShape)
+                            .background(Primary30)
+                    )
+                    if (index < checkpoints.lastIndex) {
+                        Box(
+                            modifier = Modifier
+                                .width(1.5.dp)
+                                .height(80.dp)
+                                .background(Secondary80)
+                        )
+                    }
+                }
+
+                CheckpointItem(
+                    checkpoint = checkpoint,
+                    symbol = symbol,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CheckpointItem(
+    checkpoint: Checkpoint,
+    symbol: String,
+    modifier: Modifier = Modifier
+) {
+    val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardColors(
+            containerColor = Secondary90,
+            contentColor = Primary20,
+            disabledContainerColor = Secondary90,
+            disabledContentColor = Primary20
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            if (checkpoint.imageUri != null) {
+                AsyncImage(
+                    model = checkpoint.imageUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Secondary80)
+                )
+            }
+
+            Column {
+                Text(
+                    text = timeFormat.format(checkpoint.time),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Primary30
+                )
+
+                Text(
+                    text = checkpoint.placeName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Primary10,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    val photoCount = checkpoint.images.size
+                    if (photoCount > 0) {
+                        MetaTag(
+                            icon = Icons.Outlined.CameraAlt,
+                            label = stringResource(R.string.home_screen_photos_number, photoCount)
+                        )
+                    }
+
+                    if (checkpoint.expense > 0.0) {
+                        MetaTag(
+                            icon = Icons.Outlined.AttachMoney,
+                            label = "$symbol ${String.format("%.2f", checkpoint.expense)}"
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MetaTag(icon: ImageVector, label: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = Primary20,
+            modifier = Modifier.size(14.dp)
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = Primary20,
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }

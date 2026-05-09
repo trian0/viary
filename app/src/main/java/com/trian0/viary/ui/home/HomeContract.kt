@@ -1,5 +1,6 @@
 package com.trian0.viary.ui.home
 
+import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.mvi.MviInterfaces
 import java.util.Date
@@ -15,6 +16,7 @@ interface HomeContract {
         val greaterDistance: Float? = 0f,
         val showFinishErrorDialog: Boolean = false,
         val showInitErrorDialog: Boolean = false,
+        val checkpoints: List<Checkpoint> = emptyList(),
     ) : MviInterfaces.UiState
 
     sealed class HomeIntent : MviInterfaces.UiIntent {

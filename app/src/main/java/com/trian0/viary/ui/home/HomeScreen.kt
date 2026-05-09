@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.OutlinedFlag
@@ -19,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,9 +31,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.trian0.viary.MainViewModel
 import com.trian0.viary.R
+import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.elapsedTime
+import com.trian0.viary.ui.components.CheckpointTimeline
 import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.ViaryButton
@@ -48,10 +53,16 @@ import java.util.Date
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
+    mainViewModel: MainViewModel = koinViewModel(),
     onNavigateCheckpoint: () -> Unit = {},
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val country by mainViewModel.country.collectAsStateWithLifecycle()
 
+    if (country.loading) {
+        HomeScreenSkeleton()
+        return
+    }
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -81,6 +92,8 @@ fun HomeScreen(
         uiState.isLoading,
         uiState.distanceTraveled,
         uiState.greaterDistance,
+        uiState.checkpoints,
+        country.symbol,
         onFinishViary = {
             viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
         },
@@ -97,12 +110,15 @@ fun HomeScreenView(
     isLoading: Boolean = true,
     distanceTraveled: Float? = 0f,
     greaterDistance: Float? = 0f,
+    checkpoints: List<Checkpoint> = emptyList(),
+    symbol: String = "",
     onFinishViary: () -> Unit = {},
     onNavigateCheckpoint: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 32.dp, vertical = 16.dp)
     ) {
         Text(
@@ -125,7 +141,9 @@ fun HomeScreenView(
                         viaryDepartureTime = viary.departureTime ?: Date(),
                         distanceTraveled = distanceTraveled,
                         onFinishViary = onFinishViary,
-                        onNavigateCheckpoint = onNavigateCheckpoint
+                        onNavigateCheckpoint = onNavigateCheckpoint,
+                        checkpoints = checkpoints,
+                        symbol = symbol,
                     )
                 } ?: HomeTitle(totalViary, greaterDistance)
             }
@@ -225,6 +243,8 @@ fun InProgressViary(
     distanceTraveled: Float? = 0f,
     onFinishViary: () -> Unit = {},
     onNavigateCheckpoint: () -> Unit = {},
+    checkpoints: List<Checkpoint> = emptyList(),
+    symbol: String = "",
 ) {
     var elapsed by remember { mutableStateOf(viaryDepartureTime.elapsedTime()) }
 
@@ -317,6 +337,14 @@ fun InProgressViary(
         modifier = Modifier.padding(top = 12.dp),
         onClicked = onFinishViary
     )
+
+    if (checkpoints.isNotEmpty()) {
+        CheckpointTimeline(
+            checkpoints = checkpoints,
+            symbol = symbol,
+            modifier = Modifier.padding(top = 32.dp)
+        )
+    }
 }
 
 @Composable
