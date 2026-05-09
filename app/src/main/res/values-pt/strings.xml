@@ -20,6 +20,9 @@
     <string name="home_screen_distance_traveled_title">Distância Percorrida</string>
     <string name="home_screen_add_checkpoint_button">Adicionar Checkpoint</string>
     <string name="home_screen_end_viary_button">Encerrar Viagem</string>
+    <string name="home_screen_checkpoints">Checkpoints</string>
+    <string name="home_screen_stops_number">%.1f Paradas</string>
+    <string name="home_screen_photos_number">%.1f Fotos</string>
 
     <string name="dialog_error_finish_home_screen_subtitle">Erro ao encerrar a viagem.</string>
     <string name="dialog_error_init_home_screen_subtitle">Erro ao carregar as informações.</string>

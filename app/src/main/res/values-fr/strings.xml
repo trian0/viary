@@ -20,6 +20,9 @@
     <string name="home_screen_distance_traveled_title">Distance Parcourue</string>
     <string name="home_screen_add_checkpoint_button">Ajouter un Checkpoint</string>
     <string name="home_screen_end_viary_button">Terminer le Voyage</string>
+    <string name="home_screen_checkpoints">Checkpoint</string>
+    <string name="home_screen_stops_number">%.1f Arrêts</string>
+    <string name="home_screen_photos_number">%.1f Photos</string>
 
     <string name="dialog_error_finish_home_screen_subtitle">Erreur lors de la fin du voyage.</string>
     <string name="dialog_error_init_home_screen_subtitle">Erreur lors du chargement des informations.</string>
@@ -54,7 +57,7 @@
     <!-- Create Screen -->
 
     <!-- Checkpoint Screen -->
-    <string name="checkpoint_screen_image_picker_title">Nouveau Point de Contrôle</string>
+    <string name="checkpoint_screen_image_picker_title">Nouveau Checkpoint</string>
     <string name="checkpoint_screen_checkpoint_name_label">NOM DU LIEU</string>
     <string name="checkpoint_screen_checkpoint_name_placeholder">Où êtes-vous maintenant ?</string>
     <string name="checkpoint_screen_checkpoint_current_time_label">HEURE ACTUELLE</string>
