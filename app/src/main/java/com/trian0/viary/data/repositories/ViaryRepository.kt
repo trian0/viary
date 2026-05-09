@@ -8,6 +8,7 @@ import com.trian0.viary.data.database.entities.CheckpointEntity
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
+import com.trian0.viary.data.models.ViaryWithCheckpoints
 import com.trian0.viary.data.utils.saveImageToInternalStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -73,6 +74,8 @@ class ViaryRepository(
 
         checkpointDao.insert(entity)
     }
+
+    val viaryInProgressWithCheckpoints get() = dao.getViaryInProgressWithCheckpoints()
 }
 
 fun Viary.toViaryEntity() = ViaryEntity(
@@ -131,4 +134,8 @@ fun Checkpoint.toEntity() = CheckpointEntity(
     latitude = this.latitude,
     longitude = this.longitude,
     images = images.joinToString(",")
+)
+
+fun ViaryWithCheckpoints.toViary() = viary.toViary().copy(
+    checkpoints = checkpoints.map { it.toCheckpoint() }
 )

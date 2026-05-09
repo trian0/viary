@@ -690,13 +690,13 @@ fun CapturedMomentsRow(
             }
 
             items(images) { uri ->
-                Box(modifier = Modifier.size(80.dp)) {
+                Box(modifier = Modifier.size(106.dp)) {
                     AsyncImage(
                         model = uri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(80.dp)
+                            .size(106.dp)
                             .clip(RoundedCornerShape(12.dp))
                     )
 

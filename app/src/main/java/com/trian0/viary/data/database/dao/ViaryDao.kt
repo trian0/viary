@@ -4,9 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
+import com.trian0.viary.data.models.ViaryWithCheckpoints
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -39,4 +41,12 @@ interface ViaryDao {
         latitude: Double,
         longitude: Double
     )
+
+    @Transaction
+    @Query("SELECT * FROM ViaryEntity WHERE id = :viaryId")
+    suspend fun getViaryWithCheckpoints(viaryId: String): ViaryWithCheckpoints?
+
+    @Transaction
+    @Query("SELECT * FROM ViaryEntity WHERE status = 'IN_PROGRESS' LIMIT 1")
+    fun getViaryInProgressWithCheckpoints(): Flow<ViaryWithCheckpoints?>
 }

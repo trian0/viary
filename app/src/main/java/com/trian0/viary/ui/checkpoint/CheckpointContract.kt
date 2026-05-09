@@ -19,7 +19,10 @@ interface CheckpointContract {
         val currentExpense: Double = 0.0,
         val previewAccumulated: Double = 0.0,
         val previewRemaining: Double = 0.0,
-        val capturedImages: List<Uri> = emptyList()
+        val capturedImages: List<Uri> = emptyList(),
+        val isLoading: Boolean = false,
+        val showSuccessDialog: Boolean = false,
+        val showErrorDialog: Boolean = false,
     ) : MviInterfaces.UiState
 
     sealed class CheckpointIntent : MviInterfaces.UiIntent {
@@ -29,10 +32,12 @@ interface CheckpointContract {
         object OnSaveCheckpointClicked : CheckpointIntent()
         data class OnImageAdded(val uri: Uri) : CheckpointIntent()
         data class OnImageRemoved(val uri: Uri) : CheckpointIntent()
+        object OnDismissErrorDialog : CheckpointIntent()
     }
 
     sealed class CheckpointEffect : MviInterfaces.UiEffect {
         object CheckpointSavedSuccessfully : CheckpointEffect()
+        data class ShowError(val message: String) : CheckpointEffect()
     }
 
 }

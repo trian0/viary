@@ -62,6 +62,13 @@
     <string name="checkpoint_screen_checkpoint_current_time_label">CURRENT TIME</string>
     <string name="checkpoint_screen_checkpoint_expenses_label">ACCUMULATED EXPENSE</string>
     <string name="checkpoint_screen_checkpoint_stop_expenses_label">SPENDING AT THIS STOP</string>
+    <string name="checkpoint_screen_checkpoint_initial_budget_label">Initial Budget</string>
+    <string name="checkpoint_screen_checkpoint_remaining_balance_label">Remaining Balance</string>
+    <string name="checkpoint_screen_checkpoint_save_checkpoint_button">Save Checkpoint</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_title">Checkpoint Created</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_message">Sua parada foi criada com sucesso, aproveite o restante da viagem</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_button">Let\'s Go!</string>
+    <string name="checkpoint_screen_checkpoint_error_dialog_message">Error creating checkpoint!</string>
     <!-- Checkpoint Screen -->
 
     <!-- Date Formats -->

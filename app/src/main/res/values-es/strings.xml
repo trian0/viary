@@ -55,5 +55,17 @@
 
     <!-- Checkpoint Screen -->
     <string name="checkpoint_screen_image_picker_title">Nuevo Punto de Control</string>
+    <string name="checkpoint_screen_checkpoint_name_label">NOMBRE DEL LUGAR</string>
+    <string name="checkpoint_screen_checkpoint_name_placeholder">¿Dónde estás ahora?</string>
+    <string name="checkpoint_screen_checkpoint_current_time_label">HORA ACTUAL</string>
+    <string name="checkpoint_screen_checkpoint_expenses_label">GASTO ACUMULADO</string>
+    <string name="checkpoint_screen_checkpoint_stop_expenses_label">GASTO EN ESTA PARADA</string>
+    <string name="checkpoint_screen_checkpoint_initial_budget_label">Presupuesto Inicial</string>
+    <string name="checkpoint_screen_checkpoint_remaining_balance_label">Saldo Restante</string>
+    <string name="checkpoint_screen_checkpoint_save_checkpoint_button">Guardar Checkpoint</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_title">Checkpoint Creado</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_message">Tu parada fue creada con éxito, disfruta el resto del viaje</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_button">¡Vamos!</string>
+    <string name="checkpoint_screen_checkpoint_error_dialog_message">¡Error al crear el checkpoint!</string>
     <!-- Checkpoint Screen -->
 </resources>

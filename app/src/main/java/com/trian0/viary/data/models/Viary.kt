@@ -21,6 +21,7 @@ data class Viary (
     val longitudeOrigin: Double = 0.0,
     val latitudeArrival: Double = 0.0,
     val longitudeArrival: Double = 0.0,
+    val checkpoints: List<Checkpoint> = emptyList()
 ) {
     enum class ViaryStatus {
         IN_PROGRESS,

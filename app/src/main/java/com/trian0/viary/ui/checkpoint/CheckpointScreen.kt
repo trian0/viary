@@ -50,9 +50,12 @@ import com.trian0.viary.R
 import com.trian0.viary.data.utils.CurrencyOutputTransformation
 import com.trian0.viary.ui.components.CapturedMomentsRow
 import com.trian0.viary.ui.components.ElevatedOutlinedTextField
+import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ImagePicker
 import com.trian0.viary.ui.components.ShimmerEffect
+import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.components.ViaryButton
+import com.trian0.viary.ui.create.CreateContract
 import com.trian0.viary.ui.theme.Neutral10
 import com.trian0.viary.ui.theme.Primary10
 import com.trian0.viary.ui.theme.Primary20
@@ -97,6 +100,24 @@ fun CheckpointScreen(
             CheckpointContract.CheckpointIntent.OnCheckpointBudgetChanged(
                 checkpointBudget.text.toString()
             )
+        )
+    }
+
+    if (uiState.showSuccessDialog) {
+        SuccessDialog(
+            labelTitle = stringResource(R.string.checkpoint_screen_checkpoint_success_dialog_title),
+            labelSubtitle = stringResource(R.string.checkpoint_screen_checkpoint_success_dialog_message),
+            labelConfirm = stringResource(R.string.checkpoint_screen_checkpoint_success_dialog_button),
+            onConfirm = onNavigateBack
+        )
+    }
+
+    if (uiState.showErrorDialog) {
+        ErrorDialog(
+            labelSubtitle = R.string.checkpoint_screen_checkpoint_error_dialog_message,
+            onDismiss = {
+                viewModel.onIntent(CheckpointContract.CheckpointIntent.OnDismissErrorDialog)
+            }
         )
     }
 
@@ -401,7 +422,7 @@ fun CheckpointScreenView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Orçamento Inicial",
+                            text = stringResource(R.string.checkpoint_screen_checkpoint_initial_budget_label),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Normal,
                             color = Primary10
@@ -422,7 +443,7 @@ fun CheckpointScreenView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Saldo Restante",
+                            text = stringResource(R.string.checkpoint_screen_checkpoint_remaining_balance_label),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Normal,
                             color = Primary10
@@ -451,7 +472,7 @@ fun CheckpointScreenView(
 
             ViaryButton(
                 modifier = Modifier.padding(top = 32.dp),
-                label = "Salvar Parada",
+                label = stringResource(R.string.checkpoint_screen_checkpoint_save_checkpoint_button),
                 icon = Icons.Filled.AddCircle,
                 onClicked = onSaveCheckpointClicked
             )

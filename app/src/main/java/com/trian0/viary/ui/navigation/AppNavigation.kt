@@ -59,7 +59,13 @@ fun AppNavigation(
             HistoricalScreen()
         }
         composable(NavigationItem.Checkpoint.route) {
-            CheckpointScreen()
+            CheckpointScreen(
+                onNavigateBack = {
+                    navController.navigate(NavigationItem.Home.route) {
+                        popUpTo(NavigationItem.Create.route) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

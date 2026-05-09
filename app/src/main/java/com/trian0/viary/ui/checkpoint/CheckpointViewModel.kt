@@ -7,6 +7,8 @@ import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.data.utils.saveImageToInternalStorage
 import com.trian0.viary.mvi.BaseViewModel
+import com.trian0.viary.ui.create.CreateContract
+import com.trian0.viary.ui.create.CreateViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -22,8 +24,8 @@ class CheckpointViewModel(
         viewModelScope.launch {
             try {
                 val viary = repository.viaryInProgress.first()?.toViary()
-                val checkpoints = repository.getCheckpointsByViaryId(viary?.id ?: "")
-                val accumulated = checkpoints.sumOf { it.expense }
+                val accumulated = repository.getCheckpointsByViaryId(viary?.id ?: "")
+                    .sumOf { it.expense }
                 val remaining = (viary?.initialBudget ?: 0.0) - accumulated
 
                 setState {
@@ -97,12 +99,24 @@ class CheckpointViewModel(
                     copy(capturedImages = capturedImages - intent.uri)
                 }
             }
+
+            is CheckpointContract.CheckpointIntent.OnDismissErrorDialog -> {
+                setState {
+                    copy(showErrorDialog = false)
+                }
+            }
         }
     }
 
     private fun saveCheckpoint() {
         viewModelScope.launch {
             try {
+                if (!validateFields()) {
+                    return@launch
+                }
+
+                setState { copy(isLoading = true) }
+
                 val state = currentState
 
                 val expense = state.checkpointBudget
@@ -124,14 +138,42 @@ class CheckpointViewModel(
                 setState {
                     copy(
                         accumulatedExpense = newAccumulated,
-                        remainingBudget = newRemaining
+                        remainingBudget = newRemaining,
+                        isLoading = false,
+                        showSuccessDialog = true,
                     )
                 }
 
                 setEffect { CheckpointContract.CheckpointEffect.CheckpointSavedSuccessfully }
+
+                Log.d(TAG, "Checkpoint criado com sucesso: $checkpoint")
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.d(TAG, "Checkpoint criado com sucesso", e)
+                setState { copy(isLoading = false, showErrorDialog = true) }
+                setEffect {
+                    CheckpointContract.CheckpointEffect.ShowError(
+                        e.message ?: "Erro ao criar checkpoint"
+                    )
+                }
             }
         }
+    }
+
+    private fun validateFields(): Boolean {
+        val state = currentState
+        var isValid = true
+
+        if (state.checkpointName.isBlank()) {
+            setState { copy(checkpointNameError = true) }
+            isValid = false
+        }
+
+        if (state.checkpointBudget.isBlank()) {
+            setState { copy(checkpointBudgetError = true) }
+            isValid = false
+        }
+
+        return isValid
     }
 }
