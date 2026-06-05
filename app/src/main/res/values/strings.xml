@@ -30,7 +30,18 @@
 
     <string name="dialog_error_finish_home_screen_subtitle">Error finishing viary.</string>
     <string name="dialog_error_init_home_screen_subtitle">Error loading information.</string>
+    <string name="home_screen_cta_title">NEXT ADVENTURE</string>
+    <string name="home_screen_cta_subtitle">Ready to hit the road again?</string>
+    <string name="home_screen_cta_button">Start New Viary</string>
+    <string name="home_screen_last_trip_title">LAST TRIP</string>
+    <string name="home_screen_see_history_button">See History</string>
     <!-- Home Screen -->
+
+    <!-- Historical Screen -->
+    <string name="historical_screen_title">TRAVEL HISTORY</string>
+    <string name="historical_screen_subtitle">Every journey you\'ve completed.</string>
+    <string name="historical_screen_empty">No completed trips yet.</string>
+    <!-- Historical Screen -->
 
     <!-- Create Screen -->
     <string name="create_screen_title">New Viary</string>

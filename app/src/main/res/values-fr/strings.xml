@@ -28,7 +28,18 @@
 
     <string name="dialog_error_finish_home_screen_subtitle">Erreur lors de la fin du voyage.</string>
     <string name="dialog_error_init_home_screen_subtitle">Erreur lors du chargement des informations.</string>
+    <string name="home_screen_cta_title">PROCHAINE AVENTURE</string>
+    <string name="home_screen_cta_subtitle">Prêt à reprendre la route ?</string>
+    <string name="home_screen_cta_button">Démarrer une Viary</string>
+    <string name="home_screen_last_trip_title">DERNIER VOYAGE</string>
+    <string name="home_screen_see_history_button">Voir l\'historique</string>
     <!-- Home Screen -->
+
+    <!-- Historical Screen -->
+    <string name="historical_screen_title">HISTORIQUE DES VOYAGES</string>
+    <string name="historical_screen_subtitle">Tous les voyages que vous avez terminés.</string>
+    <string name="historical_screen_empty">Aucun voyage terminé pour le moment.</string>
+    <!-- Historical Screen -->
 
     <!-- Create Screen -->
     <string name="create_screen_title">Nouveau Viary</string>

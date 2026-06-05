@@ -38,7 +38,6 @@ import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.elapsedTime
 import com.trian0.viary.ui.components.CheckpointTimeline
-import com.trian0.viary.ui.components.CompletedViaryList
 import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.ViaryButton
@@ -56,12 +55,20 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
     mainViewModel: MainViewModel = koinViewModel(),
     onNavigateCheckpoint: () -> Unit = {},
+    onNavigateCreate: () -> Unit = {},
+    onNavigateHistorical: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val country by mainViewModel.country.collectAsStateWithLifecycle()
 
     if (country.loading) {
-        HomeScreenSkeleton()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+        ) {
+            HomeScreenSkeleton()
+        }
         return
     }
 
@@ -95,14 +102,14 @@ fun HomeScreen(
         uiState.greaterDistance,
         uiState.checkpoints,
         country.symbol,
-        uiState.completedViary,
-        uiState.lastCheckpoints,
+        uiState.lastCompletedViary,
+        uiState.lastCompletedCheckpoint,
         onFinishViary = {
             viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
         },
-        onNavigateCheckpoint = {
-            onNavigateCheckpoint()
-        }
+        onNavigateCheckpoint = { onNavigateCheckpoint() },
+        onNavigateCreate = { onNavigateCreate() },
+        onNavigateHistorical = { onNavigateHistorical() },
     )
 }
 
@@ -115,10 +122,12 @@ fun HomeScreenView(
     greaterDistance: Float? = 0f,
     checkpoints: List<Checkpoint> = emptyList(),
     symbol: String = "",
-    completedViary: List<Viary> = emptyList(),
-    lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
+    lastCompletedViary: Viary? = null,
+    lastCompletedCheckpoint: Checkpoint? = null,
     onFinishViary: () -> Unit = {},
-    onNavigateCheckpoint: () -> Unit = {}
+    onNavigateCheckpoint: () -> Unit = {},
+    onNavigateCreate: () -> Unit = {},
+    onNavigateHistorical: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -151,10 +160,12 @@ fun HomeScreenView(
                         symbol = symbol,
                     )
                 } ?: HomeTitle(
-                    totalViary,
-                    greaterDistance,
-                    completedViary,
-                    lastCheckpoints,
+                    totalViary = totalViary,
+                    greaterDistance = greaterDistance,
+                    lastCompletedViary = lastCompletedViary,
+                    lastCompletedCheckpoint = lastCompletedCheckpoint,
+                    onNavigateCreate = onNavigateCreate,
+                    onNavigateHistorical = onNavigateHistorical,
                 )
             }
         }
@@ -165,8 +176,10 @@ fun HomeScreenView(
 fun HomeTitle(
     totalViary: Int,
     greaterDistance: Float?,
-    completedViary: List<Viary> = emptyList(),
-    lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
+    lastCompletedViary: Viary? = null,
+    lastCompletedCheckpoint: Checkpoint? = null,
+    onNavigateCreate: () -> Unit = {},
+    onNavigateHistorical: () -> Unit = {},
 ) {
     Text(
         text = stringResource(R.string.home_screen_title),
@@ -247,12 +260,112 @@ fun HomeTitle(
         }
     }
 
-    if (completedViary.isNotEmpty()) {
-        CompletedViaryList(
-            viaryList = completedViary,
-            modifier = Modifier.padding(top = 40.dp),
-            lastCheckpoints = lastCheckpoints
+    NewViaryCallToAction(
+        modifier = Modifier.padding(top = 32.dp),
+        onNavigateCreate = onNavigateCreate,
+    )
+
+    if (lastCompletedViary != null) {
+        LastViaryRecap(
+            viary = lastCompletedViary,
+            lastCheckpoint = lastCompletedCheckpoint,
+            modifier = Modifier.padding(top = 24.dp),
+            onNavigateHistorical = onNavigateHistorical,
         )
+    }
+}
+
+@Composable
+fun NewViaryCallToAction(
+    modifier: Modifier = Modifier,
+    onNavigateCreate: () -> Unit = {},
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardColors(
+            containerColor = Secondary90,
+            contentColor = Primary20,
+            disabledContainerColor = Secondary90,
+            disabledContentColor = Primary20,
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(24.dp)) {
+            Text(
+                text = stringResource(R.string.home_screen_cta_title),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Primary50,
+            )
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = stringResource(R.string.home_screen_cta_subtitle),
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.ExtraBold,
+            )
+            ViaryButton(
+                label = stringResource(R.string.home_screen_cta_button),
+                modifier = Modifier.padding(top = 16.dp),
+                onClicked = onNavigateCreate,
+            )
+        }
+    }
+}
+
+@Composable
+fun LastViaryRecap(
+    viary: Viary,
+    lastCheckpoint: Checkpoint? = null,
+    modifier: Modifier = Modifier,
+    onNavigateHistorical: () -> Unit = {},
+) {
+    val destination = lastCheckpoint?.placeName?.takeIf { it.isNotBlank() } ?: viary.origin
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardColors(
+            containerColor = Secondary90,
+            contentColor = Primary20,
+            disabledContainerColor = Secondary90,
+            disabledContentColor = Primary20,
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(24.dp)) {
+            Text(
+                text = stringResource(R.string.home_screen_last_trip_title),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Primary50,
+            )
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = viary.name,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = "${viary.origin} → $destination",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Primary10,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                modifier = Modifier.padding(top = 2.dp),
+                text = stringResource(R.string.home_screen_distance, viary.kmEnd),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Primary10,
+            )
+            ViarySecondaryButton(
+                label = stringResource(R.string.home_screen_see_history_button),
+                modifier = Modifier.padding(top = 16.dp),
+                onClicked = onNavigateHistorical,
+            )
+        }
     }
 }
 
@@ -369,23 +482,39 @@ fun InProgressViary(
 
 @Composable
 fun HomeScreenSkeleton() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp, vertical = 16.dp)
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        ShimmerEffect(modifier = Modifier.width(120.dp).height(14.dp))
+
         ShimmerEffect(
             modifier = Modifier
-                .width(150.dp)
-                .height(28.dp)
+                .padding(top = 8.dp)
+                .width(200.dp)
+                .height(36.dp)
         )
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            ShimmerEffect(modifier = Modifier.weight(1f).height(96.dp))
+            Spacer(modifier = Modifier.weight(0.1f))
+            ShimmerEffect(modifier = Modifier.weight(1f).height(96.dp))
+        }
 
         ShimmerEffect(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
+                .padding(top = 32.dp)
+                .height(148.dp)
+        )
+
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp)
+                .height(168.dp)
         )
     }
 }
@@ -416,7 +545,27 @@ fun HomeScreenWithViaryPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenWithoutViaryPreview() {
+    HomeScreenView(null)
+}
+
+@Preview(showBackground = true, locale = "pt")
+@Preview(showBackground = true, locale = "es")
+@Preview(showBackground = true, locale = "fr")
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenWithLastTripPreview() {
     HomeScreenView(
-        null
+        viaryInProgress = null,
+        lastCompletedViary = Viary(
+            name = "Rota do Sol",
+            origin = "Salvador",
+            departureTime = Date(),
+            initialBudget = 0.0,
+            kmEnd = 120f,
+            status = Viary.ViaryStatus.COMPLETED,
+            climate = "SUNNY",
+            selectedImage = null
+        ),
+        lastCompletedCheckpoint = Checkpoint(placeName = "Morro de São Paulo"),
     )
 }

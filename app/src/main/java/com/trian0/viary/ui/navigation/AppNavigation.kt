@@ -43,6 +43,12 @@ fun AppNavigation(
                     navController.navigate(NavigationItem.Checkpoint.route) {
                         popUpTo(NavigationItem.Home.route) { inclusive = true }
                     }
+                },
+                onNavigateCreate = {
+                    navController.navigate(NavigationItem.Create.route)
+                },
+                onNavigateHistorical = {
+                    navController.navigate(NavigationItem.Historical.route)
                 }
             )
         }

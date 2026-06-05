@@ -69,15 +69,15 @@ class HomeViewModel(
                 }
 
                 repository.allCompleted.collect { entities ->
-                    val completedViary = entities.map { it.toViary() }
-                    val lastCheckpoints = completedViary.associate { viary ->
-                        viary.id to repository.getCheckpointsByViaryId(viary.id).lastOrNull()
-                    }
+                    val last = entities.firstOrNull()?.toViary()
+                    val lastCheckpoint = if (last != null)
+                        repository.getCheckpointsByViaryId(last.id).lastOrNull()
+                    else null
 
                     setState {
                         copy(
-                            completedViary = completedViary,
-                            lastCheckpoints = lastCheckpoints
+                            lastCompletedViary = last,
+                            lastCompletedCheckpoint = lastCheckpoint,
                         )
                     }
                 }

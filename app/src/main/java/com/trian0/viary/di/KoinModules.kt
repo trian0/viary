@@ -7,6 +7,7 @@ import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.ui.checkpoint.CheckpointViewModel
 import com.trian0.viary.ui.create.CreateViewModel
+import com.trian0.viary.ui.historical.HistoricalViewModel
 import com.trian0.viary.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
@@ -17,6 +18,7 @@ val appModules = module {
     single { LocationHelper(androidContext()) }
     viewModelOf(::CreateViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::HistoricalViewModel)
     viewModelOf(::CheckpointViewModel)
     viewModelOf(::MainViewModel)
 }
