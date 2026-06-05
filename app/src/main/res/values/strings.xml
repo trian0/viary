@@ -82,7 +82,7 @@
     <string name="checkpoint_screen_checkpoint_remaining_balance_label">Remaining Balance</string>
     <string name="checkpoint_screen_checkpoint_save_checkpoint_button">Save Checkpoint</string>
     <string name="checkpoint_screen_checkpoint_success_dialog_title">Checkpoint Created</string>
-    <string name="checkpoint_screen_checkpoint_success_dialog_message">Sua parada foi criada com sucesso, aproveite o restante da viagem</string>
+    <string name="checkpoint_screen_checkpoint_success_dialog_message">Your stop was created successfully, enjoy the rest of the trip!</string>
     <string name="checkpoint_screen_checkpoint_success_dialog_button">Let\'s Go!</string>
     <string name="checkpoint_screen_checkpoint_error_dialog_message">Error creating checkpoint!</string>
     <!-- Checkpoint Screen -->

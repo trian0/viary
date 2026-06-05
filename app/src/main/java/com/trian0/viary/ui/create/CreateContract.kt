@@ -9,7 +9,7 @@ interface CreateContract {
         val viaryName: String = "",
         val departureLocation: String = "",
         val currentBudget: String = "",
-        val coverImageUri: Uri? = null,
+        val coverImagePath: String? = null,
         val isLoading: Boolean = false,
         val viaryNameError: Boolean = false,
         val departureLocationError: Boolean = false,

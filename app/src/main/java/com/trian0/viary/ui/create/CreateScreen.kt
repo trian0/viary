@@ -93,9 +93,10 @@ fun CreateScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    val viaryNameState = rememberTextFieldState()
-    val locateState = rememberTextFieldState()
-    val budgetState = rememberTextFieldState()
+    val initial = viewModel.currentState
+    val viaryNameState = rememberTextFieldState(initialText = initial.viaryName)
+    val locateState = rememberTextFieldState(initialText = initial.departureLocation)
+    val budgetState = rememberTextFieldState(initialText = initial.currentBudget)
     val climateSate = remember { mutableStateOf("") }
 
     var showPermissionDialog by remember { mutableStateOf(false) }
@@ -167,6 +168,7 @@ fun CreateScreen(
         uiState.departureLocationError,
         budgetState,
         uiState.currentBudgetError,
+        currentCoverImagePath = uiState.coverImagePath,
         onCoverImageSelected = { uri ->
             viewModel.onIntent(CreateContract.CreateIntent.OnCoverImageSelected(uri))
         },
@@ -199,6 +201,7 @@ fun CreateScreenView(
     locateError: Boolean = false,
     budget: TextFieldState = rememberTextFieldState(),
     budgetError: Boolean = false,
+    currentCoverImagePath: String? = null,
     onCoverImageSelected: (Uri) -> Unit = {},
     onStartTripClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
@@ -261,6 +264,7 @@ fun CreateScreenView(
                 label = stringResource(R.string.create_screen_image_picker_title),
                 imageSelectedTitle = stringResource(R.string.create_screen_image_picker_selected_title),
                 imageSelectedSubtitle = stringResource(R.string.create_screen_image_picker_selected_subtitle),
+                currentImagePath = currentCoverImagePath,
                 onImageSelected = {
                     onCoverImageSelected(it)
                 }

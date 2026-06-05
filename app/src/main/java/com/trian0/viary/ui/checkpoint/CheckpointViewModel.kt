@@ -1,26 +1,50 @@
 package com.trian0.viary.ui.checkpoint
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
-import com.trian0.viary.data.utils.saveImageToInternalStorage
 import com.trian0.viary.mvi.BaseViewModel
-import com.trian0.viary.ui.create.CreateContract
-import com.trian0.viary.ui.create.CreateViewModel
+import java.io.File
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class CheckpointViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val repository: ViaryRepository,
 ) : BaseViewModel<CheckpointContract.CheckpointIntent, CheckpointContract.CheckpointUiState, CheckpointContract.CheckpointEffect>() {
 
     companion object {
         private const val TAG = "CheckpointViewModel"
+        private const val KEY_CHECKPOINT_NAME = "checkpointName"
+        private const val KEY_CHECKPOINT_BUDGET = "checkpointBudget"
+        private const val KEY_COVER_PATH = "coverImagePath"
     }
 
+    private var imageCopyJob: Job? = null
+    private var currentCoverFilePath: String? = null
+    private var savedSuccessfully = false
+
     init {
+        val restoredName: String = savedStateHandle[KEY_CHECKPOINT_NAME] ?: ""
+        val restoredBudget: String = savedStateHandle[KEY_CHECKPOINT_BUDGET] ?: ""
+        val restoredCoverPath: String? = savedStateHandle[KEY_COVER_PATH]
+
+        currentCoverFilePath = restoredCoverPath
+
+        if (restoredName.isNotEmpty() || restoredBudget.isNotEmpty() || restoredCoverPath != null) {
+            setState {
+                copy(
+                    checkpointName = restoredName,
+                    checkpointBudget = restoredBudget,
+                    checkpointCoverPath = restoredCoverPath,
+                )
+            }
+        }
+
         viewModelScope.launch {
             try {
                 val viary = repository.viaryInProgress.first()?.toViary()
@@ -45,26 +69,37 @@ class CheckpointViewModel(
         }
     }
 
-    override fun createInitialState(): CheckpointContract.CheckpointUiState =
-        CheckpointContract.CheckpointUiState()
+    override fun createInitialState() = CheckpointContract.CheckpointUiState()
 
     override fun handleIntent(intent: CheckpointContract.CheckpointIntent) {
         Log.d(TAG, "handleIntent: $intent")
 
         when (intent) {
             is CheckpointContract.CheckpointIntent.OnCoverImageSelected -> {
-                setState {
-                    copy(checkpointCoverUri = intent.uri)
+                intent.uri?.let { uri ->
+                    imageCopyJob?.cancel()
+                    imageCopyJob = viewModelScope.launch {
+                        val path = repository.copyImageToStorage(uri)
+                        if (path != null) {
+                            currentCoverFilePath = path
+                            savedStateHandle[KEY_COVER_PATH] = path
+                            setState { copy(checkpointCoverPath = path) }
+                        } else {
+                            setEffect { CheckpointContract.CheckpointEffect.ShowError("Failed to save cover image") }
+                        }
+                    }
                 }
             }
 
             is CheckpointContract.CheckpointIntent.OnCheckpointNameChanged -> {
+                savedStateHandle[KEY_CHECKPOINT_NAME] = intent.name
                 setState {
                     copy(checkpointName = intent.name, checkpointNameError = false)
                 }
             }
 
             is CheckpointContract.CheckpointIntent.OnCheckpointBudgetChanged -> {
+                savedStateHandle[KEY_CHECKPOINT_BUDGET] = intent.budget
                 val expense = intent.budget
                     .filter { it.isDigit() }
                     .toLongOrNull() ?: 0L
@@ -133,7 +168,12 @@ class CheckpointViewModel(
                     expense = expenseValue,
                 )
 
-                repository.saveCheckpoint(checkpoint, state.checkpointCoverUri, state.capturedImages)
+                repository.saveCheckpointWithPath(checkpoint, state.checkpointCoverPath, state.capturedImages)
+
+                savedSuccessfully = true
+                savedStateHandle.remove<String>(KEY_CHECKPOINT_NAME)
+                savedStateHandle.remove<String>(KEY_CHECKPOINT_BUDGET)
+                savedStateHandle.remove<String>(KEY_COVER_PATH)
 
                 setState {
                     copy(
@@ -149,7 +189,7 @@ class CheckpointViewModel(
                 Log.d(TAG, "Checkpoint criado com sucesso: $checkpoint")
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.d(TAG, "Checkpoint criado com sucesso", e)
+                Log.d(TAG, "Erro ao criar checkpoint", e)
                 setState { copy(isLoading = false, showErrorDialog = true) }
                 setEffect {
                     CheckpointContract.CheckpointEffect.ShowError(
@@ -157,6 +197,13 @@ class CheckpointViewModel(
                     )
                 }
             }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        if (!savedSuccessfully) {
+            currentCoverFilePath?.let { File(it).delete() }
         }
     }
 

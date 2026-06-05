@@ -59,10 +59,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import java.io.File
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -544,6 +546,7 @@ fun ImagePicker(
     imageSelectedTitle: String,
     imageSelectedSubtitle: String,
     onImageSelected: (Uri) -> Unit,
+    currentImagePath: String? = null,
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -552,6 +555,12 @@ fun ImagePicker(
     ) { uri: Uri? ->
         selectedImageUri = uri
     }
+
+    LaunchedEffect(selectedImageUri) {
+        selectedImageUri?.let { onImageSelected(it) }
+    }
+
+    val displayModel: Any? = selectedImageUri ?: currentImagePath?.let { File(it) }
 
     Column(
         modifier = modifier
@@ -570,11 +579,10 @@ fun ImagePicker(
             ),
             onClick = { launcher.launch("image/*") }
         ) {
-            if (selectedImageUri != null) {
-                onImageSelected(selectedImageUri!!)
+            if (displayModel != null) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     AsyncImage(
-                        model = selectedImageUri,
+                        model = displayModel,
                         contentDescription = "Imagem selecionada",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop

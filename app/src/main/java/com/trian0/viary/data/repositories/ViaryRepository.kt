@@ -20,14 +20,12 @@ class ViaryRepository(
 ) {
     val viaryInProgress get() = dao.getByStatus(Viary.ViaryStatus.IN_PROGRESS)
 
-    suspend fun create(viary: Viary, imageUri: Uri?) {
-        var finalImagePath: String? = null
+    suspend fun copyImageToStorage(uri: Uri): String? = withContext(Dispatchers.IO) {
+        saveImageToInternalStorage(context, uri)
+    }
 
-        imageUri?.let {
-            finalImagePath = saveImageToInternalStorage(context, it)
-        }
-
-        val entity = viary.toViaryEntity().copy(selectedImage = finalImagePath)
+    suspend fun createWithPath(viary: Viary, imagePath: String?) {
+        val entity = viary.toViaryEntity().copy(selectedImage = imagePath)
         dao.save(entity)
     }
 
@@ -58,20 +56,14 @@ class ViaryRepository(
         return checkpointDao.getByViaryId(viaryId).map { it.toCheckpoint() }
     }
 
-    suspend fun saveCheckpoint(checkpoint: Checkpoint, coverUri: Uri?, imagesUri: List<Uri>) {
-        var finalImagePath: String? = null
-
-        coverUri?.let {
-            finalImagePath = saveImageToInternalStorage(context, it)
-        }
-        val savedPaths = imagesUri.mapNotNull { uri ->
-            saveImageToInternalStorage(context, uri)
+    suspend fun saveCheckpointWithPath(checkpoint: Checkpoint, coverPath: String?, imagesUri: List<Uri>) {
+        val savedPaths = withContext(Dispatchers.IO) {
+            imagesUri.mapNotNull { uri -> saveImageToInternalStorage(context, uri) }
         }
         val entity = checkpoint.toEntity().copy(
-            imageUri = finalImagePath,
+            imageUri = coverPath,
             images = savedPaths.joinToString(",")
         )
-
         checkpointDao.insert(entity)
     }
 

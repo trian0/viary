@@ -84,8 +84,9 @@ fun CheckpointScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    val checkpointName = rememberTextFieldState()
-    val checkpointBudget = rememberTextFieldState()
+    val initial = viewModel.currentState
+    val checkpointName = rememberTextFieldState(initialText = initial.checkpointName)
+    val checkpointBudget = rememberTextFieldState(initialText = initial.checkpointBudget)
 
     LaunchedEffect(checkpointName.text) {
         viewModel.onIntent(
@@ -125,6 +126,7 @@ fun CheckpointScreen(
         modifier = Modifier,
         onNavigateBack,
         viaryName = uiState.viaryName,
+        currentCoverImagePath = uiState.checkpointCoverPath,
         onCoverImageSelected = {
             viewModel.onIntent(CheckpointContract.CheckpointIntent.OnCoverImageSelected(it))
         },
@@ -146,7 +148,8 @@ fun CheckpointScreen(
         },
         onSaveCheckpointClicked = {
             viewModel.onIntent(CheckpointContract.CheckpointIntent.OnSaveCheckpointClicked)
-        }
+        },
+        isLoading = uiState.isLoading
     )
 }
 
@@ -155,6 +158,7 @@ fun CheckpointScreenView(
     modifier: Modifier,
     onNavigateBack: () -> Unit = {},
     viaryName: String,
+    currentCoverImagePath: String? = null,
     onCoverImageSelected: (Uri) -> Unit = {},
     checkpointName: TextFieldState = rememberTextFieldState(),
     checkpointNameError: Boolean = false,
@@ -169,6 +173,7 @@ fun CheckpointScreenView(
     onImageAdded: (Uri) -> Unit = {},
     onImageRemoved: (Uri) -> Unit = {},
     onSaveCheckpointClicked: () -> Unit = {},
+    isLoading: Boolean = false,
 ) {
     Box(
         modifier = modifier
@@ -218,6 +223,7 @@ fun CheckpointScreenView(
                 label = stringResource(R.string.checkpoint_screen_image_picker_title),
                 imageSelectedTitle = stringResource(R.string.checkpoint_screen_image_picker_title),
                 imageSelectedSubtitle = stringResource(R.string.create_screen_image_picker_selected_subtitle),
+                currentImagePath = currentCoverImagePath,
                 onImageSelected = {
                     onCoverImageSelected(it)
                 }
@@ -474,7 +480,8 @@ fun CheckpointScreenView(
                 modifier = Modifier.padding(top = 32.dp),
                 label = stringResource(R.string.checkpoint_screen_checkpoint_save_checkpoint_button),
                 icon = Icons.Filled.AddCircle,
-                onClicked = onSaveCheckpointClicked
+                onClicked = onSaveCheckpointClicked,
+                isLoading = isLoading
             )
         }
     }

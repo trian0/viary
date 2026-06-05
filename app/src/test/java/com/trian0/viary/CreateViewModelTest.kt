@@ -1,6 +1,7 @@
 package com.trian0.viary
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.helpers.LocationHelper
@@ -22,6 +23,7 @@ class CreateViewModelTest {
 
     private val repository = mockk<ViaryRepository>(relaxed = true)
     private val locationHelper = mockk<LocationHelper>(relaxed = true)
+    private val savedStateHandle = SavedStateHandle()
     private lateinit var viewModel: CreateViewModel
 
     @Before
@@ -29,7 +31,7 @@ class CreateViewModelTest {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
-        viewModel = CreateViewModel(repository, locationHelper)
+        viewModel = CreateViewModel(savedStateHandle, repository, locationHelper)
     }
 
     @Test

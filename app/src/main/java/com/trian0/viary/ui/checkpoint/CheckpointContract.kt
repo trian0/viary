@@ -11,7 +11,7 @@ interface CheckpointContract {
         val initialBudget: Double = 0.0,
         val accumulatedExpense: Double = 0.0,
         val remainingBudget: Double = 0.0,
-        val checkpointCoverUri: Uri? = null,
+        val checkpointCoverPath: String? = null,
         val checkpointName: String = "",
         val checkpointNameError: Boolean = false,
         val checkpointBudget: String = "",
