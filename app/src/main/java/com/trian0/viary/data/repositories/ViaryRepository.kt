@@ -67,6 +67,10 @@ class ViaryRepository(
         checkpointDao.insert(entity)
     }
 
+    suspend fun getViaryWithCheckpointsById(viaryId: String): ViaryWithCheckpoints? = withContext(Dispatchers.IO) {
+        dao.getViaryWithCheckpoints(viaryId)
+    }
+
     val viaryInProgressWithCheckpoints get() = dao.getViaryInProgressWithCheckpoints()
 
     val allCompleted get() = dao.getAllCompleted()

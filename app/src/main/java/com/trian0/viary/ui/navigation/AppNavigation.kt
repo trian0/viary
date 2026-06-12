@@ -7,12 +7,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.trian0.viary.MainViewModel
 import com.trian0.viary.ui.checkpoint.CheckpointScreen
 import com.trian0.viary.ui.create.CreateScreen
 import com.trian0.viary.ui.historical.HistoricalScreen
 import com.trian0.viary.ui.home.HomeScreen
 import com.trian0.viary.ui.splash.CustomSplashScreen
+import com.trian0.viary.ui.viarydetails.ViaryDetailsScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -62,7 +65,21 @@ fun AppNavigation(
             )
         }
         composable(NavigationItem.Historical.route) {
-            HistoricalScreen()
+            HistoricalScreen(
+                onViaryClick = { viaryId ->
+                    navController.navigate(NavigationItem.ViaryDetails.route(viaryId))
+                }
+            )
+        }
+        composable(
+            route = NavigationItem.ViaryDetails.route,
+            arguments = listOf(navArgument("viaryId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val viaryId = backStackEntry.arguments?.getString("viaryId") ?: return@composable
+            ViaryDetailsScreen(
+                viaryId = viaryId,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         composable(NavigationItem.Checkpoint.route) {
             CheckpointScreen(

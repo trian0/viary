@@ -9,6 +9,7 @@ import com.trian0.viary.ui.checkpoint.CheckpointViewModel
 import com.trian0.viary.ui.create.CreateViewModel
 import com.trian0.viary.ui.historical.HistoricalViewModel
 import com.trian0.viary.ui.home.HomeViewModel
+import com.trian0.viary.ui.viarydetails.ViaryDetailsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -19,6 +20,7 @@ val appModules = module {
     viewModelOf(::CheckpointViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::HistoricalViewModel)
+    viewModelOf(::ViaryDetailsViewModel)
     viewModelOf(::MainViewModel)
 }
 

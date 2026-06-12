@@ -15,4 +15,7 @@ sealed class NavigationItem(val route: String, val icon: ImageVector, val title:
     object Create : NavigationItem("create", Icons.Rounded.AddCircleOutline, "Criar")
     object Historical : NavigationItem("historical", Icons.Outlined.History, "Histórico")
     object Checkpoint : NavigationItem("checkpoint", Icons.Rounded.AddCircle, "Checkpoint")
+    object ViaryDetails : NavigationItem("viary_details/{viaryId}", Icons.Outlined.Home, "Detalhes") {
+        fun route(viaryId: String) = "viary_details/$viaryId"
+    }
 }

@@ -32,6 +32,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
 
     val screensWithoutBottomBar = listOf(
         NavigationItem.Splash.route,
+        NavigationItem.ViaryDetails.route,
     )
 
     RequestLocationPermission()

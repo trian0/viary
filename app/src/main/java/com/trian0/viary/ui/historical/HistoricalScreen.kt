@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import java.util.Date
 @Composable
 fun HistoricalScreen(
     viewModel: HistoricalViewModel = koinViewModel(),
+    onViaryClick: (String) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -39,6 +41,7 @@ fun HistoricalScreen(
         completedViary = uiState.completedViary,
         lastCheckpoints = uiState.lastCheckpoints,
         isLoading = uiState.isLoading,
+        onViaryClick = onViaryClick,
     )
 }
 
@@ -47,6 +50,7 @@ fun HistoricalScreenView(
     completedViary: List<Viary> = emptyList(),
     lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
     isLoading: Boolean = true,
+    onViaryClick: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -71,16 +75,20 @@ fun HistoricalScreenView(
         when {
             isLoading -> HomeScreenSkeleton()
 
-            completedViary.isEmpty() -> Text(
-                modifier = Modifier.padding(top = 40.dp),
-                text = stringResource(R.string.historical_screen_empty),
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            completedViary.isEmpty() -> Column(
+                modifier = Modifier.padding(top = 40.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.historical_screen_empty),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
 
             else -> CompletedViaryList(
                 viaryList = completedViary,
                 modifier = Modifier.padding(top = 40.dp),
-                lastCheckpoints = lastCheckpoints
+                lastCheckpoints = lastCheckpoints,
+                onViaryClick = onViaryClick,
             )
         }
     }

@@ -900,13 +900,15 @@ fun CompletedViaryList(
     modifier: Modifier = Modifier,
     viaryList: List<Viary>,
     lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
+    onViaryClick: (String) -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         viaryList.forEachIndexed { index, viary ->
             CompletedViaryItem(
                 viary = viary,
                 lastCheckpointName = lastCheckpoints[viary.id]?.placeName ?: "",
-                isLast = index == viaryList.lastIndex
+                isLast = index == viaryList.lastIndex,
+                onClick = { onViaryClick(viary.id) }
             )
         }
     }
@@ -916,7 +918,8 @@ fun CompletedViaryList(
 fun CompletedViaryItem(
     viary: Viary,
     lastCheckpointName: String,
-    isLast: Boolean = false
+    isLast: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
     val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
@@ -946,6 +949,7 @@ fun CompletedViaryItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
+            onClick = onClick,
             colors = CardColors(
                 containerColor = Secondary90,
                 contentColor = Primary20,

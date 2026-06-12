@@ -37,6 +37,22 @@
     <string name="home_screen_see_history_button">See History</string>
     <!-- Home Screen -->
 
+    <!-- Viary Details Screen -->
+    <string name="viary_details_screen_back_button">Go back</string>
+    <string name="viary_details_screen_not_found">Trip not found</string>
+    <string name="viary_details_screen_completed_label">COMPLETED TRIP</string>
+    <string name="viary_details_screen_origin_prefix">From %s</string>
+    <string name="viary_details_screen_origin_default">Departure</string>
+    <string name="viary_details_screen_destination_default">Final Destination</string>
+    <string name="viary_details_screen_point_fallback">Point %d</string>
+    <string name="viary_details_screen_total_distance">Total Distance</string>
+    <string name="viary_details_screen_budget_spent">Budget Spent</string>
+    <string name="viary_details_screen_trip_duration">Trip Duration</string>
+    <string name="viary_details_screen_checkpoints_log">Checkpoint Log</string>
+    <string name="viary_details_screen_departure_point">Departure Point</string>
+    <string name="viary_details_screen_gallery_title">Trip Gallery</string>
+    <!-- Viary Details Screen -->
+
     <!-- Historical Screen -->
     <string name="historical_screen_title">TRAVEL HISTORY</string>
     <string name="historical_screen_subtitle">Every journey you\'ve completed.</string>

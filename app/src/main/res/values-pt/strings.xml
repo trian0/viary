@@ -35,6 +35,22 @@
     <string name="home_screen_see_history_button">Ver Histórico</string>
     <!-- Home Screen -->
 
+    <!-- Viary Details Screen -->
+    <string name="viary_details_screen_back_button">Voltar</string>
+    <string name="viary_details_screen_not_found">Viagem não encontrada</string>
+    <string name="viary_details_screen_completed_label">VIAGEM CONCLUÍDA</string>
+    <string name="viary_details_screen_origin_prefix">De %s</string>
+    <string name="viary_details_screen_origin_default">Partida</string>
+    <string name="viary_details_screen_destination_default">Destino Final</string>
+    <string name="viary_details_screen_point_fallback">Ponto %d</string>
+    <string name="viary_details_screen_total_distance">Distância Total</string>
+    <string name="viary_details_screen_budget_spent">Orçamento Gasto</string>
+    <string name="viary_details_screen_trip_duration">Duração da Viagem</string>
+    <string name="viary_details_screen_checkpoints_log">Registro de Checkpoints</string>
+    <string name="viary_details_screen_departure_point">Ponto de Partida</string>
+    <string name="viary_details_screen_gallery_title">Galeria da Viagem</string>
+    <!-- Viary Details Screen -->
+
     <!-- Historical Screen -->
     <string name="historical_screen_title">HISTÓRICO DE VIAGENS</string>
     <string name="historical_screen_subtitle">Todas as jornadas que você concluiu.</string>

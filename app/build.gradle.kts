@@ -1,9 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
 }
+
+val localProperties = Properties()
+localProperties.load(rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.trian0.viary"
@@ -20,6 +25,7 @@ android {
     }
 
     buildTypes {
+        debug {}
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -37,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -77,6 +84,9 @@ dependencies {
     testImplementation(libs.bundles.unit.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Maps
+    implementation(libs.maplibre.android)
 
     configurations.all {
         exclude(group = "com.intellij", module = "annotations")
