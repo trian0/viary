@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Viary Banner" width="100%"/>
+  <img src="assets/banner.svg" alt="Viary Banner" width="100%"/>
 </p>
 
 <h1 align="center">Viary</h1>
@@ -27,35 +27,33 @@ Ao finalizar a viagem, você tem um relatório completo com mapa interativo da r
 <table>
   <tr>
     <td align="center">
-      <img src="assets/screens/splash.png" width="180" alt="Splash Screen"/><br/>
+      <img src="assets/screens/mockups/splash.svg" width="180" alt="Splash Screen"/><br/>
       <b>Splash</b>
     </td>
     <td align="center">
-      <img src="assets/screens/home.png" width="180" alt="Home Screen"/><br/>
+      <img src="assets/screens/mockups/home.svg" width="180" alt="Home Screen"/><br/>
       <b>Home</b>
     </td>
     <td align="center">
-      <img src="assets/screens/create.png" width="180" alt="Criar Viagem"/><br/>
+      <img src="assets/screens/mockups/create.svg" width="180" alt="Criar Viagem"/><br/>
       <b>Criar Viagem</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="assets/screens/checkpoint.png" width="180" alt="Checkpoint"/><br/>
+      <img src="assets/screens/mockups/checkpoint.svg" width="180" alt="Checkpoint"/><br/>
       <b>Checkpoint</b>
     </td>
     <td align="center">
-      <img src="assets/screens/historical.png" width="180" alt="Histórico"/><br/>
+      <img src="assets/screens/mockups/historical.svg" width="180" alt="Histórico"/><br/>
       <b>Histórico</b>
     </td>
     <td align="center">
-      <img src="assets/screens/details.png" width="180" alt="Detalhes"/><br/>
+      <img src="assets/screens/mockups/details.svg" width="180" alt="Detalhes"/><br/>
       <b>Detalhes</b>
     </td>
   </tr>
 </table>
-
-> Adicione os screenshots reais na pasta `assets/screens/` antes de publicar.
 
 ---
 
