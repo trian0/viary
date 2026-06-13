@@ -39,6 +39,44 @@
     }
 
     /* ——————————————————————————
+       LANGUAGE TOGGLE
+    —————————————————————————— */
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+      gap: 2px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-subtle);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+    .lang-btn:not(.active):hover {
+      background: rgba(255,255,255,.06);
+      color: var(--text-muted);
+    }
+
+    /* ——————————————————————————
        PARTICLES
     —————————————————————————— */
     .particles {
@@ -137,6 +175,7 @@
       width: 6px; height: 6px;
       background: var(--primary);
       border-radius: 50%;
+      flex-shrink: 0;
       animation: pulse-dot 2s ease-in-out infinite;
     }
     @keyframes pulse-dot {
@@ -201,7 +240,7 @@
       font-weight: 600;
       color: var(--text-muted);
     }
-    .badge-android { color: #3DDC84; }
+    .badge-android { color: #3DDC84; flex-shrink: 0; }
 
     .hero-visual {
       display: flex;
@@ -518,6 +557,7 @@
       .screens-grid { grid-template-columns: 1fr; }
       .feat-grid    { grid-template-columns: 1fr; }
       .hero-stats   { flex-direction: column; gap: 24px; align-items: center; }
+      .lang-toggle  { top: 14px; right: 14px; }
     }
   </style>
 </head>
@@ -540,34 +580,33 @@
     <div class="hero-content">
       <div class="hero-eyebrow">
         <div class="hero-eyebrow-dot"></div>
-        Disponível para Android
+        <span data-i18n="hero-eyebrow">Disponível para Android</span>
       </div>
-      <h1 class="hero-title">
-        Seu diário de<br>
-        <em>viagens</em>
+      <h1 class="hero-title" data-i18n="hero-title">
+        Seu diário de<br><em>viagens</em>
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub" data-i18n="hero-sub">
         Cada parada, cada gasto, cada memória — registrada com precisão. Do GPS ao relatório final, tudo em um só lugar.
       </p>
       <div class="hero-stats">
         <div>
           <span class="hero-stat-val">6</span>
-          <span class="hero-stat-lbl">Telas</span>
+          <span class="hero-stat-lbl" data-i18n="stat-screens">Telas</span>
         </div>
         <div>
           <span class="hero-stat-val">∞</span>
-          <span class="hero-stat-lbl">Viagens</span>
+          <span class="hero-stat-lbl" data-i18n="stat-trips">Viagens</span>
         </div>
         <div>
           <span class="hero-stat-val">0</span>
-          <span class="hero-stat-lbl">Papel necessário</span>
+          <span class="hero-stat-lbl" data-i18n="stat-paper">Papel necessário</span>
         </div>
       </div>
       <div class="hero-badge">
         <svg class="badge-android" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.07c1.3-.13 2.18.55 2.95.55.79 0 2.27-.68 3.83-.58 1.53.07 2.93.65 3.77 1.95-3.46 2.08-2.89 6.55.62 7.85-.57 1.49-1.37 2.97-3.17 4.44zM12 7.07C11.79 5.1 13.4 3.37 15.25 3c.24 2.12-1.79 3.9-3.25 4.07z"/>
         </svg>
-        Android 7.0 ou superior
+        <span data-i18n="hero-badge">Android 7.0 ou superior</span>
       </div>
     </div>
 
@@ -584,24 +623,24 @@
 ═══════════════════════════════════════ -->
 <section class="s-value">
   <div class="section-wrap">
-    <div class="s-label">Por que Viary</div>
-    <h2 class="s-title">Viagens têm histórias.<br>O Viary as guarda.</h2>
-    <p class="s-sub">Pare de confiar só na memória. Registre cada momento, cada gasto e cada km percorrido — sem esforço, sem perder nada.</p>
+    <div class="s-label" data-i18n="value-label">Por que Viary</div>
+    <h2 class="s-title" data-i18n="value-title">Viagens têm histórias.<br>O Viary as guarda.</h2>
+    <p class="s-sub" data-i18n="value-sub">Pare de confiar só na memória. Registre cada momento, cada gasto e cada km percorrido — sem esforço, sem perder nada.</p>
     <div class="value-grid">
       <div class="value-card fade-up">
         <div class="value-icon">📍</div>
-        <div class="value-title">Registre cada parada</div>
-        <p class="value-desc">Adicione checkpoints ao longo da rota com nome do local, valor gasto, horário e fotos. A história da viagem fica completa e organizada.</p>
+        <div class="value-title" data-i18n="v1-title">Registre cada parada</div>
+        <p class="value-desc" data-i18n="v1-desc">Adicione checkpoints ao longo da rota com nome do local, valor gasto, horário e fotos. A história da viagem fica completa e organizada.</p>
       </div>
       <div class="value-card fade-up">
         <div class="value-icon">💸</div>
-        <div class="value-title">Controle total de gastos</div>
-        <p class="value-desc">Defina um orçamento na largada e veja o saldo diminuir em cada parada. Nunca mais chegue no destino sem saber quanto gastou.</p>
+        <div class="value-title" data-i18n="v2-title">Controle total de gastos</div>
+        <p class="value-desc" data-i18n="v2-desc">Defina um orçamento na largada e veja o saldo diminuir em cada parada. Nunca mais chegue no destino sem saber quanto gastou.</p>
       </div>
       <div class="value-card fade-up">
         <div class="value-icon">🗺️</div>
-        <div class="value-title">Reviva a rota completa</div>
-        <p class="value-desc">Ao finalizar, você tem um mapa interativo com todos os pontos percorridos, uma timeline das paradas e uma galeria de fotos.</p>
+        <div class="value-title" data-i18n="v3-title">Reviva a rota completa</div>
+        <p class="value-desc" data-i18n="v3-desc">Ao finalizar, você tem um mapa interativo com todos os pontos percorridos, uma timeline das paradas e uma galeria de fotos.</p>
       </div>
     </div>
   </div>
@@ -612,51 +651,51 @@
 ═══════════════════════════════════════ -->
 <section class="s-screens">
   <div class="section-wrap">
-    <div class="s-label">As telas</div>
-    <h2 class="s-title">Simples por fora,<br>poderoso por dentro.</h2>
-    <p class="s-sub">Uma interface limpa e intuitiva que sai do caminho e deixa você focar no que importa: a viagem em si.</p>
+    <div class="s-label" data-i18n="screens-label">As telas</div>
+    <h2 class="s-title" data-i18n="screens-title">Simples por fora,<br>poderoso por dentro.</h2>
+    <p class="s-sub" data-i18n="screens-sub">Uma interface limpa e intuitiva que sai do caminho e deixa você focar no que importa: a viagem em si.</p>
     <div class="screens-grid">
       <div class="screen-card fade-up">
         <div class="screen-img">
-          <img src="assets/screens/mockups/splash.svg" alt="Tela de Abertura">
+          <img src="assets/screens/mockups/splash.svg" alt="Splash Screen">
         </div>
-        <div class="screen-name">Abertura</div>
-        <p class="screen-desc">A identidade do app te recebe com animação ao iniciar</p>
+        <div class="screen-name" data-i18n="sc1-name">Abertura</div>
+        <p class="screen-desc" data-i18n="sc1-desc">A identidade do app te recebe com animação ao iniciar</p>
       </div>
       <div class="screen-card fade-up">
         <div class="screen-img">
-          <img src="assets/screens/mockups/home.svg" alt="Painel">
+          <img src="assets/screens/mockups/home.svg" alt="Dashboard">
         </div>
-        <div class="screen-name">Painel</div>
-        <p class="screen-desc">Viagem ativa, distância e tempo atualizados em tempo real</p>
+        <div class="screen-name" data-i18n="sc2-name">Painel</div>
+        <p class="screen-desc" data-i18n="sc2-desc">Viagem ativa, distância e tempo atualizados em tempo real</p>
       </div>
       <div class="screen-card fade-up">
         <div class="screen-img">
-          <img src="assets/screens/mockups/create.svg" alt="Nova Viagem">
+          <img src="assets/screens/mockups/create.svg" alt="New Trip">
         </div>
-        <div class="screen-name">Nova Viagem</div>
-        <p class="screen-desc">Nome, origem, orçamento inicial e clima da viagem</p>
+        <div class="screen-name" data-i18n="sc3-name">Nova Viagem</div>
+        <p class="screen-desc" data-i18n="sc3-desc">Nome, origem, orçamento inicial e clima da viagem</p>
       </div>
       <div class="screen-card fade-up">
         <div class="screen-img">
           <img src="assets/screens/mockups/checkpoint.svg" alt="Checkpoint">
         </div>
-        <div class="screen-name">Checkpoint</div>
-        <p class="screen-desc">Registre cada parada com local, gasto e fotos</p>
+        <div class="screen-name" data-i18n="sc4-name">Checkpoint</div>
+        <p class="screen-desc" data-i18n="sc4-desc">Registre cada parada com local, gasto e fotos</p>
       </div>
       <div class="screen-card fade-up">
         <div class="screen-img">
-          <img src="assets/screens/mockups/historical.svg" alt="Histórico">
+          <img src="assets/screens/mockups/historical.svg" alt="History">
         </div>
-        <div class="screen-name">Histórico</div>
-        <p class="screen-desc">Todas as viagens concluídas reunidas em um só lugar</p>
+        <div class="screen-name" data-i18n="sc5-name">Histórico</div>
+        <p class="screen-desc" data-i18n="sc5-desc">Todas as viagens concluídas reunidas em um só lugar</p>
       </div>
       <div class="screen-card fade-up">
         <div class="screen-img">
-          <img src="assets/screens/mockups/details.svg" alt="Detalhes">
+          <img src="assets/screens/mockups/details.svg" alt="Details">
         </div>
-        <div class="screen-name">Detalhes</div>
-        <p class="screen-desc">Mapa interativo, timeline e galeria da viagem finalizada</p>
+        <div class="screen-name" data-i18n="sc6-name">Detalhes</div>
+        <p class="screen-desc" data-i18n="sc6-desc">Mapa interativo, timeline e galeria da viagem finalizada</p>
       </div>
     </div>
   </div>
@@ -667,34 +706,34 @@
 ═══════════════════════════════════════ -->
 <section class="s-journey">
   <div class="section-wrap">
-    <div class="s-label">Como funciona</div>
-    <h2 class="s-title">Uma viagem em quatro passos.</h2>
-    <p class="s-sub">Do início ao relatório final, tudo acontece de forma natural. Você viaja, o Viary cuida do resto.</p>
+    <div class="s-label" data-i18n="journey-label">Como funciona</div>
+    <h2 class="s-title" data-i18n="journey-title">Uma viagem em quatro passos.</h2>
+    <p class="s-sub" data-i18n="journey-sub">Do início ao relatório final, tudo acontece de forma natural. Você viaja, o Viary cuida do resto.</p>
     <div class="journey-grid">
       <div class="journey-line"></div>
       <div class="journey-step fade-up">
         <div class="j-number">1</div>
         <div class="j-emoji">🚀</div>
-        <div class="j-title">Crie a viagem</div>
-        <p class="j-desc">Dê um nome, defina a origem, escolha o clima e estabeleça seu orçamento inicial.</p>
+        <div class="j-title" data-i18n="j1-title">Crie a viagem</div>
+        <p class="j-desc" data-i18n="j1-desc">Dê um nome, defina a origem, escolha o clima e estabeleça seu orçamento inicial.</p>
       </div>
       <div class="journey-step fade-up">
         <div class="j-number">2</div>
         <div class="j-emoji">📸</div>
-        <div class="j-title">Registre as paradas</div>
-        <p class="j-desc">Em cada checkpoint, anote o local, o valor gasto e adicione fotos da parada.</p>
+        <div class="j-title" data-i18n="j2-title">Registre as paradas</div>
+        <p class="j-desc" data-i18n="j2-desc">Em cada checkpoint, anote o local, o valor gasto e adicione fotos da parada.</p>
       </div>
       <div class="journey-step fade-up">
         <div class="j-number">3</div>
         <div class="j-emoji">📡</div>
-        <div class="j-title">GPS automático</div>
-        <p class="j-desc">Enquanto você viaja, o app registra distância percorrida e tempo decorrido em segundo plano.</p>
+        <div class="j-title" data-i18n="j3-title">GPS automático</div>
+        <p class="j-desc" data-i18n="j3-desc">Enquanto você viaja, o app registra distância percorrida e tempo decorrido em segundo plano.</p>
       </div>
       <div class="journey-step fade-up">
         <div class="j-number">4</div>
         <div class="j-emoji">📊</div>
-        <div class="j-title">Relatório completo</div>
-        <p class="j-desc">Ao finalizar, acesse o mapa da rota, a timeline de paradas e a galeria organizada por checkpoint.</p>
+        <div class="j-title" data-i18n="j4-title">Relatório completo</div>
+        <p class="j-desc" data-i18n="j4-desc">Ao finalizar, acesse o mapa da rota, a timeline de paradas e a galeria organizada por checkpoint.</p>
       </div>
     </div>
   </div>
@@ -705,49 +744,49 @@
 ═══════════════════════════════════════ -->
 <section class="s-features">
   <div class="section-wrap">
-    <div class="s-label">Funcionalidades</div>
-    <h2 class="s-title">Tudo que uma viagem precisa.</h2>
-    <p class="s-sub">Pensado para quem viaja de verdade — cada detalhe existe porque faz diferença no caminho.</p>
+    <div class="s-label" data-i18n="feat-label">Funcionalidades</div>
+    <h2 class="s-title" data-i18n="feat-title">Tudo que uma viagem precisa.</h2>
+    <p class="s-sub" data-i18n="feat-sub">Pensado para quem viaja de verdade — cada detalhe existe porque faz diferença no caminho.</p>
     <div class="feat-grid">
       <div class="feat-card fade-up">
         <span class="feat-emoji">🛰️</span>
-        <div class="feat-title">GPS em tempo real</div>
-        <p class="feat-desc">Distância e duração atualizadas continuamente enquanto você está na estrada.</p>
+        <div class="feat-title" data-i18n="f1-title">GPS em tempo real</div>
+        <p class="feat-desc" data-i18n="f1-desc">Distância e duração atualizadas continuamente enquanto você está na estrada.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">💰</span>
-        <div class="feat-title">Controle de orçamento</div>
-        <p class="feat-desc">Saldo atualizado a cada checkpoint. Você sempre sabe quanto ainda tem para gastar.</p>
+        <div class="feat-title" data-i18n="f2-title">Controle de orçamento</div>
+        <p class="feat-desc" data-i18n="f2-desc">Saldo atualizado a cada checkpoint. Você sempre sabe quanto ainda tem para gastar.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">🖼️</span>
-        <div class="feat-title">Galeria por parada</div>
-        <p class="feat-desc">Fotos organizadas automaticamente por checkpoint, não apenas por data.</p>
+        <div class="feat-title" data-i18n="f3-title">Galeria por parada</div>
+        <p class="feat-desc" data-i18n="f3-desc">Fotos organizadas automaticamente por checkpoint, não apenas por data.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">🗺️</span>
-        <div class="feat-title">Mapa interativo</div>
-        <p class="feat-desc">Visualize toda a rota percorrida com marcadores para origem, paradas e destino final.</p>
+        <div class="feat-title" data-i18n="f4-title">Mapa interativo</div>
+        <p class="feat-desc" data-i18n="f4-desc">Visualize toda a rota percorrida com marcadores para origem, paradas e destino final.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">📋</span>
-        <div class="feat-title">Histórico de viagens</div>
-        <p class="feat-desc">Todas as suas aventuras anteriores disponíveis para revisitar a qualquer momento.</p>
+        <div class="feat-title" data-i18n="f5-title">Histórico de viagens</div>
+        <p class="feat-desc" data-i18n="f5-desc">Todas as suas aventuras anteriores disponíveis para revisitar a qualquer momento.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">🌤️</span>
-        <div class="feat-title">Clima da viagem</div>
-        <p class="feat-desc">Registre o vibe do dia: ensolarado, nublado, chuvoso ou frio.</p>
+        <div class="feat-title" data-i18n="f6-title">Clima da viagem</div>
+        <p class="feat-desc" data-i18n="f6-desc">Registre o vibe do dia: ensolarado, nublado, chuvoso ou frio.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">💱</span>
-        <div class="feat-title">Moeda por país</div>
-        <p class="feat-desc">Detecção automática do país para exibir o símbolo de moeda correto nos gastos.</p>
+        <div class="feat-title" data-i18n="f7-title">Moeda por país</div>
+        <p class="feat-desc" data-i18n="f7-desc">Detecção automática do país para exibir o símbolo de moeda correto nos gastos.</p>
       </div>
       <div class="feat-card fade-up">
         <span class="feat-emoji">📱</span>
-        <div class="feat-title">Funciona offline</div>
-        <p class="feat-desc">Tudo salvo localmente no dispositivo. Sem depender de internet para registrar a viagem.</p>
+        <div class="feat-title" data-i18n="f8-title">Funciona offline</div>
+        <p class="feat-desc" data-i18n="f8-desc">Tudo salvo localmente no dispositivo. Sem depender de internet para registrar a viagem.</p>
       </div>
     </div>
   </div>
@@ -758,20 +797,148 @@
 ═══════════════════════════════════════ -->
 <footer>
   <div class="footer-logo">viary</div>
-  <p class="footer-tag">Seu diário de viagens. Cada parada, cada gasto, cada memória.</p>
+  <p class="footer-tag" data-i18n="footer-tag">Seu diário de viagens. Cada parada, cada gasto, cada memória.</p>
   <div class="footer-rule"></div>
-  <p class="footer-credit">Feito com <span class="heart">♥</span> por Viary</p>
+  <p class="footer-credit" data-i18n="footer-credit">Feito com <span class="heart">♥</span> por Viary</p>
 </footer>
 
+<!-- ═══════════════════════════════════════
+     LANGUAGE TOGGLE
+═══════════════════════════════════════ -->
+<div class="lang-toggle" id="langToggle">
+  <button class="lang-btn active" data-lang="pt">PT</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
 <script>
-  // Stagger delays for grid children before they enter the viewport
-  const staggerSelectors = [
-    '.value-grid',
-    '.screens-grid',
-    '.journey-grid',
-    '.feat-grid',
-  ];
-  staggerSelectors.forEach(sel => {
+  // ─── Translation dictionary ───────────────────────────────
+  const T = {
+    pt: {
+      title:          'Viary — Seu diário de viagens',
+      'hero-eyebrow': 'Disponível para Android',
+      'hero-title':   'Seu diário de<br><em>viagens</em>',
+      'hero-sub':     'Cada parada, cada gasto, cada memória — registrada com precisão. Do GPS ao relatório final, tudo em um só lugar.',
+      'stat-screens': 'Telas',
+      'stat-trips':   'Viagens',
+      'stat-paper':   'Papel necessário',
+      'hero-badge':   'Android 7.0 ou superior',
+
+      'value-label': 'Por que Viary',
+      'value-title': 'Viagens têm histórias.<br>O Viary as guarda.',
+      'value-sub':   'Pare de confiar só na memória. Registre cada momento, cada gasto e cada km percorrido — sem esforço, sem perder nada.',
+      'v1-title': 'Registre cada parada',
+      'v1-desc':  'Adicione checkpoints ao longo da rota com nome do local, valor gasto, horário e fotos. A história da viagem fica completa e organizada.',
+      'v2-title': 'Controle total de gastos',
+      'v2-desc':  'Defina um orçamento na largada e veja o saldo diminuir em cada parada. Nunca mais chegue no destino sem saber quanto gastou.',
+      'v3-title': 'Reviva a rota completa',
+      'v3-desc':  'Ao finalizar, você tem um mapa interativo com todos os pontos percorridos, uma timeline das paradas e uma galeria de fotos.',
+
+      'screens-label': 'As telas',
+      'screens-title': 'Simples por fora,<br>poderoso por dentro.',
+      'screens-sub':   'Uma interface limpa e intuitiva que sai do caminho e deixa você focar no que importa: a viagem em si.',
+      'sc1-name': 'Abertura',    'sc1-desc': 'A identidade do app te recebe com animação ao iniciar',
+      'sc2-name': 'Painel',      'sc2-desc': 'Viagem ativa, distância e tempo atualizados em tempo real',
+      'sc3-name': 'Nova Viagem', 'sc3-desc': 'Nome, origem, orçamento inicial e clima da viagem',
+      'sc4-name': 'Checkpoint',  'sc4-desc': 'Registre cada parada com local, gasto e fotos',
+      'sc5-name': 'Histórico',   'sc5-desc': 'Todas as viagens concluídas reunidas em um só lugar',
+      'sc6-name': 'Detalhes',    'sc6-desc': 'Mapa interativo, timeline e galeria da viagem finalizada',
+
+      'journey-label': 'Como funciona',
+      'journey-title': 'Uma viagem em quatro passos.',
+      'journey-sub':   'Do início ao relatório final, tudo acontece de forma natural. Você viaja, o Viary cuida do resto.',
+      'j1-title': 'Crie a viagem',       'j1-desc': 'Dê um nome, defina a origem, escolha o clima e estabeleça seu orçamento inicial.',
+      'j2-title': 'Registre as paradas', 'j2-desc': 'Em cada checkpoint, anote o local, o valor gasto e adicione fotos da parada.',
+      'j3-title': 'GPS automático',      'j3-desc': 'Enquanto você viaja, o app registra distância percorrida e tempo decorrido em segundo plano.',
+      'j4-title': 'Relatório completo',  'j4-desc': 'Ao finalizar, acesse o mapa da rota, a timeline de paradas e a galeria organizada por checkpoint.',
+
+      'feat-label': 'Funcionalidades',
+      'feat-title': 'Tudo que uma viagem precisa.',
+      'feat-sub':   'Pensado para quem viaja de verdade — cada detalhe existe porque faz diferença no caminho.',
+      'f1-title': 'GPS em tempo real',    'f1-desc': 'Distância e duração atualizadas continuamente enquanto você está na estrada.',
+      'f2-title': 'Controle de orçamento','f2-desc': 'Saldo atualizado a cada checkpoint. Você sempre sabe quanto ainda tem para gastar.',
+      'f3-title': 'Galeria por parada',   'f3-desc': 'Fotos organizadas automaticamente por checkpoint, não apenas por data.',
+      'f4-title': 'Mapa interativo',      'f4-desc': 'Visualize toda a rota percorrida com marcadores para origem, paradas e destino final.',
+      'f5-title': 'Histórico de viagens', 'f5-desc': 'Todas as suas aventuras anteriores disponíveis para revisitar a qualquer momento.',
+      'f6-title': 'Clima da viagem',      'f6-desc': 'Registre o vibe do dia: ensolarado, nublado, chuvoso ou frio.',
+      'f7-title': 'Moeda por país',       'f7-desc': 'Detecção automática do país para exibir o símbolo de moeda correto nos gastos.',
+      'f8-title': 'Funciona offline',     'f8-desc': 'Tudo salvo localmente no dispositivo. Sem depender de internet para registrar a viagem.',
+
+      'footer-tag':    'Seu diário de viagens. Cada parada, cada gasto, cada memória.',
+      'footer-credit': 'Feito com <span class="heart">♥</span> por Viary',
+    },
+    en: {
+      title:          'Viary — Your travel journal',
+      'hero-eyebrow': 'Available for Android',
+      'hero-title':   'Your travel<br><em>journal</em>',
+      'hero-sub':     'Every stop, every expense, every memory — recorded with precision. From GPS tracking to the final report, all in one place.',
+      'stat-screens': 'Screens',
+      'stat-trips':   'Trips',
+      'stat-paper':   'Paper needed',
+      'hero-badge':   'Android 7.0 or higher',
+
+      'value-label': 'Why Viary',
+      'value-title': 'Trips have stories.<br>Viary keeps them.',
+      'value-sub':   'Stop relying on memory alone. Record every moment, every expense, and every km traveled — effortlessly, without missing a thing.',
+      'v1-title': 'Log every stop',
+      'v1-desc':  'Add checkpoints along the route with the location name, amount spent, timestamp, and photos. Your trip story stays complete and organized.',
+      'v2-title': 'Full spending control',
+      'v2-desc':  'Set a budget at the start and watch your balance update at every stop. Never arrive at your destination unsure of what you spent.',
+      'v3-title': 'Relive the full route',
+      'v3-desc':  'When you finish, you get an interactive map of every point traveled, a timeline of stops, and a photo gallery.',
+
+      'screens-label': 'The screens',
+      'screens-title': 'Simple on the outside,<br>powerful on the inside.',
+      'screens-sub':   'A clean, intuitive interface that gets out of the way and lets you focus on what matters: the trip itself.',
+      'sc1-name': 'Splash',      'sc1-desc': 'The app\'s identity welcomes you with an animation on launch',
+      'sc2-name': 'Dashboard',   'sc2-desc': 'Active trip, distance and time updated in real time',
+      'sc3-name': 'New Trip',    'sc3-desc': 'Name, origin, starting budget, and trip weather',
+      'sc4-name': 'Checkpoint',  'sc4-desc': 'Log each stop with location, expenses, and photos',
+      'sc5-name': 'History',     'sc5-desc': 'All completed trips gathered in one place',
+      'sc6-name': 'Details',     'sc6-desc': 'Interactive map, timeline, and gallery of the completed trip',
+
+      'journey-label': 'How it works',
+      'journey-title': 'A trip in four steps.',
+      'journey-sub':   'From start to final report, everything happens naturally. You travel, Viary takes care of the rest.',
+      'j1-title': 'Create the trip',  'j1-desc': 'Give it a name, set the origin, choose the weather vibe, and establish your starting budget.',
+      'j2-title': 'Log the stops',    'j2-desc': 'At each checkpoint, note the location, the amount spent, and add photos of the stop.',
+      'j3-title': 'Automatic GPS',    'j3-desc': 'While you travel, the app records distance covered and time elapsed in the background.',
+      'j4-title': 'Full report',      'j4-desc': 'When done, access the route map, stop timeline, and gallery organized by checkpoint.',
+
+      'feat-label': 'Features',
+      'feat-title': 'Everything a trip needs.',
+      'feat-sub':   'Built for real travelers — every detail exists because it makes a difference on the road.',
+      'f1-title': 'Real-time GPS',        'f1-desc': 'Distance and duration updated continuously while you\'re on the road.',
+      'f2-title': 'Budget control',       'f2-desc': 'Balance updated at every checkpoint. You always know how much you have left to spend.',
+      'f3-title': 'Gallery per stop',     'f3-desc': 'Photos organized automatically by checkpoint, not just by date.',
+      'f4-title': 'Interactive map',      'f4-desc': 'View the entire route with markers for origin, stops, and final destination.',
+      'f5-title': 'Trip history',         'f5-desc': 'All your past adventures available to revisit at any time.',
+      'f6-title': 'Trip weather',         'f6-desc': 'Record the day\'s vibe: sunny, cloudy, rainy, or cold.',
+      'f7-title': 'Currency by country',  'f7-desc': 'Automatic country detection to display the correct currency symbol for expenses.',
+      'f8-title': 'Works offline',        'f8-desc': 'Everything saved locally on your device. No internet needed to record your trip.',
+
+      'footer-tag':    'Your travel journal. Every stop, every expense, every memory.',
+      'footer-credit': 'Made with <span class="heart">♥</span> by Viary',
+    }
+  };
+
+  // ─── Language switch ──────────────────────────────────────
+  function setLang(lang) {
+    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+    document.title = T[lang].title;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.innerHTML = T[lang][el.dataset.i18n];
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+
+  // ─── Stagger delays ───────────────────────────────────────
+  ['.value-grid', '.screens-grid', '.journey-grid', '.feat-grid'].forEach(sel => {
     const parent = document.querySelector(sel);
     if (!parent) return;
     parent.querySelectorAll('.fade-up').forEach((el, i) => {
@@ -779,13 +946,12 @@
     });
   });
 
-  // Scroll-triggered reveal
+  // ─── Scroll-triggered reveal ──────────────────────────────
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const el = entry.target;
       el.classList.add('in');
-      // Reset delay after animation so hover isn't sluggish
       const delay = parseFloat(el.style.transitionDelay || 0) * 1000 + 700;
       setTimeout(() => { el.style.transitionDelay = '0s'; }, delay);
       observer.unobserve(el);
