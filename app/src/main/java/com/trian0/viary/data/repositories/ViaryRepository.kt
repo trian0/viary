@@ -2,6 +2,10 @@ package com.trian0.viary.data.repositories
 
 import android.content.Context
 import android.net.Uri
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.trian0.viary.data.database.dao.CheckpointDao
 import com.trian0.viary.data.database.dao.ViaryDao
 import com.trian0.viary.data.database.entities.CheckpointEntity
@@ -11,6 +15,8 @@ import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.models.ViaryWithCheckpoints
 import com.trian0.viary.data.utils.saveImageToInternalStorage
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class ViaryRepository(
@@ -74,6 +80,11 @@ class ViaryRepository(
     val viaryInProgressWithCheckpoints get() = dao.getViaryInProgressWithCheckpoints()
 
     val allCompleted get() = dao.getAllCompleted()
+
+    fun completedPaged(): Flow<PagingData<Viary>> = Pager(
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        pagingSourceFactory = { dao.getAllCompletedPaged() }
+    ).flow.map { pagingData -> pagingData.map { it.toViary() } }
 }
 
 fun Viary.toViaryEntity() = ViaryEntity(

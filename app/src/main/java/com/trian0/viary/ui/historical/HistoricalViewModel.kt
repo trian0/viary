@@ -2,6 +2,7 @@ package com.trian0.viary.ui.historical
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.mvi.BaseViewModel
@@ -16,6 +17,8 @@ class HistoricalViewModel(
         private const val TAG = "HistoricalViewModel"
     }
 
+    val completedPaged = repository.completedPaged().cachedIn(viewModelScope)
+
     override fun createInitialState(): HistoricalContract.HistoricalUiState =
         HistoricalContract.HistoricalUiState()
 
@@ -24,8 +27,6 @@ class HistoricalViewModel(
     }
 
     fun init() {
-        Log.d(TAG, "init: ")
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.allCompleted.collect { entities ->
@@ -33,18 +34,10 @@ class HistoricalViewModel(
                     val lastCheckpoints = completedViary.associate { viary ->
                         viary.id to repository.getCheckpointsByViaryId(viary.id).lastOrNull()
                     }
-
-                    setState {
-                        copy(
-                            completedViary = completedViary,
-                            lastCheckpoints = lastCheckpoints,
-                            isLoading = false,
-                        )
-                    }
+                    setState { copy(lastCheckpoints = lastCheckpoints) }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                setState { copy(isLoading = false) }
             }
         }
     }

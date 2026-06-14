@@ -1,5 +1,6 @@
 package com.trian0.viary.data.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -52,4 +53,7 @@ interface ViaryDao {
 
     @Query("SELECT * FROM viaryentity WHERE status = 'COMPLETED' ORDER BY departureTime DESC")
     fun getAllCompleted(): Flow<List<ViaryEntity>>
+
+    @Query("SELECT * FROM viaryentity WHERE status = 'COMPLETED' ORDER BY departureTime DESC")
+    fun getAllCompletedPaged(): PagingSource<Int, ViaryEntity>
 }
