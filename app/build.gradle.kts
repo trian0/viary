@@ -75,6 +75,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.room.paging)
     ksp(libs.room.compiler)
     testImplementation(libs.room.testing)
 
@@ -88,6 +89,10 @@ dependencies {
     testImplementation(libs.bundles.unit.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 
     // Maps
     implementation(libs.maplibre.android)

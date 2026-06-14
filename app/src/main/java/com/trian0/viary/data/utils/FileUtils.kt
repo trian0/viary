@@ -1,6 +1,8 @@
 package com.trian0.viary.data.utils
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import java.io.File
@@ -13,11 +15,14 @@ fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
         val fileName = "viary_image_${System.currentTimeMillis()}.jpg"
         val file = File(context.filesDir, fileName)
 
-        context.contentResolver.openInputStream(uri)?.use { inputStream ->
-            FileOutputStream(file).use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
+        val bitmap = context.contentResolver.openInputStream(uri)?.use { input ->
+            BitmapFactory.decodeStream(input)
+        } ?: return null
+
+        FileOutputStream(file).use { output ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, output)
         }
+
         file.absolutePath
     } catch (e: Exception) {
         Log.e("FileUtil", "Erro ao salvar imagem", e)
