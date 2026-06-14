@@ -12,9 +12,10 @@ import com.trian0.viary.data.utils.Converters
 @Database(
     entities = [
         ViaryEntity::class,
-        CheckpointEntity::class, ],
+        CheckpointEntity::class,
+    ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class ViaryDatabase : RoomDatabase() {
