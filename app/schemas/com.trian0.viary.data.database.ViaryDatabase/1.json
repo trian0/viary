@@ -1,0 +1,171 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "97ea4cd35b68282c1174f4c98206cbe0",
+    "entities": [
+      {
+        "tableName": "ViaryEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `origin` TEXT NOT NULL, `departureTime` INTEGER, `initialBudget` REAL NOT NULL, `status` TEXT NOT NULL, `finalBudget` REAL NOT NULL, `kmEnd` REAL NOT NULL, `selectedImage` TEXT, `climate` TEXT, `latitudeOrigin` REAL NOT NULL, `longitudeOrigin` REAL NOT NULL, `latitudeArrival` REAL NOT NULL, `longitudeArrival` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "origin",
+            "columnName": "origin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "departureTime",
+            "columnName": "departureTime",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "initialBudget",
+            "columnName": "initialBudget",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "finalBudget",
+            "columnName": "finalBudget",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kmEnd",
+            "columnName": "kmEnd",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedImage",
+            "columnName": "selectedImage",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "climate",
+            "columnName": "climate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "latitudeOrigin",
+            "columnName": "latitudeOrigin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitudeOrigin",
+            "columnName": "longitudeOrigin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitudeArrival",
+            "columnName": "latitudeArrival",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitudeArrival",
+            "columnName": "longitudeArrival",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "checkpoints",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `viaryId` TEXT NOT NULL, `placeName` TEXT NOT NULL, `time` INTEGER NOT NULL, `expense` REAL NOT NULL, `imageUri` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `images` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viaryId",
+            "columnName": "viaryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "placeName",
+            "columnName": "placeName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expense",
+            "columnName": "expense",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUri",
+            "columnName": "imageUri",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "images",
+            "columnName": "images",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '97ea4cd35b68282c1174f4c98206cbe0')"
+    ]
+  }
+}

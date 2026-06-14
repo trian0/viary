@@ -10,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import okhttp3.OkHttpClient
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -24,6 +25,7 @@ class MainViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository = mockk<ViaryRepository>(relaxed = true)
+    private val httpClient = mockk<OkHttpClient>(relaxed = true)
     private lateinit var viewModel: MainViewModel
 
     private val fakeViaryEntity = ViaryEntity(
@@ -53,14 +55,14 @@ class MainViewModelTest {
 
     @Test
     fun `navState - inicializa como Loading`() = runTest {
-        viewModel = MainViewModel(repository)
+        viewModel = MainViewModel(repository, httpClient)
 
         assertEquals(SplashNavState.Loading, viewModel.navState.value)
     }
 
     @Test
     fun `navState - navega para Home apos o delay inicial`() = runTest {
-        viewModel = MainViewModel(repository)
+        viewModel = MainViewModel(repository, httpClient)
 
         viewModel.navState.test {
             awaitItem() // Loading
@@ -72,7 +74,7 @@ class MainViewModelTest {
 
     @Test
     fun `keepSplashOn - inicia como true enquanto Loading`() = runTest {
-        viewModel = MainViewModel(repository)
+        viewModel = MainViewModel(repository, httpClient)
 
         assertTrue(viewModel.keepSplashOn.value)
     }
@@ -80,7 +82,7 @@ class MainViewModelTest {
     @Test
     fun `hasViaryInProgress - false quando nao ha viary em andamento`() = runTest {
         every { repository.viaryInProgress } returns flowOf(null)
-        viewModel = MainViewModel(repository)
+        viewModel = MainViewModel(repository, httpClient)
 
         // aguarda o flow ser coletado
         viewModel.navState.test {
@@ -95,7 +97,7 @@ class MainViewModelTest {
     @Test
     fun `hasViaryInProgress - true quando ha viary em andamento`() = runTest {
         every { repository.viaryInProgress } returns flowOf(fakeViaryEntity)
-        viewModel = MainViewModel(repository)
+        viewModel = MainViewModel(repository, httpClient)
 
         viewModel.navState.test {
             awaitItem()

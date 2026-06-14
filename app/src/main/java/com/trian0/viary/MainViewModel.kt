@@ -27,7 +27,8 @@ sealed class SplashNavState {
 }
 
 class MainViewModel(
-    private val repository: ViaryRepository
+    private val repository: ViaryRepository,
+    private val httpClient: OkHttpClient
 ) : ViewModel() {
     private val _navState = MutableStateFlow<SplashNavState>(SplashNavState.Loading)
     val navState: StateFlow<SplashNavState> = _navState.asStateFlow()
@@ -65,8 +66,7 @@ class MainViewModel(
     private fun fetchCountry() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val client = OkHttpClient()
-                val response = client.newCall(
+                val response = httpClient.newCall(
                     Request.Builder()
                         .url("http://ip-api.com/json/?fields=countryCode,currency")
                         .build()

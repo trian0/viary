@@ -10,12 +10,14 @@ import com.trian0.viary.ui.create.CreateViewModel
 import com.trian0.viary.ui.historical.HistoricalViewModel
 import com.trian0.viary.ui.home.HomeViewModel
 import com.trian0.viary.ui.viarydetails.ViaryDetailsViewModel
+import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModules = module {
     single { LocationHelper(androidContext()) }
+    single { OkHttpClient() }
     viewModelOf(::CreateViewModel)
     viewModelOf(::CheckpointViewModel)
     viewModelOf(::HomeViewModel)
@@ -30,7 +32,7 @@ val storageModule = module {
             context = androidContext(),
             klass = ViaryDatabase::class.java,
             name = "viary.db"
-        ).fallbackToDestructiveMigration(false).build()
+        ).build()
     }
     single { get<ViaryDatabase>().viaryDao() }
     single { get<ViaryDatabase>().checkpointDao() }
