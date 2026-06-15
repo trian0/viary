@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.trian0.viary" />
+                  <option name="mobileSdkAppId" value="1:876291678706:android:30aa6f2a2c875caf770b6b" />
+                  <option name="projectId" value="viary-c3603" />
+                  <option name="projectNumber" value="876291678706" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

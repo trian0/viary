@@ -2,6 +2,7 @@ package com.trian0.viary.ui.create
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import androidx.lifecycle.viewModelScope
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
@@ -161,6 +162,7 @@ class CreateViewModel(
 
                 Log.d(TAG, "Viagem criada com sucesso: $viary")
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.e(TAG, "Erro ao criar viagem", e)
                 setState { copy(isLoading = false, showErrorDialog = true) }
                 setEffect {

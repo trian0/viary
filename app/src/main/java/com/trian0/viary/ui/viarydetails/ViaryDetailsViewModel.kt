@@ -2,6 +2,7 @@ package com.trian0.viary.ui.viarydetails
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.mvi.BaseViewModel
@@ -55,6 +56,7 @@ class ViaryDetailsViewModel(
                     )
                 }
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.e(TAG, "loadViary error", e)
                 setState { copy(isLoading = false) }
             }

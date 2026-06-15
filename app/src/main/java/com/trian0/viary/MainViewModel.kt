@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.models.Country
 import com.trian0.viary.data.repositories.ViaryRepository
 import kotlinx.coroutines.Dispatchers
@@ -86,6 +87,7 @@ class MainViewModel(
                     loading = false
                 )
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
                 _currencyData.value = _currencyData.value.copy(loading = false)
             }

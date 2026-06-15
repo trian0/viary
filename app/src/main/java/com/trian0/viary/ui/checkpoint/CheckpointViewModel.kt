@@ -2,6 +2,7 @@ package com.trian0.viary.ui.checkpoint
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import androidx.lifecycle.viewModelScope
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.repositories.ViaryRepository
@@ -64,6 +65,7 @@ class CheckpointViewModel(
                     )
                 }
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
             }
         }
@@ -188,6 +190,7 @@ class CheckpointViewModel(
 
                 Log.d(TAG, "Checkpoint criado com sucesso: $checkpoint")
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
                 Log.d(TAG, "Erro ao criar checkpoint", e)
                 setState { copy(isLoading = false, showErrorDialog = true) }
