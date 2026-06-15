@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 val localProperties = Properties()
@@ -89,6 +91,11 @@ dependencies {
     // Paging 3
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
     // Maps
     implementation(libs.maplibre.android)

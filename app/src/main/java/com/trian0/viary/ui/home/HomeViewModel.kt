@@ -3,6 +3,7 @@ package com.trian0.viary.ui.home
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
@@ -91,6 +92,7 @@ class HomeViewModel(
                     )
                 }
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
                 setState { copy(isLoading = false, showInitErrorDialog = true) }
             }
@@ -135,6 +137,7 @@ class HomeViewModel(
                     setState { copy(distanceTraveled = totalDistance) }
                 }
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
             }
         }
@@ -163,6 +166,7 @@ class HomeViewModel(
                     )
                 }
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
                 setState { copy(isLoading = false, showFinishErrorDialog = true) }
             }

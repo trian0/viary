@@ -3,6 +3,7 @@ package com.trian0.viary.ui.historical
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.mvi.BaseViewModel
@@ -37,6 +38,7 @@ class HistoricalViewModel(
                     setState { copy(lastCheckpoints = lastCheckpoints) }
                 }
             } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 e.printStackTrace()
             }
         }

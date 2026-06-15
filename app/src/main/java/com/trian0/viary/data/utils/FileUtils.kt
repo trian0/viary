@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Date
@@ -25,6 +26,7 @@ fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
 
         file.absolutePath
     } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(e)
         Log.e("FileUtil", "Erro ao salvar imagem", e)
         null
     }
