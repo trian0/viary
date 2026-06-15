@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,7 +38,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     RequestLocationPermission()
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
-    Scaffold(contentWindowInsets = WindowInsets.ime) { innerPadding ->
+    Scaffold(contentWindowInsets = WindowInsets.safeDrawing) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

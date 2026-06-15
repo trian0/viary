@@ -14,7 +14,6 @@ import io.mockk.mockkStatic
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -54,7 +53,7 @@ class HistoricalViewModelTest {
     }
 
     @Test
-    fun `init - lista vazia, deve definir completedViary como vazio e isLoading false`() = runTest {
+    fun `init - lista vazia, deve definir lastCheckpoints como vazio`() = runTest {
         every { repository.allCompleted } returns flowOf(emptyList())
         viewModel = HistoricalViewModel(repository)
 
@@ -62,25 +61,26 @@ class HistoricalViewModelTest {
             awaitItem() // estado inicial
             viewModel.init()
             val state = awaitItem() // estado pós-init
-            assertTrue(state.completedViary.isEmpty())
-            assertFalse(state.isLoading)
+            assertTrue(state.lastCheckpoints.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `init - com viagens concluidas, deve popular completedViary`() = runTest {
+    fun `init - com viagens concluidas, deve montar mapa lastCheckpoints`() = runTest {
         val entities = listOf(makeEntity("v1"), makeEntity("v2"))
         every { repository.allCompleted } returns flowOf(entities)
+        coEvery { repository.getCheckpointsByViaryId("v1") } returns emptyList()
+        coEvery { repository.getCheckpointsByViaryId("v2") } returns emptyList()
         viewModel = HistoricalViewModel(repository)
 
         viewModel.uiState.test {
             awaitItem() // estado inicial
             viewModel.init()
             val state = awaitItem() // estado pós-init
-            assertEquals(2, state.completedViary.size)
-            assertEquals("Viagem v1", state.completedViary[0].name)
-            assertFalse(state.isLoading)
+            assertEquals(2, state.lastCheckpoints.size)
+            assertTrue(state.lastCheckpoints.containsKey("v1"))
+            assertTrue(state.lastCheckpoints.containsKey("v2"))
             cancelAndIgnoreRemainingEvents()
         }
     }

@@ -3,6 +3,7 @@ package com.trian0.viary
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.trian0.viary.ui.theme.ViaryTheme
@@ -18,6 +19,8 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition {
             viewModel.keepSplashOn.value
         }
+
+        enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
 
