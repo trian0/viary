@@ -36,7 +36,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -56,6 +55,8 @@ import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.components.ViaryButton
 import com.trian0.viary.ui.create.CreateContract
+import com.trian0.viary.ui.theme.BudgetExceeded
+import com.trian0.viary.ui.theme.BudgetPositive
 import com.trian0.viary.ui.theme.Neutral10
 import com.trian0.viary.ui.theme.Primary10
 import com.trian0.viary.ui.theme.Primary20
@@ -459,7 +460,7 @@ fun CheckpointScreenView(
                             text = "$symbol $previewRemaining",
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Green
+                            color = if (previewRemaining < 0) BudgetExceeded else BudgetPositive
                         )
                     }
                 }

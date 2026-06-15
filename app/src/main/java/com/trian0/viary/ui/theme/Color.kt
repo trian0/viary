@@ -55,3 +55,6 @@ val Neutral100 = Color(0xFFe6f3fb)
 val Neutral = Color(0xFF263328)
 
 val White = Color(0xFFFFFFFF)
+
+val BudgetPositive = Color(0xFF2E7D32)
+val BudgetExceeded = Color(0xFFD32F2F)
