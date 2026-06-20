@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
+import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.mvi.BaseViewModel
 import java.io.File
 import kotlinx.coroutines.Job
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 class CheckpointViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val repository: ViaryRepository,
+    private val locationHelper: LocationHelper,
 ) : BaseViewModel<CheckpointContract.CheckpointIntent, CheckpointContract.CheckpointUiState, CheckpointContract.CheckpointEffect>() {
 
     companion object {
@@ -164,10 +166,13 @@ class CheckpointViewModel(
                 val newAccumulated = state.accumulatedExpense + expenseValue
                 val newRemaining = state.initialBudget - newAccumulated
 
+                val location = locationHelper.getCurrentLocation()
                 val checkpoint = Checkpoint(
                     viaryId = state.viaryId,
                     placeName = state.checkpointName,
                     expense = expenseValue,
+                    latitude = location?.latitude ?: 0.0,
+                    longitude = location?.longitude ?: 0.0,
                 )
 
                 repository.saveCheckpointWithPath(checkpoint, state.checkpointCoverPath, state.capturedImages)
