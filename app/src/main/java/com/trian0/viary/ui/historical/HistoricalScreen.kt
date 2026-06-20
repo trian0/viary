@@ -67,6 +67,12 @@ fun HistoricalScreenView(
     ) {
         item {
             Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 30.dp),
                 text = stringResource(R.string.historical_screen_title),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
