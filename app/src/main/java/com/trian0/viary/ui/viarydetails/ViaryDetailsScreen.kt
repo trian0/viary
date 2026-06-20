@@ -1,6 +1,7 @@
 package com.trian0.viary.ui.viarydetails
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,13 +27,9 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -64,7 +61,6 @@ import com.trian0.viary.ui.theme.Primary50
 import com.trian0.viary.ui.theme.Primary70
 import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
-import com.trian0.viary.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.annotations.MarkerOptions
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -75,8 +71,8 @@ import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViaryDetailsScreen(
     viaryId: String,
@@ -90,29 +86,26 @@ fun ViaryDetailsScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        2
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.viary_details_screen_back_button)
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = White,
-                titleContentColor = Primary10,
-                navigationIconContentColor = Primary10,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.viary_details_screen_back_button),
+                tint = Primary10,
+                modifier = Modifier
+                    .size(20.dp)
+                    .clickable { onNavigateBack() },
             )
-        )
+            Text(
+                modifier = Modifier.padding(start = 9.dp),
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        }
 
         when {
             uiState.isLoading -> Box(
@@ -158,7 +151,7 @@ private fun ViaryDetailsContent(state: ViaryDetailsContract.ViaryDetailsUiState)
 
 @Composable
 private fun HeaderSection(viary: Viary, checkpoints: List<Checkpoint>) {
-    val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("MMM dd", LocalLocale.current.platformLocale)
     val departure = viary.departureTime?.let { dateFormat.format(it) } ?: ""
     val arrival = checkpoints.lastOrNull()?.time?.let { dateFormat.format(it) } ?: ""
     val dateRange = when {
@@ -359,7 +352,7 @@ private fun StatCard(icon: ImageVector, label: String, value: String) {
 
 @Composable
 private fun CheckpointLogsSection(viary: Viary, checkpoints: List<Checkpoint>) {
-    val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("hh:mm a", LocalLocale.current.platformLocale)
     val hasArrival = viary.latitudeArrival != 0.0 || viary.longitudeArrival != 0.0
     val totalItems = 1 + checkpoints.size + (if (hasArrival) 1 else 0)
 

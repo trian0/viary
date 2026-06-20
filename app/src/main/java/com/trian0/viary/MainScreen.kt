@@ -38,7 +38,10 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     RequestLocationPermission()
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
-    Scaffold(contentWindowInsets = WindowInsets.safeDrawing) { innerPadding ->
+    Scaffold(
+        containerColor = Tertiary90.copy(alpha = 0.3f),
+        contentWindowInsets = WindowInsets.safeDrawing
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
