@@ -12,6 +12,8 @@ import com.trian0.viary.ui.home.HomeViewModel
 import com.trian0.viary.ui.viarydetails.ViaryDetailsViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
+import kotlinx.coroutines.Dispatchers
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -20,9 +22,9 @@ val appModules = module {
     single { OkHttpClient() }
     viewModelOf(::CreateViewModel)
     viewModelOf(::CheckpointViewModel)
-    viewModelOf(::HomeViewModel)
-    viewModelOf(::HistoricalViewModel)
-    viewModelOf(::ViaryDetailsViewModel)
+    viewModel { HomeViewModel(get(), get(), Dispatchers.IO) }
+    viewModel { HistoricalViewModel(get(), Dispatchers.IO) }
+    viewModel { ViaryDetailsViewModel(get(), Dispatchers.IO) }
     viewModelOf(::MainViewModel)
 }
 

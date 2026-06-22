@@ -7,11 +7,13 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.mvi.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HistoricalViewModel(
     private val repository: ViaryRepository,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<HistoricalContract.HistoricalIntent, HistoricalContract.HistoricalUiState, HistoricalContract.HistoricalEffect>() {
 
     companion object {
@@ -28,7 +30,7 @@ class HistoricalViewModel(
     }
 
     fun init() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 repository.allCompleted.collect { entities ->
                     val completedViary = entities.map { it.toViary() }

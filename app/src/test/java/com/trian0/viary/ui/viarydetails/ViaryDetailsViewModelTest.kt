@@ -8,6 +8,7 @@ import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.models.ViaryWithCheckpoints
 import com.trian0.viary.data.repositories.ViaryRepository
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -51,9 +52,11 @@ class ViaryDetailsViewModelTest {
     @Before
     fun setup() {
         mockkStatic(Log::class)
+        mockkStatic(FirebaseCrashlytics::class)
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
-        viewModel = ViaryDetailsViewModel(repository)
+        every { FirebaseCrashlytics.getInstance() } returns mockk(relaxed = true)
+        viewModel = ViaryDetailsViewModel(repository, mainDispatcherRule.testDispatcher)
     }
 
     @Test

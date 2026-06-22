@@ -7,7 +7,9 @@ import app.cash.turbine.test
 import com.trian0.viary.MainDispatcherRule
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.repositories.ViaryRepository
+import com.trian0.viary.helpers.LocationHelper
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -30,6 +32,7 @@ class CheckpointViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository = mockk<ViaryRepository>(relaxed = true)
+    private val locationHelper = mockk<LocationHelper>(relaxed = true)
     private val savedStateHandle = SavedStateHandle()
     private lateinit var viewModel: CheckpointViewModel
 
@@ -53,14 +56,16 @@ class CheckpointViewModelTest {
     @Before
     fun setup() {
         mockkStatic(Log::class)
+        mockkStatic(FirebaseCrashlytics::class)
         every { Log.d(any(), any()) } returns 0
         every { Log.d(any(), any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
+        every { FirebaseCrashlytics.getInstance() } returns mockk(relaxed = true)
         every { repository.viaryInProgress } returns flowOf(fakeViaryEntity)
     }
 
     private fun createViewModel() {
-        viewModel = CheckpointViewModel(savedStateHandle, repository)
+        viewModel = CheckpointViewModel(savedStateHandle, repository, locationHelper)
     }
 
     @Test
@@ -155,7 +160,7 @@ class CheckpointViewModelTest {
 
     @Test
     fun `OnImageAdded - deve adicionar URI a lista capturedImages`() = runTest {
-        val uri = mockk<Uri>()
+        val uri = mockk<Uri>(relaxed = true)
         createViewModel()
 
         viewModel.uiState.test {
@@ -171,7 +176,7 @@ class CheckpointViewModelTest {
 
     @Test
     fun `OnImageRemoved - deve remover URI da lista capturedImages`() = runTest {
-        val uri = mockk<Uri>()
+        val uri = mockk<Uri>(relaxed = true)
         createViewModel()
 
         viewModel.uiState.test {

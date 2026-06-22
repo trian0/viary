@@ -9,7 +9,10 @@ plugins {
 }
 
 val localProperties = Properties()
-localProperties.load(rootProject.file("local.properties").inputStream())
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
 
 android {
     namespace = "com.trian0.viary"

@@ -8,6 +8,7 @@ import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.helpers.LocationHelper
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -52,14 +53,16 @@ class HomeViewModelTest {
     @Before
     fun setup() {
         mockkStatic(Log::class)
+        mockkStatic(FirebaseCrashlytics::class)
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
+        every { FirebaseCrashlytics.getInstance() } returns mockk(relaxed = true)
         every { repository.viaryInProgress } returns flowOf(null)
         every { repository.allCompleted } returns flowOf(emptyList())
     }
 
     private fun createViewModel() {
-        viewModel = HomeViewModel(repository, locationHelper)
+        viewModel = HomeViewModel(repository, locationHelper, mainDispatcherRule.testDispatcher)
     }
 
     @Test

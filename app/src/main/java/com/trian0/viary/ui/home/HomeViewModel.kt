@@ -9,6 +9,7 @@ import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.mvi.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val repository: ViaryRepository,
     private val locationHelper: LocationHelper,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<HomeContract.HomeIntent, HomeContract.HomeUiState, HomeContract.HomeEffect>() {
 
     companion object {
@@ -49,7 +51,7 @@ class HomeViewModel(
     fun init() {
         Log.d(TAG, "init: ")
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val viary = repository.viaryInProgress.first()?.toViary()
                 val totalViary = repository.getTotalViary()
