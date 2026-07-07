@@ -197,10 +197,15 @@ class HomeViewModel(
                     longitude = currentLocation?.longitude ?: 0.0
                 )
 
+                val totalViary = repository.getTotalViary()
+                val greaterDistance = repository.getGreaterDistance()
+
                 setState {
                     copy(
                         isLoading = false,
-                        viaryInProgress = null
+                        viaryInProgress = null,
+                        totalViary = totalViary,
+                        greaterDistance = greaterDistance,
                     )
                 }
             } catch (e: Exception) {

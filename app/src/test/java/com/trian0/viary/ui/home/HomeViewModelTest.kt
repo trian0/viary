@@ -165,8 +165,10 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `OnFinishViary - quando sucesso, deve limpar viaryInProgress`() = runTest {
+    fun `OnFinishViary - quando sucesso, deve limpar viaryInProgress e recalcular total e maior distancia`() = runTest {
         every { repository.viaryInProgress } returns flowOf(fakeViaryEntity)
+        coEvery { repository.getTotalViary() } returns 1
+        coEvery { repository.getGreaterDistance() } returns 0f
         createViewModel()
 
         viewModel.uiState.test {
@@ -174,10 +176,15 @@ class HomeViewModelTest {
             viewModel.init()
             awaitItem() // estado pós-init
 
+            coEvery { repository.getTotalViary() } returns 2
+            coEvery { repository.getGreaterDistance() } returns 42f
+
             viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
             val state = expectMostRecentItem() // estado final após conclusão
             assertNull(state.viaryInProgress)
             assertFalse(state.isLoading)
+            assertEquals(2, state.totalViary)
+            assertEquals(42f, state.greaterDistance)
             cancelAndIgnoreRemainingEvents()
         }
     }
