@@ -55,12 +55,11 @@ class HistoricalViewModelTest {
     @Test
     fun `init - lista vazia, deve definir lastCheckpoints como vazio`() = runTest {
         every { repository.allCompleted } returns flowOf(emptyList())
-        viewModel = HistoricalViewModel(repository)
+        viewModel = HistoricalViewModel(repository, mainDispatcherRule.testDispatcher)
+        viewModel.init()
 
         viewModel.uiState.test {
-            awaitItem() // estado inicial
-            viewModel.init()
-            val state = awaitItem() // estado pós-init
+            val state = awaitItem()
             assertTrue(state.lastCheckpoints.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
@@ -72,7 +71,7 @@ class HistoricalViewModelTest {
         every { repository.allCompleted } returns flowOf(entities)
         coEvery { repository.getCheckpointsByViaryId("v1") } returns emptyList()
         coEvery { repository.getCheckpointsByViaryId("v2") } returns emptyList()
-        viewModel = HistoricalViewModel(repository)
+        viewModel = HistoricalViewModel(repository, mainDispatcherRule.testDispatcher)
 
         viewModel.uiState.test {
             awaitItem() // estado inicial
@@ -92,7 +91,7 @@ class HistoricalViewModelTest {
         val checkpoint2 = Checkpoint(viaryId = "v1", placeName = "Parada 2")
         every { repository.allCompleted } returns flowOf(listOf(entity))
         coEvery { repository.getCheckpointsByViaryId("v1") } returns listOf(checkpoint1, checkpoint2)
-        viewModel = HistoricalViewModel(repository)
+        viewModel = HistoricalViewModel(repository, mainDispatcherRule.testDispatcher)
 
         viewModel.uiState.test {
             awaitItem() // estado inicial

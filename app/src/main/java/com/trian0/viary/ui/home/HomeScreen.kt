@@ -61,6 +61,10 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val country by mainViewModel.country.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
+
     if (country.loading) {
         Column(
             modifier = Modifier
@@ -70,10 +74,6 @@ fun HomeScreen(
             HomeScreenSkeleton()
         }
         return
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.init()
     }
 
     if (uiState.showFinishErrorDialog) {

@@ -6,12 +6,14 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
 import com.trian0.viary.mvi.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class ViaryDetailsViewModel(
     private val repository: ViaryRepository,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<ViaryDetailsContract.ViaryDetailsIntent, ViaryDetailsContract.ViaryDetailsUiState, ViaryDetailsContract.ViaryDetailsEffect>() {
 
     companion object {
@@ -28,7 +30,7 @@ class ViaryDetailsViewModel(
 
     private fun loadViary(viaryId: String) {
         Log.d(TAG, "loadViary: $viaryId")
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val result = repository.getViaryWithCheckpointsById(viaryId)
                 if (result == null) {
