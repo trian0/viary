@@ -13,6 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -102,7 +103,22 @@ class ViaryDaoTest {
         dao.save(entity(id = "b", kmEnd = 50f))
         dao.save(entity(id = "c", kmEnd = 30f))
         val result = dao.getGreaterDistance()
-        assertEquals(50f, result, 0.001f)
+        assertEquals(50f, result!!, 0.001f)
+    }
+
+    @Test
+    fun getGreaterDistance_excludesInProgress() = runBlocking {
+        dao.save(entity(id = "in", status = Viary.ViaryStatus.IN_PROGRESS, kmEnd = 999f))
+        dao.save(entity(id = "done", status = Viary.ViaryStatus.COMPLETED, kmEnd = 30f))
+        val result = dao.getGreaterDistance()
+        assertEquals(30f, result!!, 0.001f)
+    }
+
+    @Test
+    fun getGreaterDistance_returnsNullWhenNoCompletedTrips() = runBlocking {
+        dao.save(entity(id = "in", status = Viary.ViaryStatus.IN_PROGRESS, kmEnd = 15f))
+        val result = dao.getGreaterDistance()
+        assertNull(result)
     }
 
     @Test

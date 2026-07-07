@@ -11,7 +11,7 @@ import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.mvi.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -19,11 +19,22 @@ class HomeViewModel(
     private val repository: ViaryRepository,
     private val locationHelper: LocationHelper,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val distanceBetweenMeters: (Location, Location) -> Float = { from, to ->
+        val results = FloatArray(1)
+        Location.distanceBetween(from.latitude, from.longitude, to.latitude, to.longitude, results)
+        results[0]
+    },
 ) : BaseViewModel<HomeContract.HomeIntent, HomeContract.HomeUiState, HomeContract.HomeEffect>() {
 
     companion object {
         private const val TAG = "HomeViewModel"
+        internal const val MIN_ACCURACY_METERS = 30f
+        internal const val MIN_DISTANCE_METERS = 5f
     }
+
+    internal data class TrackingState(val lastLocation: Location?, val totalDistanceKm: Float)
+
+    private var trackingJob: Job? = null
 
     override fun createInitialState(): HomeContract.HomeUiState = HomeContract.HomeUiState()
 
@@ -43,8 +54,6 @@ class HomeViewModel(
                 setState { copy(showInitErrorDialog = false, isLoading = true) }
                 init()
             }
-
-
         }
     }
 
@@ -71,7 +80,19 @@ class HomeViewModel(
                     )
                 }
 
-                repository.allCompleted.collect { entities ->
+                if (viary != null) {
+                    startTrackingDistance(viary.kmEnd, viary.id)
+                }
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+                e.printStackTrace()
+                setState { copy(isLoading = false, showInitErrorDialog = true) }
+            }
+        }
+
+        viewModelScope.launch(ioDispatcher) {
+            repository.allCompleted.collect { entities ->
+                try {
                     val last = entities.firstOrNull()?.toViary()
                     val lastCheckpoint = if (last != null)
                         repository.getCheckpointsByViaryId(last.id).lastOrNull()
@@ -83,66 +104,81 @@ class HomeViewModel(
                             lastCompletedCheckpoint = lastCheckpoint,
                         )
                     }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    e.printStackTrace()
                 }
-
-                if (viary != null) {
-                    startTrackingDistance(
-                        viary.latitudeOrigin,
-                        viary.longitudeOrigin,
-                        viary.kmEnd,
-                        viary.id
-                    )
-                }
-            } catch (e: Exception) {
-                FirebaseCrashlytics.getInstance().recordException(e)
-                e.printStackTrace()
-                setState { copy(isLoading = false, showInitErrorDialog = true) }
             }
         }
     }
 
-    private fun startTrackingDistance(
-        startLat: Double,
-        startLng: Double,
-        savedDistance: Float,
-        viaryId: String
-    ) {
-        Log.d(
-            TAG,
-            "startTrackingDistance: startLat: $startLat, startLng: $startLng, savedDistance: $savedDistance, viaryId: $viaryId"
-        )
-        viewModelScope.launch(Dispatchers.Default) {
-            try {
-                var lastLatitude = startLat
-                var lastLongitude = startLng
-                var totalDistance = savedDistance
+    private fun startTrackingDistance(savedDistance: Float, viaryId: String) {
+        Log.d(TAG, "startTrackingDistance: savedDistance: $savedDistance, viaryId: $viaryId")
 
-                while (true) {
-                    delay(1000L)
+        trackingJob?.cancel()
+        trackingJob = viewModelScope.launch(ioDispatcher) {
+            var state = TrackingState(lastLocation = null, totalDistanceKm = savedDistance)
 
-                    val currentLocation = locationHelper.getCurrentLocation()
+            locationHelper.locationUpdates().collect { location ->
+                try {
+                    Log.d(
+                        TAG,
+                        "locationUpdate: lat=${location.latitude}, lng=${location.longitude}, " +
+                            "accuracy=${location.accuracy}, hasAccuracy=${location.hasAccuracy()}"
+                    )
 
-                    if (currentLocation != null) {
-                        val results = FloatArray(1)
-                        Location.distanceBetween(
-                            lastLatitude, lastLongitude,
-                            currentLocation.latitude, currentLocation.longitude,
-                            results
+                    val nextState = nextTrackingState(state, location)
+
+                    if (nextState.totalDistanceKm != state.totalDistanceKm) {
+                        Log.d(
+                            TAG,
+                            "distancia atualizada: ${state.totalDistanceKm}km -> ${nextState.totalDistanceKm}km " +
+                                "(viaryId=$viaryId)"
                         )
-                        totalDistance += results[0] / 1000f
-                        lastLatitude = currentLocation.latitude
-                        lastLongitude = currentLocation.longitude
-
-                        repository.updateDistanceTraveled(viaryId, totalDistance)
+                        repository.updateDistanceTraveled(viaryId, nextState.totalDistanceKm)
                     }
 
-                    setState { copy(distanceTraveled = totalDistance) }
+                    state = nextState
+                    setState { copy(distanceTraveled = state.totalDistanceKm) }
+                } catch (e: Exception) {
+                    Log.e(TAG, "erro ao processar atualizacao de localizacao", e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                FirebaseCrashlytics.getInstance().recordException(e)
-                e.printStackTrace()
             }
         }
+    }
+
+    // função pura de propósito, para poder ser testada sem depender do loop/coroutine
+    internal fun nextTrackingState(current: TrackingState, newLocation: Location): TrackingState {
+        if (!isAccurateEnough(newLocation)) {
+            Log.d(TAG, "leitura ignorada: acuracia insuficiente (${newLocation.accuracy}m)")
+            return current
+        }
+
+        val previousLocation = current.lastLocation
+            ?: run {
+                Log.d(TAG, "primeira leitura: fixando referencia, sem somar distancia")
+                return current.copy(lastLocation = newLocation)
+            }
+
+        val distanceMeters = distanceBetweenMeters(previousLocation, newLocation)
+
+        return if (distanceMeters >= MIN_DISTANCE_METERS) {
+            Log.d(TAG, "deslocamento aceito: ${distanceMeters}m desde a ultima referencia")
+            TrackingState(newLocation, current.totalDistanceKm + distanceMeters / 1000f)
+        } else {
+            Log.d(TAG, "deslocamento abaixo do limiar (${distanceMeters}m < ${MIN_DISTANCE_METERS}m), ignorado")
+            current
+        }
+    }
+
+    private fun isAccurateEnough(location: Location) =
+        !location.hasAccuracy() || location.accuracy <= MIN_ACCURACY_METERS
+
+    override fun onCleared() {
+        super.onCleared()
+        trackingJob?.cancel()
     }
 
     private fun finishViary() {

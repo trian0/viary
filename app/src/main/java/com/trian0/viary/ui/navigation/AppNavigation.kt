@@ -48,7 +48,9 @@ fun AppNavigation(
                     }
                 },
                 onNavigateCreate = {
-                    navController.navigate(NavigationItem.Create.route)
+                    navController.navigate(NavigationItem.Create.route) {
+                        popUpTo(NavigationItem.Home.route) { inclusive = true }
+                    }
                 },
                 onNavigateHistorical = {
                     navController.navigate(NavigationItem.Historical.route)
@@ -85,7 +87,7 @@ fun AppNavigation(
             CheckpointScreen(
                 onNavigateBack = {
                     navController.navigate(NavigationItem.Home.route) {
-                        popUpTo(NavigationItem.Create.route) { inclusive = true }
+                        popUpTo(NavigationItem.Checkpoint.route) { inclusive = true }
                     }
                 }
             )

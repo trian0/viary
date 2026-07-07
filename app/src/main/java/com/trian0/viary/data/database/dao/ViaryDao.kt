@@ -32,8 +32,8 @@ interface ViaryDao {
     @Query("UPDATE ViaryEntity SET kmEnd = :distance WHERE id = :viaryId")
     suspend fun updateDistanceTraveled(viaryId: String, distance: Float)
 
-    @Query("SELECT MAX(kmEnd) FROM ViaryEntity")
-    suspend fun getGreaterDistance(): Float
+    @Query("SELECT MAX(kmEnd) FROM ViaryEntity WHERE status = 'COMPLETED'")
+    suspend fun getGreaterDistance(): Float?
 
     @Query("UPDATE ViaryEntity SET status = :status, latitudeArrival = :latitude, longitudeArrival = :longitude WHERE id = :viaryId")
     suspend fun finishViary(
