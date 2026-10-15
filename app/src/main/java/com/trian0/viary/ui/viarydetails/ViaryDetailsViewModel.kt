@@ -46,7 +46,10 @@ class ViaryDetailsViewModel(
                     photos
                 }
 
-                val duration = formatDuration(viary.departureTime?.time, checkpoints.lastOrNull()?.time?.time)
+                val duration = formatDuration(
+                    viary.departureTime?.time,
+                    (viary.arrivalTime ?: checkpoints.lastOrNull()?.time)?.time,
+                )
 
                 setState {
                     copy(

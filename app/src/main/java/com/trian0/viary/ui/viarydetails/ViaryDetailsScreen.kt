@@ -39,10 +39,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import com.trian0.viary.R
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +53,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.trian0.viary.R
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.ui.theme.Primary10
@@ -70,8 +72,6 @@ import org.maplibre.android.maps.MapLibreMapOptions
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
 import java.text.SimpleDateFormat
-import java.util.Locale
-import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun ViaryDetailsScreen(
@@ -199,6 +199,7 @@ private const val MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty"
 @Composable
 private fun MapSection(viary: Viary, checkpoints: List<Checkpoint>) {
     val context = LocalContext.current
+    val resources = LocalResources.current
 
     val allPoints = remember(viary.id, checkpoints.size) {
         buildList {
@@ -215,9 +216,9 @@ private fun MapSection(viary: Viary, checkpoints: List<Checkpoint>) {
 
     val markerTitles = remember(viary.id, checkpoints.size) {
         buildList {
-            add(viary.origin.ifEmpty { context.getString(R.string.viary_details_screen_origin_default) })
+            add(viary.origin.ifEmpty { resources.getString(R.string.viary_details_screen_origin_default) })
             checkpoints.forEach { add(it.placeName) }
-            add(context.getString(R.string.viary_details_screen_destination_default))
+            add(resources.getString(R.string.viary_details_screen_destination_default))
         }
     }
 
@@ -255,7 +256,12 @@ private fun MapSection(viary: Viary, checkpoints: List<Checkpoint>) {
                     map.addMarker(
                         MarkerOptions()
                             .position(point)
-                            .title(markerTitles.getOrElse(i) { context.getString(R.string.viary_details_screen_point_fallback, i) })
+                            .title(markerTitles.getOrElse(i) {
+                                resources.getString(
+                                    R.string.viary_details_screen_point_fallback,
+                                    i
+                                )
+                            })
                     )
                 }
                 when {

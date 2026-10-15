@@ -6,11 +6,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.models.ViaryWithCheckpoints
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface ViaryDao {
@@ -35,12 +35,13 @@ interface ViaryDao {
     @Query("SELECT MAX(kmEnd) FROM ViaryEntity WHERE status = 'COMPLETED'")
     suspend fun getGreaterDistance(): Float?
 
-    @Query("UPDATE ViaryEntity SET status = :status, latitudeArrival = :latitude, longitudeArrival = :longitude WHERE id = :viaryId")
+    @Query("UPDATE ViaryEntity SET status = :status, latitudeArrival = :latitude, longitudeArrival = :longitude, arrivalTime = :arrivalTime WHERE id = :viaryId")
     suspend fun finishViary(
         viaryId: String,
         status: Viary.ViaryStatus,
         latitude: Double,
-        longitude: Double
+        longitude: Double,
+        arrivalTime: Date,
     )
 
     @Transaction

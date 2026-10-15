@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 class ViaryRepository(
     private val dao: ViaryDao,
@@ -54,15 +55,25 @@ class ViaryRepository(
         dao.getGreaterDistance()
     }
 
-    suspend fun finishViary(viaryId: String, status: Viary.ViaryStatus, latitude: Double, longitude: Double) = withContext(Dispatchers.IO) {
-        dao.finishViary(viaryId, status, latitude, longitude)
+    suspend fun finishViary(
+        viaryId: String,
+        status: Viary.ViaryStatus,
+        latitude: Double,
+        longitude: Double,
+        arrivalTime: Date = Date(),
+    ) = withContext(Dispatchers.IO) {
+        dao.finishViary(viaryId, status, latitude, longitude, arrivalTime)
     }
 
     suspend fun getCheckpointsByViaryId(viaryId: String): List<Checkpoint> {
         return checkpointDao.getByViaryId(viaryId).map { it.toCheckpoint() }
     }
 
-    suspend fun saveCheckpointWithPath(checkpoint: Checkpoint, coverPath: String?, imagesUri: List<Uri>) {
+    suspend fun saveCheckpointWithPath(
+        checkpoint: Checkpoint,
+        coverPath: String?,
+        imagesUri: List<Uri>
+    ) {
         val savedPaths = withContext(Dispatchers.IO) {
             imagesUri.mapNotNull { uri -> saveImageToInternalStorage(context, uri) }
         }
@@ -73,9 +84,10 @@ class ViaryRepository(
         checkpointDao.insert(entity)
     }
 
-    suspend fun getViaryWithCheckpointsById(viaryId: String): ViaryWithCheckpoints? = withContext(Dispatchers.IO) {
-        dao.getViaryWithCheckpoints(viaryId)
-    }
+    suspend fun getViaryWithCheckpointsById(viaryId: String): ViaryWithCheckpoints? =
+        withContext(Dispatchers.IO) {
+            dao.getViaryWithCheckpoints(viaryId)
+        }
 
     val viaryInProgressWithCheckpoints get() = dao.getViaryInProgressWithCheckpoints()
 
@@ -101,7 +113,8 @@ fun Viary.toViaryEntity() = ViaryEntity(
     latitudeOrigin = this.latitudeOrigin,
     longitudeOrigin = this.longitudeOrigin,
     latitudeArrival = this.latitudeArrival,
-    longitudeArrival = this.longitudeArrival
+    longitudeArrival = this.longitudeArrival,
+    arrivalTime = this.arrivalTime,
 )
 
 fun ViaryEntity.toViary() = Viary(
@@ -118,7 +131,8 @@ fun ViaryEntity.toViary() = Viary(
     latitudeOrigin = this.latitudeOrigin,
     longitudeOrigin = this.longitudeOrigin,
     latitudeArrival = this.latitudeArrival,
-    longitudeArrival = this.longitudeArrival
+    longitudeArrival = this.longitudeArrival,
+    arrivalTime = this.arrivalTime,
 )
 
 fun CheckpointEntity.toCheckpoint() = Checkpoint(

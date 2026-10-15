@@ -22,20 +22,35 @@ android {
         applicationId = "com.trian0.viary"
         minSdk = 24
         targetSdk = 37
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        debug {}
+        debug {
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+            buildConfigField(
+                "String",
+                "BANNER_AD_UNIT_ID",
+                "\"ca-app-pub-3940256099942544/6300978111\""
+            )
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-2346690986578970~6243381238"
+            buildConfigField(
+                "String",
+                "BANNER_AD_UNIT_ID",
+                "\"ca-app-pub-2346690986578970/2073306552\""
+            )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -65,7 +80,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.play.services.location)
     testImplementation(libs.junit)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit5)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -103,6 +117,10 @@ dependencies {
 
     // Maps
     implementation(libs.maplibre.android)
+
+    // Ads
+    implementation(libs.play.services.ads)
+    implementation(libs.ump)
 
     configurations.all {
         exclude(group = "com.intellij", module = "annotations")

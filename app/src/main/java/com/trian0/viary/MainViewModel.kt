@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.models.Country
 import com.trian0.viary.data.repositories.ViaryRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,8 @@ sealed class SplashNavState {
 
 class MainViewModel(
     private val repository: ViaryRepository,
-    private val httpClient: OkHttpClient
+    private val httpClient: OkHttpClient,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
     private val _navState = MutableStateFlow<SplashNavState>(SplashNavState.Loading)
     val navState: StateFlow<SplashNavState> = _navState.asStateFlow()
@@ -65,7 +67,7 @@ class MainViewModel(
     }
 
     private fun fetchCountry() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val response = httpClient.newCall(
                     Request.Builder()
