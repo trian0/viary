@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.trian0.viary.ui.components.RequestLocationPermission
+import com.trian0.viary.ui.components.RequestNotificationPermission
 import com.trian0.viary.ui.navigation.AppNavigation
 import com.trian0.viary.ui.navigation.BottomNavigation
 import com.trian0.viary.ui.navigation.NavigationItem
@@ -36,6 +37,7 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
     )
 
     RequestLocationPermission()
+    RequestNotificationPermission()
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
     Scaffold(

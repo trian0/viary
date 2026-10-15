@@ -36,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -54,7 +55,6 @@ import com.trian0.viary.ui.components.ImagePicker
 import com.trian0.viary.ui.components.ShimmerEffect
 import com.trian0.viary.ui.components.SuccessDialog
 import com.trian0.viary.ui.components.ViaryButton
-import com.trian0.viary.ui.create.CreateContract
 import com.trian0.viary.ui.theme.BudgetExceeded
 import com.trian0.viary.ui.theme.BudgetPositive
 import com.trian0.viary.ui.theme.Neutral10
@@ -68,7 +68,6 @@ import com.trian0.viary.ui.theme.Tertiary10
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 @Composable
 fun CheckpointScreen(
@@ -273,7 +272,7 @@ fun CheckpointScreenView(
 
                         val dateFormat = SimpleDateFormat(
                             stringResource(R.string.date_format_hh_mm),
-                            Locale.getDefault()
+                            LocalLocale.current.platformLocale
                         )
 
                         Row(

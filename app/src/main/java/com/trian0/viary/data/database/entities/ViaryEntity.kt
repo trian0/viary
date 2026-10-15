@@ -2,13 +2,12 @@ package com.trian0.viary.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import java.util.Date
 import java.util.UUID
 
 @Entity
-data class ViaryEntity (
+data class ViaryEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val name: String,
     val origin: String,
@@ -22,5 +21,6 @@ data class ViaryEntity (
     val latitudeOrigin: Double,
     val longitudeOrigin: Double,
     val latitudeArrival: Double,
-    val longitudeArrival: Double
+    val longitudeArrival: Double,
+    val arrivalTime: Date? = null,
 )

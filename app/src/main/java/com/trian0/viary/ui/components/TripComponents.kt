@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,6 @@ import com.trian0.viary.ui.theme.Primary30
 import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Composable
 fun ClimateViary(
@@ -124,7 +124,7 @@ fun CompletedViaryItem(
     isLast: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("MMM dd, yyyy", LocalLocale.current.platformLocale)
 
     Row(modifier = Modifier.fillMaxWidth()) {
 

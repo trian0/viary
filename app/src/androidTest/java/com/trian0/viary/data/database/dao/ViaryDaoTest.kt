@@ -124,9 +124,11 @@ class ViaryDaoTest {
     @Test
     fun finishViary_updatesStatusAndCords() = runBlocking {
         dao.save(entity(id = "trip", status = Viary.ViaryStatus.IN_PROGRESS))
-        dao.finishViary("trip", Viary.ViaryStatus.COMPLETED, 10.0, 20.0)
+        val arrival = Date(1_700_000_000_000L)
+        dao.finishViary("trip", Viary.ViaryStatus.COMPLETED, 10.0, 20.0, arrival)
         val result = dao.getById("trip").first()
         assertEquals(Viary.ViaryStatus.COMPLETED, result.status)
+        assertEquals(arrival, result.arrivalTime)
         assertEquals(10.0, result.latitudeArrival, 0.001)
         assertEquals(20.0, result.longitudeArrival, 0.001)
     }

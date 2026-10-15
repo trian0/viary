@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,7 @@ import com.trian0.viary.R
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.utils.elapsedTime
+import com.trian0.viary.ui.components.BannerAdView
 import com.trian0.viary.ui.components.CheckpointTimeline
 import com.trian0.viary.ui.components.ErrorDialog
 import com.trian0.viary.ui.components.ShimmerEffect
@@ -94,23 +96,27 @@ fun HomeScreen(
         )
     }
 
-    HomeScreenView(
-        uiState.viaryInProgress,
-        uiState.totalViary,
-        uiState.isLoading,
-        uiState.distanceTraveled,
-        uiState.greaterDistance,
-        uiState.checkpoints,
-        country.symbol,
-        uiState.lastCompletedViary,
-        uiState.lastCompletedCheckpoint,
-        onFinishViary = {
-            viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
-        },
-        onNavigateCheckpoint = { onNavigateCheckpoint() },
-        onNavigateCreate = { onNavigateCreate() },
-        onNavigateHistorical = { onNavigateHistorical() },
-    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        HomeScreenView(
+            uiState.viaryInProgress,
+            uiState.totalViary,
+            uiState.isLoading,
+            uiState.distanceTraveled,
+            uiState.greaterDistance,
+            uiState.checkpoints,
+            country.symbol,
+            uiState.lastCompletedViary,
+            uiState.lastCompletedCheckpoint,
+            onFinishViary = {
+                viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
+            },
+            onNavigateCheckpoint = { onNavigateCheckpoint() },
+            onNavigateCreate = { onNavigateCreate() },
+            onNavigateHistorical = { onNavigateHistorical() },
+            modifier = Modifier.weight(1f),
+        )
+        BannerAdView()
+    }
 }
 
 @Composable
@@ -128,9 +134,10 @@ fun HomeScreenView(
     onNavigateCheckpoint: () -> Unit = {},
     onNavigateCreate: () -> Unit = {},
     onNavigateHistorical: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 32.dp, vertical = 16.dp)
@@ -483,7 +490,9 @@ fun InProgressViary(
 @Composable
 fun HomeScreenSkeleton() {
     Column(modifier = Modifier.fillMaxWidth()) {
-        ShimmerEffect(modifier = Modifier.width(120.dp).height(14.dp))
+        ShimmerEffect(modifier = Modifier
+            .width(120.dp)
+            .height(14.dp))
 
         ShimmerEffect(
             modifier = Modifier
@@ -498,9 +507,13 @@ fun HomeScreenSkeleton() {
                 .padding(top = 40.dp),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            ShimmerEffect(modifier = Modifier.weight(1f).height(96.dp))
+            ShimmerEffect(modifier = Modifier
+                .weight(1f)
+                .height(96.dp))
             Spacer(modifier = Modifier.weight(0.1f))
-            ShimmerEffect(modifier = Modifier.weight(1f).height(96.dp))
+            ShimmerEffect(modifier = Modifier
+                .weight(1f)
+                .height(96.dp))
         }
 
         ShimmerEffect(

@@ -116,6 +116,43 @@ class ViaryDetailsViewModelTest {
     }
 
     @Test
+    fun `Load - sem checkpoints, duracao usa o horario de chegada`() = runTest {
+        val entity = baseViaryEntity.copy(
+            departureTime = Date(0L),
+            arrivalTime = Date(3 * 3_600_000L + 15 * 60_000L),
+        )
+        coEvery { repository.getViaryWithCheckpointsById("viary-1") } returns
+            ViaryWithCheckpoints(entity, emptyList())
+
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onIntent(ViaryDetailsContract.ViaryDetailsIntent.Load("viary-1"))
+            val state = awaitItem()
+            assertEquals("3h 15m", state.durationFormatted)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `Load - horario de chegada tem prioridade sobre o ultimo checkpoint`() = runTest {
+        val entity = baseViaryEntity.copy(
+            departureTime = Date(0L),
+            arrivalTime = Date(4 * 3_600_000L),
+        )
+        val checkpointEntity = CheckpointEntity(viaryId = "viary-1", time = Date(3_600_000L))
+        coEvery { repository.getViaryWithCheckpointsById("viary-1") } returns
+            ViaryWithCheckpoints(entity, listOf(checkpointEntity))
+
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onIntent(ViaryDetailsContract.ViaryDetailsIntent.Load("viary-1"))
+            val state = awaitItem()
+            assertEquals("4h 0m", state.durationFormatted)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `Load - quando departureTime e nulo, duracao deve ser placeholder`() = runTest {
         val entity = baseViaryEntity.copy(departureTime = null)
         val checkpointEntity = CheckpointEntity(viaryId = "viary-1")

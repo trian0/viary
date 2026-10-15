@@ -2,15 +2,18 @@ package com.trian0.viary
 
 import android.util.Log
 import app.cash.turbine.test
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.trian0.viary.data.database.entities.ViaryEntity
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -48,21 +51,29 @@ class MainViewModelTest {
     @Before
     fun setup() {
         mockkStatic(Log::class)
+        // fetchCountry cai no catch porque o httpClient é mock
+        mockkStatic(FirebaseCrashlytics::class)
+        every { FirebaseCrashlytics.getInstance() } returns mockk(relaxed = true)
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
         every { repository.viaryInProgress } returns flowOf(null)
     }
 
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
+
     @Test
     fun `navState - inicializa como Loading`() = runTest {
-        viewModel = MainViewModel(repository, httpClient)
+        viewModel = MainViewModel(repository, httpClient, mainDispatcherRule.testDispatcher)
 
         assertEquals(SplashNavState.Loading, viewModel.navState.value)
     }
 
     @Test
     fun `navState - navega para Home apos o delay inicial`() = runTest {
-        viewModel = MainViewModel(repository, httpClient)
+        viewModel = MainViewModel(repository, httpClient, mainDispatcherRule.testDispatcher)
 
         viewModel.navState.test {
             awaitItem() // Loading
@@ -74,7 +85,7 @@ class MainViewModelTest {
 
     @Test
     fun `keepSplashOn - inicia como true enquanto Loading`() = runTest {
-        viewModel = MainViewModel(repository, httpClient)
+        viewModel = MainViewModel(repository, httpClient, mainDispatcherRule.testDispatcher)
 
         assertTrue(viewModel.keepSplashOn.value)
     }
@@ -82,7 +93,7 @@ class MainViewModelTest {
     @Test
     fun `hasViaryInProgress - false quando nao ha viary em andamento`() = runTest {
         every { repository.viaryInProgress } returns flowOf(null)
-        viewModel = MainViewModel(repository, httpClient)
+        viewModel = MainViewModel(repository, httpClient, mainDispatcherRule.testDispatcher)
 
         // aguarda o flow ser coletado
         viewModel.navState.test {
@@ -97,7 +108,7 @@ class MainViewModelTest {
     @Test
     fun `hasViaryInProgress - true quando ha viary em andamento`() = runTest {
         every { repository.viaryInProgress } returns flowOf(fakeViaryEntity)
-        viewModel = MainViewModel(repository, httpClient)
+        viewModel = MainViewModel(repository, httpClient, mainDispatcherRule.testDispatcher)
 
         viewModel.navState.test {
             awaitItem()

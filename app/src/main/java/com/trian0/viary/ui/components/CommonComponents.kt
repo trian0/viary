@@ -1,6 +1,7 @@
 package com.trian0.viary.ui.components
 
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearEasing
@@ -57,8 +58,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.trian0.viary.R
 import com.trian0.viary.ui.theme.Neutral90
-import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary100
+import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary50
 import com.trian0.viary.ui.theme.Primary80
 import com.trian0.viary.ui.theme.Secondary90
@@ -248,6 +249,21 @@ fun RequestLocationPermission(
                 permissionState.launchPermissionRequest()
             }
         )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestNotificationPermission() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+    val locationState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    val notificationState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+
+    LaunchedEffect(locationState.status.isGranted) {
+        if (locationState.status.isGranted && !notificationState.status.isGranted) {
+            notificationState.launchPermissionRequest()
+        }
     }
 }
 
