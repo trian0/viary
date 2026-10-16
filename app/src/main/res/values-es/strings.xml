@@ -40,9 +40,7 @@
     <string name="viary_details_screen_not_found">Viaje no encontrado</string>
     <string name="viary_details_screen_completed_label">VIAJE COMPLETADO</string>
     <string name="viary_details_screen_origin_prefix">De %s</string>
-    <string name="viary_details_screen_origin_default">Partida</string>
     <string name="viary_details_screen_destination_default">Destino Final</string>
-    <string name="viary_details_screen_point_fallback">Punto %d</string>
     <string name="viary_details_screen_total_distance">Distancia Total</string>
     <string name="viary_details_screen_budget_spent">Presupuesto Gastado</string>
     <string name="viary_details_screen_trip_duration">Duración del Viaje</string>

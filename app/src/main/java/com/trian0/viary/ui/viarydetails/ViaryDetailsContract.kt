@@ -1,6 +1,7 @@
 package com.trian0.viary.ui.viarydetails
 
 import com.trian0.viary.data.models.Checkpoint
+import com.trian0.viary.data.models.GeoPoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.mvi.MviInterfaces
 
@@ -11,6 +12,7 @@ interface ViaryDetailsContract {
         val checkpoints: List<Checkpoint> = emptyList(),
         val allPhotos: List<String> = emptyList(),
         val durationFormatted: String = "--",
+        val route: List<GeoPoint> = emptyList(),
         val isLoading: Boolean = true,
     ) : MviInterfaces.UiState
 

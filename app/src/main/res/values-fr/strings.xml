@@ -40,9 +40,7 @@
     <string name="viary_details_screen_not_found">Voyage introuvable</string>
     <string name="viary_details_screen_completed_label">VOYAGE TERMINÉ</string>
     <string name="viary_details_screen_origin_prefix">De %s</string>
-    <string name="viary_details_screen_origin_default">Départ</string>
     <string name="viary_details_screen_destination_default">Destination Finale</string>
-    <string name="viary_details_screen_point_fallback">Point %d</string>
     <string name="viary_details_screen_total_distance">Distance Totale</string>
     <string name="viary_details_screen_budget_spent">Budget Dépensé</string>
     <string name="viary_details_screen_trip_duration">Durée du Voyage</string>
