@@ -26,6 +26,12 @@ android {
         versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "MAPBOX_ACCESS_TOKEN",
+            "\"${localProperties.getProperty("MAPBOX_ACCESS_TOKEN", "")}\""
+        )
     }
 
     buildTypes {
@@ -116,7 +122,7 @@ dependencies {
     implementation(libs.firebase.analytics)
 
     // Maps
-    implementation(libs.maplibre.android)
+    implementation(libs.mapbox.maps)
 
     // Ads
     implementation(libs.play.services.ads)

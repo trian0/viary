@@ -1,10 +1,12 @@
 package com.trian0.viary.di
 
 import androidx.room.Room
+import com.trian0.viary.BuildConfig
 import com.trian0.viary.MainViewModel
 import com.trian0.viary.data.database.MIGRATION_1_2
 import com.trian0.viary.data.database.ViaryDatabase
 import com.trian0.viary.data.repositories.ViaryRepository
+import com.trian0.viary.helpers.DirectionsClient
 import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.ui.checkpoint.CheckpointViewModel
 import com.trian0.viary.ui.create.CreateViewModel
@@ -21,11 +23,12 @@ import org.koin.dsl.module
 val appModules = module {
     single { LocationHelper(androidContext()) }
     single { OkHttpClient() }
+    single { DirectionsClient(get(), BuildConfig.MAPBOX_ACCESS_TOKEN) }
     viewModelOf(::CreateViewModel)
     viewModelOf(::CheckpointViewModel)
     viewModel { HomeViewModel(get(), get(), Dispatchers.IO) }
     viewModel { HistoricalViewModel(get(), Dispatchers.IO) }
-    viewModel { ViaryDetailsViewModel(get(), Dispatchers.IO) }
+    viewModel { ViaryDetailsViewModel(get(), get(), Dispatchers.IO) }
     viewModel { MainViewModel(get(), get(), Dispatchers.IO) }
 }
 

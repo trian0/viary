@@ -3,8 +3,11 @@ package com.trian0.viary.ui.viarydetails
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.trian0.viary.data.models.GeoPoint
+import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.data.repositories.toViary
+import com.trian0.viary.helpers.DirectionsClient
 import com.trian0.viary.mvi.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class ViaryDetailsViewModel(
     private val repository: ViaryRepository,
+    private val directionsClient: DirectionsClient,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<ViaryDetailsContract.ViaryDetailsIntent, ViaryDetailsContract.ViaryDetailsUiState, ViaryDetailsContract.ViaryDetailsEffect>() {
 
@@ -60,6 +64,9 @@ class ViaryDetailsViewModel(
                         isLoading = false,
                     )
                 }
+
+                val route = directionsClient.route(routeWaypoints(viary))
+                if (route.isNotEmpty()) setState { copy(route = route) }
             } catch (e: Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
                 Log.e(TAG, "loadViary error", e)
@@ -67,6 +74,12 @@ class ViaryDetailsViewModel(
             }
         }
     }
+
+    private fun routeWaypoints(viary: Viary): List<GeoPoint> = buildList {
+        add(GeoPoint(viary.latitudeOrigin, viary.longitudeOrigin))
+        viary.checkpoints.sortedBy { it.time }.forEach { add(GeoPoint(it.latitude, it.longitude)) }
+        add(GeoPoint(viary.latitudeArrival, viary.longitudeArrival))
+    }.filter { it.isSet }
 
     private fun formatDuration(startMs: Long?, endMs: Long?): String {
         if (startMs == null || endMs == null || endMs <= startMs) return "--"

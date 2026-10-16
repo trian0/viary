@@ -71,7 +71,7 @@ Ao finalizar a viagem, você tem um relatório completo com mapa interativo da r
 - Visualize o orçamento acumulado e o saldo restante antes de confirmar
 
 ### Mapa e Rota
-- Visualize toda a rota no mapa interativo (MapLibre) ao concluir a viagem
+- Visualize toda a rota no mapa interativo (Mapbox) ao concluir a viagem
 - Marcadores para origem, cada checkpoint e destino final
 
 ### Estatísticas
@@ -95,7 +95,7 @@ Ao finalizar a viagem, você tem um relatório completo com mapa interativo da r
 | Navegação | Navigation Compose 2.9.6 |
 | Banco de dados | Room 2.8.3 |
 | Injeção de dependência | Koin 4.1.1 |
-| Mapas | MapLibre Android 11.5.1 |
+| Mapas | Mapbox Maps SDK 11.32.1 |
 | Localização | Google Play Services Location 21.3.0 |
 | Carregamento de imagens | Coil 2.7.0 |
 | Permissões | Accompanist Permissions 0.37.3 |

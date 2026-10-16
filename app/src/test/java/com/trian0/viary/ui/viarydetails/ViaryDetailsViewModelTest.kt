@@ -5,14 +5,18 @@ import app.cash.turbine.test
 import com.trian0.viary.MainDispatcherRule
 import com.trian0.viary.data.database.entities.CheckpointEntity
 import com.trian0.viary.data.database.entities.ViaryEntity
+import com.trian0.viary.data.models.GeoPoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.models.ViaryWithCheckpoints
 import com.trian0.viary.data.repositories.ViaryRepository
+import com.trian0.viary.helpers.DirectionsClient
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -30,6 +34,7 @@ class ViaryDetailsViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository = mockk<ViaryRepository>(relaxed = true)
+    private val directionsClient = mockk<DirectionsClient>(relaxed = true)
     private lateinit var viewModel: ViaryDetailsViewModel
 
     private val baseViaryEntity = ViaryEntity(
@@ -56,7 +61,48 @@ class ViaryDetailsViewModelTest {
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any(), any()) } returns 0
         every { FirebaseCrashlytics.getInstance() } returns mockk(relaxed = true)
-        viewModel = ViaryDetailsViewModel(repository, mainDispatcherRule.testDispatcher)
+        viewModel = ViaryDetailsViewModel(repository, directionsClient, mainDispatcherRule.testDispatcher)
+    }
+
+    @Test
+    fun `Load - deve pedir rota com origem, checkpoints e destino na ordem`() = runTest {
+        val checkpointEntity = CheckpointEntity(
+            viaryId = "viary-1", placeName = "Parada", latitude = -23.0, longitude = -45.0
+        )
+        coEvery { repository.getViaryWithCheckpointsById("viary-1") } returns
+            ViaryWithCheckpoints(baseViaryEntity, listOf(checkpointEntity))
+        val route = listOf(GeoPoint(-23.5, -46.6), GeoPoint(-22.9, -43.1))
+        coEvery { directionsClient.route(any()) } returns route
+
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onIntent(ViaryDetailsContract.ViaryDetailsIntent.Load("viary-1"))
+            advanceUntilIdle()
+            assertEquals(route, expectMostRecentItem().route)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify {
+            directionsClient.route(
+                listOf(GeoPoint(-23.5, -46.6), GeoPoint(-23.0, -45.0), GeoPoint(-22.9, -43.1))
+            )
+        }
+    }
+
+    @Test
+    fun `Load - quando rota falha, mantem estado sem rota`() = runTest {
+        coEvery { repository.getViaryWithCheckpointsById("viary-1") } returns
+            ViaryWithCheckpoints(baseViaryEntity, emptyList())
+        coEvery { directionsClient.route(any()) } returns emptyList()
+
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onIntent(ViaryDetailsContract.ViaryDetailsIntent.Load("viary-1"))
+            val state = awaitItem()
+            assertTrue(state.route.isEmpty())
+            assertEquals("Viagem ao Rio", state.viary?.name)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

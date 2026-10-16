@@ -58,3 +58,6 @@ val White = Color(0xFFFFFFFF)
 
 val BudgetPositive = Color(0xFF2E7D32)
 val BudgetExceeded = Color(0xFFD32F2F)
+
+val MapOriginColor = Color(0xFF2E7D32)
+val MapDestinationColor = Color(0xFFC62828)

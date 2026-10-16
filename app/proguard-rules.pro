@@ -10,7 +10,7 @@
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
-# Room, MapLibre e Firebase já trazem suas próprias consumer proguard rules
+# Room, Mapbox e Firebase já trazem suas próprias consumer proguard rules
 # dentro dos AARs. Koin resolve via tipo reificado em bytecode (sem
 # reflection/scanning) e o Coil registra fetchers/decoders explicitamente no
 # código — nenhum dos dois precisa de -keep hoje. Se aparecer
