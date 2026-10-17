@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,7 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -120,23 +121,28 @@ fun ViaryDetailsScreen(
 private fun ViaryDetailsContent(state: ViaryDetailsContract.ViaryDetailsUiState) {
     val viary = state.viary ?: return
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 32.dp)
+    // Few fixed sections: a plain Column keeps the MapView alive while scrolling instead of
+    // disposing and rebuilding it when it leaves the viewport
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 32.dp)
     ) {
-        item { HeaderSection(viary, state.checkpoints) }
-        item { ViaryMap(viary, state.checkpoints, state.route) }
-        item { StatsSection(viary, state.checkpoints, state.durationFormatted) }
-        item { CheckpointLogsSection(viary, state.checkpoints) }
+        HeaderSection(viary, state.checkpoints)
+        ViaryMap(viary, state.checkpoints, state.route)
+        StatsSection(viary, state.checkpoints, state.durationFormatted)
+        CheckpointLogsSection(viary, state.checkpoints)
         if (state.allPhotos.isNotEmpty()) {
-            item { GallerySection(state.allPhotos) }
+            GallerySection(state.allPhotos)
         }
     }
 }
 
 @Composable
 private fun HeaderSection(viary: Viary, checkpoints: List<Checkpoint>) {
-    val dateFormat = SimpleDateFormat("MMM dd", LocalLocale.current.platformLocale)
+    val locale = LocalLocale.current.platformLocale
+    val dateFormat = remember(locale) { SimpleDateFormat("MMM dd", locale) }
     val departure = viary.departureTime?.let { dateFormat.format(it) } ?: ""
     val arrival = checkpoints.lastOrNull()?.time?.let { dateFormat.format(it) } ?: ""
     val dateRange = when {
@@ -241,7 +247,8 @@ private fun StatCard(icon: ImageVector, label: String, value: String) {
 
 @Composable
 private fun CheckpointLogsSection(viary: Viary, checkpoints: List<Checkpoint>) {
-    val timeFormat = SimpleDateFormat("hh:mm a", LocalLocale.current.platformLocale)
+    val locale = LocalLocale.current.platformLocale
+    val timeFormat = remember(locale) { SimpleDateFormat("hh:mm a", locale) }
     val hasArrival = viary.latitudeArrival != 0.0 || viary.longitudeArrival != 0.0
     val totalItems = 1 + checkpoints.size + (if (hasArrival) 1 else 0)
 

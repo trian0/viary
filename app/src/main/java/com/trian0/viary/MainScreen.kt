@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,17 +23,17 @@ import com.trian0.viary.ui.navigation.BottomNavigation
 import com.trian0.viary.ui.navigation.NavigationItem
 import com.trian0.viary.ui.theme.Tertiary90
 
+private val screensWithoutBottomBar = setOf(
+    NavigationItem.Splash.route,
+    NavigationItem.ViaryDetails.route,
+)
+
 @Composable
 fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    val screensWithoutBottomBar = listOf(
-        NavigationItem.Splash.route,
-        NavigationItem.ViaryDetails.route,
-    )
 
     RequestLocationPermission()
     RequestNotificationPermission()
@@ -49,7 +48,6 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(Tertiary90.copy(alpha = 0.3f))
-                .graphicsLayer { clip = false }
         ) {
             AppNavigation(
                 viewModel = viewModel,
@@ -64,11 +62,11 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(start = 24.dp, end = 24.dp, bottom = 16.dp, top = 0.dp)
-                        .graphicsLayer { clip = false }
                 ) {
                     BottomNavigation(
                         navController = navController,
-                        modifier = Modifier,
+                        currentRoute = currentRoute,
+                        viewModel = viewModel,
                     )
                 }
             }

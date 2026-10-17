@@ -54,8 +54,8 @@ import java.util.Date
 
 @Composable
 fun HomeScreen(
+    mainViewModel: MainViewModel,
     viewModel: HomeViewModel = koinViewModel(),
-    mainViewModel: MainViewModel = koinViewModel(),
     onNavigateCheckpoint: () -> Unit = {},
     onNavigateCreate: () -> Unit = {},
     onNavigateHistorical: () -> Unit = {},
@@ -159,7 +159,7 @@ fun HomeScreenView(
                 viaryInProgress?.let { viary ->
                     InProgressViary(
                         viaryName = viary.name,
-                        viaryDepartureTime = viary.departureTime ?: Date(),
+                        viaryDepartureTime = viary.departureTime,
                         distanceTraveled = distanceTraveled,
                         onFinishViary = onFinishViary,
                         onNavigateCheckpoint = onNavigateCheckpoint,
@@ -379,18 +379,20 @@ fun LastViaryRecap(
 @Composable
 fun InProgressViary(
     viaryName: String,
-    viaryDepartureTime: Date = Date(),
+    viaryDepartureTime: Date?,
     distanceTraveled: Float? = 0f,
     onFinishViary: () -> Unit = {},
     onNavigateCheckpoint: () -> Unit = {},
     checkpoints: List<Checkpoint> = emptyList(),
     symbol: String = "",
 ) {
-    var elapsed by remember { mutableStateOf(viaryDepartureTime.elapsedTime()) }
+    // Date compares by value, so a re-emitted viary with the same departure keeps the ticker running
+    val departure = remember(viaryDepartureTime) { viaryDepartureTime ?: Date() }
+    var elapsed by remember(departure) { mutableStateOf(departure.elapsedTime()) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(departure) {
         while (true) {
-            elapsed = viaryDepartureTime.elapsedTime()
+            elapsed = departure.elapsedTime()
             delay(1000L)
         }
     }
