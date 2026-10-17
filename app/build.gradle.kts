@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.baselineprofile)
 }
 
 val localProperties = Properties()
@@ -69,6 +70,24 @@ android {
     }
 }
 
+// Baseline profile and benchmark builds inherit release config; keep automated runs on AdMob test ids
+androidComponents {
+    onVariants(selector().withBuildType("nonMinifiedRelease")) { it.useTestAdIds() }
+    onVariants(selector().withBuildType("benchmarkRelease")) { it.useTestAdIds() }
+}
+
+fun com.android.build.api.variant.ApplicationVariant.useTestAdIds() {
+    manifestPlaceholders.put("admobAppId", "ca-app-pub-3940256099942544~3347511713")
+    buildConfigFields?.put(
+        "BANNER_AD_UNIT_ID",
+        com.android.build.api.variant.BuildConfigField(
+            "String",
+            "\"ca-app-pub-3940256099942544/6300978111\"",
+            null
+        )
+    )
+}
+
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
@@ -90,6 +109,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(project(":baselineprofile"))
     implementation(libs.androidx.compose.material.icons)
     implementation(libs.coil.compose)
     implementation(libs.google.accompanist.permissions)

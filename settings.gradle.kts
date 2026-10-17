@@ -22,4 +22,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Viary"
 include(":app")
+include(":baselineprofile")
  
