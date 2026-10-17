@@ -14,8 +14,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,19 +26,21 @@ import com.trian0.viary.R
 import com.trian0.viary.SplashNavState
 import kotlinx.coroutines.delay
 
+private const val VISIBLE_TIME_AFTER_LOAD = 3000L
+
 @Composable
 fun CustomSplashScreen(
     onNavigateToHome: () -> Unit,
     viewModel: MainViewModel = viewModel()
 ) {
     val navState by viewModel.navState.collectAsStateWithLifecycle()
-    val VISIBLE_TIME_AFTER_LOAD = 3000L
+    val currentOnNavigateToHome by rememberUpdatedState(onNavigateToHome)
 
     LaunchedEffect(navState) {
         when (navState) {
             is SplashNavState.NavigateToHome -> {
                 delay(VISIBLE_TIME_AFTER_LOAD)
-                onNavigateToHome()
+                currentOnNavigateToHome()
             }
 
             SplashNavState.Loading -> {}
@@ -45,7 +48,7 @@ fun CustomSplashScreen(
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "pulsatingLogo")
-    val scale by infiniteTransition.animateFloat(
+    val scale = infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 1.05f,
         animationSpec = infiniteRepeatable(
@@ -65,7 +68,10 @@ fun CustomSplashScreen(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
-                .scale(scale)
+                .graphicsLayer {
+                    scaleX = scale.value
+                    scaleY = scale.value
+                }
         )
     }
 }
