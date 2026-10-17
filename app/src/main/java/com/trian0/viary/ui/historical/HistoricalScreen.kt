@@ -9,10 +9,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +23,8 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.trian0.viary.R
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
@@ -30,6 +33,7 @@ import com.trian0.viary.ui.home.HomeScreenSkeleton
 import com.trian0.viary.ui.theme.Primary50
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
+import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
@@ -39,10 +43,6 @@ fun HistoricalScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lazyViary = viewModel.completedPaged.collectAsLazyPagingItems()
-
-    LaunchedEffect(Unit) {
-        viewModel.init()
-    }
 
     HistoricalScreenView(
         lazyViary = lazyViary,
@@ -57,15 +57,20 @@ fun HistoricalScreenView(
     lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
     onViaryClick: (String) -> Unit = {},
 ) {
-    val isRefreshing = lazyViary.loadState.refresh is LoadState.Loading
+    val loadState = lazyViary.loadState
+    val isRefreshing = loadState.refresh is LoadState.Loading
     val isEmpty = lazyViary.itemCount == 0 && !isRefreshing
+    val lastIndex = if (loadState.append.endOfPaginationReached) lazyViary.itemCount - 1 else -1
+
+    val locale = LocalLocale.current.platformLocale
+    val dateFormat = remember(locale) { SimpleDateFormat("MMM dd, yyyy", locale) }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp, vertical = 16.dp)
     ) {
-        item {
+        item(contentType = "header") {
             Text(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium
@@ -87,9 +92,9 @@ fun HistoricalScreenView(
         }
 
         when {
-            isRefreshing -> item { HomeScreenSkeleton() }
+            isRefreshing -> item(contentType = "skeleton") { HomeScreenSkeleton() }
 
-            isEmpty -> item {
+            isEmpty -> item(contentType = "empty") {
                 Text(
                     text = stringResource(R.string.historical_screen_empty),
                     style = MaterialTheme.typography.bodyLarge,
@@ -97,20 +102,23 @@ fun HistoricalScreenView(
             }
 
             else -> {
-                items(count = lazyViary.itemCount) { index ->
+                items(
+                    count = lazyViary.itemCount,
+                    key = lazyViary.itemKey { it.id },
+                    contentType = lazyViary.itemContentType { "viary" }
+                ) { index ->
                     val viary = lazyViary[index] ?: return@items
-                    val isLast = index == lazyViary.itemCount - 1 &&
-                            lazyViary.loadState.append.endOfPaginationReached
                     CompletedViaryItem(
                         viary = viary,
+                        departureLabel = viary.departureTime?.let(dateFormat::format),
                         lastCheckpointName = lastCheckpoints[viary.id]?.placeName ?: "",
-                        isLast = isLast,
+                        isLast = index == lastIndex,
                         onClick = { onViaryClick(viary.id) }
                     )
                 }
 
-                if (lazyViary.loadState.append is LoadState.Loading) {
-                    item {
+                if (loadState.append is LoadState.Loading) {
+                    item(contentType = "loader") {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

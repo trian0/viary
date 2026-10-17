@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,7 +76,7 @@ fun CapturedMomentsRow(
             modifier = Modifier.padding(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
+            item(contentType = "add") {
                 Box(
                     modifier = Modifier
                         .size(106.dp)
@@ -93,7 +94,7 @@ fun CapturedMomentsRow(
                 }
             }
 
-            items(images) { uri ->
+            items(images, contentType = { "photo" }) { uri ->
                 Box(modifier = Modifier.size(106.dp)) {
                     AsyncImage(
                         model = uri,
@@ -193,7 +194,8 @@ fun CheckpointItem(
     symbol: String,
     modifier: Modifier = Modifier
 ) {
-    val timeFormat = SimpleDateFormat("hh:mm a", LocalLocale.current.platformLocale)
+    val locale = LocalLocale.current.platformLocale
+    val timeFormat = remember(locale) { SimpleDateFormat("hh:mm a", locale) }
 
     Card(
         modifier = modifier.fillMaxWidth(),
