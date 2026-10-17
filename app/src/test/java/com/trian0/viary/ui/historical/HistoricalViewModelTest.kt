@@ -53,10 +53,9 @@ class HistoricalViewModelTest {
     }
 
     @Test
-    fun `init - lista vazia, deve definir lastCheckpoints como vazio`() = runTest {
+    fun `ao criar - lista vazia, deve definir lastCheckpoints como vazio`() = runTest {
         every { repository.allCompleted } returns flowOf(emptyList())
         viewModel = HistoricalViewModel(repository, mainDispatcherRule.testDispatcher)
-        viewModel.init()
 
         viewModel.uiState.test {
             val state = awaitItem()
@@ -66,7 +65,7 @@ class HistoricalViewModelTest {
     }
 
     @Test
-    fun `init - com viagens concluidas, deve montar mapa lastCheckpoints`() = runTest {
+    fun `ao criar - com viagens concluidas, deve montar mapa lastCheckpoints`() = runTest {
         val entities = listOf(makeEntity("v1"), makeEntity("v2"))
         every { repository.allCompleted } returns flowOf(entities)
         coEvery { repository.getCheckpointsByViaryId("v1") } returns emptyList()
@@ -74,9 +73,7 @@ class HistoricalViewModelTest {
         viewModel = HistoricalViewModel(repository, mainDispatcherRule.testDispatcher)
 
         viewModel.uiState.test {
-            awaitItem() // estado inicial
-            viewModel.init()
-            val state = awaitItem() // estado pós-init
+            val state = awaitItem()
             assertEquals(2, state.lastCheckpoints.size)
             assertTrue(state.lastCheckpoints.containsKey("v1"))
             assertTrue(state.lastCheckpoints.containsKey("v2"))
@@ -85,7 +82,7 @@ class HistoricalViewModelTest {
     }
 
     @Test
-    fun `init - deve montar mapa lastCheckpoints com ultimo checkpoint por viary`() = runTest {
+    fun `ao criar - deve montar mapa lastCheckpoints com ultimo checkpoint por viary`() = runTest {
         val entity = makeEntity("v1")
         val checkpoint1 = Checkpoint(viaryId = "v1", placeName = "Parada 1")
         val checkpoint2 = Checkpoint(viaryId = "v1", placeName = "Parada 2")
@@ -94,9 +91,7 @@ class HistoricalViewModelTest {
         viewModel = HistoricalViewModel(repository, mainDispatcherRule.testDispatcher)
 
         viewModel.uiState.test {
-            awaitItem() // estado inicial
-            viewModel.init()
-            val state = awaitItem() // estado pós-init
+            val state = awaitItem()
             assertEquals("Parada 2", state.lastCheckpoints["v1"]?.placeName)
             cancelAndIgnoreRemainingEvents()
         }

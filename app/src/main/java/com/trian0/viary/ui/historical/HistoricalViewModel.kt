@@ -22,6 +22,10 @@ class HistoricalViewModel(
 
     val completedPaged = repository.completedPaged().cachedIn(viewModelScope)
 
+    init {
+        observeLastCheckpoints()
+    }
+
     override fun createInitialState(): HistoricalContract.HistoricalUiState =
         HistoricalContract.HistoricalUiState()
 
@@ -29,7 +33,7 @@ class HistoricalViewModel(
         Log.d(TAG, "handleIntent: $intent")
     }
 
-    fun init() {
+    private fun observeLastCheckpoints() {
         viewModelScope.launch(ioDispatcher) {
             try {
                 repository.allCompleted.collect { entities ->

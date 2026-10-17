@@ -30,13 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.trian0.viary.R
-import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
 import com.trian0.viary.ui.theme.Neutral90
 import com.trian0.viary.ui.theme.Primary10
@@ -44,7 +42,6 @@ import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary30
 import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
-import java.text.SimpleDateFormat
 
 @Composable
 fun ClimateViary(
@@ -99,33 +96,13 @@ fun ClimateViary(
 }
 
 @Composable
-fun CompletedViaryList(
-    modifier: Modifier = Modifier,
-    viaryList: List<Viary>,
-    lastCheckpoints: Map<String, Checkpoint?> = emptyMap(),
-    onViaryClick: (String) -> Unit = {},
-) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        viaryList.forEachIndexed { index, viary ->
-            CompletedViaryItem(
-                viary = viary,
-                lastCheckpointName = lastCheckpoints[viary.id]?.placeName ?: "",
-                isLast = index == viaryList.lastIndex,
-                onClick = { onViaryClick(viary.id) }
-            )
-        }
-    }
-}
-
-@Composable
 fun CompletedViaryItem(
     viary: Viary,
+    departureLabel: String?,
     lastCheckpointName: String,
     isLast: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-    val dateFormat = SimpleDateFormat("MMM dd, yyyy", LocalLocale.current.platformLocale)
-
     Row(modifier = Modifier.fillMaxWidth()) {
 
         Column(
@@ -162,10 +139,10 @@ fun CompletedViaryItem(
             shape = RoundedCornerShape(16.dp)
         ) {
             Column {
-                viary.departureTime?.let {
+                departureLabel?.let {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 12.dp),
-                        text = dateFormat.format(it),
+                        text = it,
                         style = MaterialTheme.typography.labelSmall,
                         color = Primary30,
                         fontWeight = FontWeight.Bold
