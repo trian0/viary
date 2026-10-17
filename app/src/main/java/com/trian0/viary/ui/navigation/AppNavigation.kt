@@ -42,6 +42,7 @@ fun AppNavigation(
 
         composable(NavigationItem.Home.route) {
             HomeScreen(
+                mainViewModel = viewModel,
                 onNavigateCheckpoint = {
                     navController.navigate(NavigationItem.Checkpoint.route) {
                         popUpTo(NavigationItem.Home.route) { inclusive = true }
@@ -59,6 +60,7 @@ fun AppNavigation(
         }
         composable(NavigationItem.Create.route) {
             CreateScreen(
+                mainViewModel = viewModel,
                 onNavigateBack = {
                     navController.navigate(NavigationItem.Home.route) {
                         popUpTo(NavigationItem.Create.route) { inclusive = true }
@@ -85,6 +87,7 @@ fun AppNavigation(
         }
         composable(NavigationItem.Checkpoint.route) {
             CheckpointScreen(
+                mainViewModel = viewModel,
                 onNavigateBack = {
                     navController.navigate(NavigationItem.Home.route) {
                         popUpTo(NavigationItem.Checkpoint.route) { inclusive = true }

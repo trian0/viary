@@ -42,9 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -200,7 +202,7 @@ fun ShimmerEffect(
     modifier: Modifier = Modifier
 ) {
     val transition = rememberInfiniteTransition(label = "shimmer")
-    val shimmerTranslate by transition.animateFloat(
+    val shimmerTranslate = transition.animateFloat(
         initialValue = 0f,
         targetValue = 1000f,
         animationSpec = infiniteRepeatable(
@@ -210,22 +212,28 @@ fun ShimmerEffect(
         label = "shimmer_translate"
     )
 
-    val brush = Brush.linearGradient(
-        colors = listOf(
-            Neutral90,
-            White,
-            Neutral90,
-        ),
-        start = Offset(shimmerTranslate - 300f, 0f),
-        end = Offset(shimmerTranslate, 0f)
-    )
-
+    // The animated value is only read while drawing, so the shimmer never recomposes.
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(brush)
+            .clip(ShimmerShape)
+            .drawWithCache {
+                val brush = Brush.linearGradient(
+                    colors = ShimmerColors,
+                    start = Offset(-300f, 0f),
+                    end = Offset.Zero
+                )
+                onDrawBehind {
+                    val x = shimmerTranslate.value
+                    translate(left = x) {
+                        drawRect(brush, topLeft = Offset(-x, 0f), size = size)
+                    }
+                }
+            }
     )
 }
+
+private val ShimmerColors = listOf(Neutral90, White, Neutral90)
+private val ShimmerShape = RoundedCornerShape(12.dp)
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
