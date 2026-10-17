@@ -3,6 +3,7 @@ package com.trian0.viary
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.trian0.viary.data.models.Viary
 import com.trian0.viary.data.repositories.ViaryRepository
 import com.trian0.viary.helpers.LocationHelper
 import com.trian0.viary.ui.create.CreateContract
@@ -53,6 +54,11 @@ class CreateViewModelTest {
             val finalState = expectMostRecentItem()
             assert(finalState.showSuccessDialog)
         }
+    }
+
+    @Test
+    fun `clima padrao deve ser SUNNY`() {
+        assertEquals(Viary.ViaryClimate.SUNNY.name, viewModel.currentState.climate)
     }
 
     @Test
