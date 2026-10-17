@@ -76,7 +76,7 @@ fun CapturedMomentsRow(
             modifier = Modifier.padding(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item(contentType = "add") {
+            item(key = "add", contentType = "add") {
                 Box(
                     modifier = Modifier
                         .size(106.dp)
@@ -94,7 +94,7 @@ fun CapturedMomentsRow(
                 }
             }
 
-            items(images, contentType = { "photo" }) { uri ->
+            items(images, key = { it.toString() }, contentType = { "photo" }) { uri ->
                 Box(modifier = Modifier.size(106.dp)) {
                     AsyncImage(
                         model = uri,

@@ -34,6 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
@@ -65,14 +67,17 @@ import com.trian0.viary.ui.theme.Secondary30
 import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
 import com.trian0.viary.ui.theme.Tertiary10
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 
+private val BudgetMaxLength = InputTransformation.maxLength(15)
+
 @Composable
 fun CheckpointScreen(
+    mainViewModel: MainViewModel,
     viewModel: CheckpointViewModel = koinViewModel(),
-    mainViewModel: MainViewModel = koinViewModel(),
     onNavigateBack: () -> Unit = {},
 ) {
     val country by mainViewModel.country.collectAsStateWithLifecycle()
@@ -88,20 +93,18 @@ fun CheckpointScreen(
     val checkpointName = rememberTextFieldState(initialText = initial.checkpointName)
     val checkpointBudget = rememberTextFieldState(initialText = initial.checkpointBudget)
 
-    LaunchedEffect(checkpointName.text) {
-        viewModel.onIntent(
-            CheckpointContract.CheckpointIntent.OnCheckpointNameChanged(
-                checkpointName.text.toString()
-            )
-        )
-    }
-
-    LaunchedEffect(checkpointBudget.text) {
-        viewModel.onIntent(
-            CheckpointContract.CheckpointIntent.OnCheckpointBudgetChanged(
-                checkpointBudget.text.toString()
-            )
-        )
+    // snapshotFlow keeps the text reads out of composition, so typing doesn't recompose the screen
+    LaunchedEffect(checkpointName, checkpointBudget) {
+        launch {
+            snapshotFlow { checkpointName.text.toString() }.collect {
+                viewModel.onIntent(CheckpointContract.CheckpointIntent.OnCheckpointNameChanged(it))
+            }
+        }
+        launch {
+            snapshotFlow { checkpointBudget.text.toString() }.collect {
+                viewModel.onIntent(CheckpointContract.CheckpointIntent.OnCheckpointBudgetChanged(it))
+            }
+        }
     }
 
     if (uiState.showSuccessDialog) {
@@ -270,10 +273,9 @@ fun CheckpointScreenView(
                             overflow = TextOverflow.Ellipsis
                         )
 
-                        val dateFormat = SimpleDateFormat(
-                            stringResource(R.string.date_format_hh_mm),
-                            LocalLocale.current.platformLocale
-                        )
+                        val pattern = stringResource(R.string.date_format_hh_mm)
+                        val locale = LocalLocale.current.platformLocale
+                        val dateFormat = remember(pattern, locale) { SimpleDateFormat(pattern, locale) }
 
                         Row(
                             modifier = Modifier.padding(top = 36.dp),
@@ -385,8 +387,8 @@ fun CheckpointScreenView(
                             state = checkpointBudget,
                             modifier = Modifier.weight(0.6f),
                             keyboardType = KeyboardType.Number,
-                            inputTransformation = InputTransformation.maxLength(15),
-                            outputTransformation = CurrencyOutputTransformation(symbol),
+                            inputTransformation = BudgetMaxLength,
+                            outputTransformation = remember(symbol) { CurrencyOutputTransformation(symbol) },
                             isError = checkpointBudgetError
                         )
 
