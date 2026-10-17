@@ -1,6 +1,7 @@
 package com.trian0.viary.ui.create
 
 import android.net.Uri
+import com.trian0.viary.data.models.Viary
 import com.trian0.viary.mvi.MviInterfaces
 
 interface CreateContract {
@@ -16,7 +17,7 @@ interface CreateContract {
         val currentBudgetError: Boolean = false,
         val showSuccessDialog: Boolean = false,
         val showErrorDialog: Boolean = false,
-        val climate: String = "",
+        val climate: String = Viary.ViaryClimate.SUNNY.name,
     ) : MviInterfaces.UiState
 
     sealed class CreateIntent : MviInterfaces.UiIntent {

@@ -219,13 +219,11 @@ fun CreateScreenView(
     onStartTripClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
     isLoading: Boolean = false,
-    selectedClimate: String = "",
+    selectedClimate: String = Viary.ViaryClimate.SUNNY.name,
     onClimateSelected: (Viary.ViaryClimate) -> Unit = {},
     countryCurrency: String = "",
     symbol: String = "",
 ) {
-    // Nothing chosen yet still highlights SUNNY, as before; the stored value stays empty
-    val highlightedClimate = selectedClimate.ifEmpty { Viary.ViaryClimate.SUNNY.name }
 
     Box(
         modifier = modifier
@@ -356,7 +354,7 @@ fun CreateScreenView(
                             ClimateViary(
                                 icon = icon,
                                 label = stringResource(climate.labelRes),
-                                isSelected = highlightedClimate == climate.name,
+                                isSelected = selectedClimate == climate.name,
                                 onClick = { onClimateSelected(climate) }
                             )
                         }
