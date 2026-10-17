@@ -5,4 +5,6 @@ plugins {
     id("com.google.devtools.ksp") version "2.3.9" apply false
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.android.test) apply false
+    alias(libs.plugins.baselineprofile) apply false
 }
