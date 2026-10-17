@@ -128,6 +128,7 @@ class CheckpointViewModel(
             }
 
             is CheckpointContract.CheckpointIntent.OnImageAdded -> {
+                if (intent.uri in currentState.capturedImages) return
                 setState {
                     copy(capturedImages = capturedImages + intent.uri)
                 }

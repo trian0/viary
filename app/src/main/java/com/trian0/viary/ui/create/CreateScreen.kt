@@ -40,12 +40,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -75,12 +75,22 @@ import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
 import com.trian0.viary.ui.theme.Tertiary10
 import com.trian0.viary.ui.theme.Tertiary90
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+
+private val BudgetMaxLength = InputTransformation.maxLength(15)
+
+private val WeatherOptions = listOf(
+    Viary.ViaryClimate.SUNNY to Icons.Outlined.WbSunny,
+    Viary.ViaryClimate.CLOUDY to Icons.Outlined.Cloud,
+    Viary.ViaryClimate.RAINY to Icons.Outlined.WaterDrop,
+    Viary.ViaryClimate.CHILLY to Icons.Outlined.SentimentVerySatisfied
+)
 
 @Composable
 fun CreateScreen(
+    mainViewModel: MainViewModel,
     viewModel: CreateViewModel = koinViewModel(),
-    mainViewModel: MainViewModel = koinViewModel(),
     onNavigateBack: () -> Unit = {},
 ) {
     val country by mainViewModel.country.collectAsStateWithLifecycle()
@@ -97,7 +107,6 @@ fun CreateScreen(
     val viaryNameState = rememberTextFieldState(initialText = initial.viaryName)
     val locateState = rememberTextFieldState(initialText = initial.departureLocation)
     val budgetState = rememberTextFieldState(initialText = initial.currentBudget)
-    val climateSate = remember { mutableStateOf("") }
 
     var showPermissionDialog by remember { mutableStateOf(false) }
 
@@ -107,22 +116,23 @@ fun CreateScreen(
         )
     }
 
-    LaunchedEffect(viaryNameState.text) {
-        viewModel.onIntent(CreateContract.CreateIntent.OnViaryNameChanged(viaryNameState.text.toString()))
-    }
-
-    LaunchedEffect(locateState.text) {
-        viewModel.onIntent(CreateContract.CreateIntent.OnDepartureLocationChanged(locateState.text.toString()))
-    }
-
-    LaunchedEffect(budgetState.text) {
-        viewModel.onIntent(
-            CreateContract.CreateIntent.OnCurrentBudgetChanged(budgetState.text.toString())
-        )
-    }
-
-    LaunchedEffect(climateSate.value) {
-        viewModel.onIntent(CreateContract.CreateIntent.OnClimateChanged(climateSate.value))
+    // snapshotFlow keeps the text reads out of composition, so typing doesn't recompose the screen
+    LaunchedEffect(viaryNameState, locateState, budgetState) {
+        launch {
+            snapshotFlow { viaryNameState.text.toString() }.collect {
+                viewModel.onIntent(CreateContract.CreateIntent.OnViaryNameChanged(it))
+            }
+        }
+        launch {
+            snapshotFlow { locateState.text.toString() }.collect {
+                viewModel.onIntent(CreateContract.CreateIntent.OnDepartureLocationChanged(it))
+            }
+        }
+        launch {
+            snapshotFlow { budgetState.text.toString() }.collect {
+                viewModel.onIntent(CreateContract.CreateIntent.OnCurrentBudgetChanged(it))
+            }
+        }
     }
 
     val tripSuccessMessage = stringResource(R.string.create_screen_trip_started_message)
@@ -186,7 +196,10 @@ fun CreateScreen(
         },
         onNavigateBack,
         uiState.isLoading,
-        climateSate,
+        selectedClimate = uiState.climate,
+        onClimateSelected = { climate ->
+            viewModel.onIntent(CreateContract.CreateIntent.OnClimateChanged(climate.name))
+        },
         countryCurrency = country.currency,
         symbol = country.symbol
     )
@@ -206,11 +219,13 @@ fun CreateScreenView(
     onStartTripClicked: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
     isLoading: Boolean = false,
-    climateState: MutableState<String> = mutableStateOf(""),
+    selectedClimate: String = "",
+    onClimateSelected: (Viary.ViaryClimate) -> Unit = {},
     countryCurrency: String = "",
     symbol: String = "",
 ) {
-    var selectedWeather by remember { mutableStateOf(Viary.ViaryClimate.SUNNY) }
+    // Nothing chosen yet still highlights SUNNY, as before; the stored value stays empty
+    val highlightedClimate = selectedClimate.ifEmpty { Viary.ViaryClimate.SUNNY.name }
 
     Box(
         modifier = modifier
@@ -337,22 +352,12 @@ fun CreateScreenView(
                             .padding(top = 16.dp, bottom = 32.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        val weatherOptions = listOf(
-                            Viary.ViaryClimate.SUNNY to Icons.Outlined.WbSunny,
-                            Viary.ViaryClimate.CLOUDY to Icons.Outlined.Cloud,
-                            Viary.ViaryClimate.RAINY to Icons.Outlined.WaterDrop,
-                            Viary.ViaryClimate.CHILLY to Icons.Outlined.SentimentVerySatisfied
-                        )
-
-                        weatherOptions.forEach { (climate, icon) ->
+                        WeatherOptions.forEach { (climate, icon) ->
                             ClimateViary(
                                 icon = icon,
                                 label = stringResource(climate.labelRes),
-                                isSelected = selectedWeather == climate,
-                                onClick = {
-                                    selectedWeather = climate
-                                    climateState.value = climate.name
-                                }
+                                isSelected = highlightedClimate == climate.name,
+                                onClick = { onClimateSelected(climate) }
                             )
                         }
                     }
@@ -375,8 +380,8 @@ fun CreateScreenView(
                             state = budget,
                             modifier = Modifier.weight(0.6f),
                             keyboardType = KeyboardType.Number,
-                            inputTransformation = InputTransformation.maxLength(15),
-                            outputTransformation = CurrencyOutputTransformation(symbol),
+                            inputTransformation = BudgetMaxLength,
+                            outputTransformation = remember(symbol) { CurrencyOutputTransformation(symbol) },
                             isError = budgetError
                         )
 

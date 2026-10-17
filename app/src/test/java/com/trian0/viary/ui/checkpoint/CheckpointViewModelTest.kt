@@ -175,6 +175,24 @@ class CheckpointViewModelTest {
     }
 
     @Test
+    fun `OnImageAdded - nao deve duplicar URI ja capturada`() = runTest {
+        val uri = mockk<Uri>(relaxed = true)
+        createViewModel()
+
+        viewModel.uiState.test {
+            expectMostRecentItem()
+
+            viewModel.onIntent(CheckpointContract.CheckpointIntent.OnImageAdded(uri))
+            awaitItem()
+
+            viewModel.onIntent(CheckpointContract.CheckpointIntent.OnImageAdded(uri))
+            expectNoEvents()
+            assertEquals(listOf(uri), viewModel.currentState.capturedImages)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `OnImageRemoved - deve remover URI da lista capturedImages`() = runTest {
         val uri = mockk<Uri>(relaxed = true)
         createViewModel()
