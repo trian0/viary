@@ -7,24 +7,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.trian0.viary.MainViewModel
 import com.trian0.viary.ui.components.NavigationBottomItem
 import com.trian0.viary.ui.theme.Tertiary90
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BottomNavigation(
     navController: NavController,
+    currentRoute: String?,
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = koinViewModel()
 ) {
     val items = remember(viewModel.hasViaryInProgress) {
         if (viewModel.hasViaryInProgress) {
@@ -49,14 +46,10 @@ fun BottomNavigation(
             .background(
                 color = Tertiary90.copy(alpha = 0.4f),
                 shape = RoundedCornerShape(24.dp)
-            )
-            .graphicsLayer { clip = false },
+            ),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
         items.forEach { item ->
             NavigationBottomItem(
                 selected = currentRoute == item.route,

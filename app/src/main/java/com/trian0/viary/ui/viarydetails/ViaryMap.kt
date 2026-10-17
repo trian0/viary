@@ -93,7 +93,7 @@ fun ViaryMap(viary: Viary, checkpoints: List<Checkpoint>, route: List<GeoPoint>)
     }
     val destinationName = stringResource(R.string.viary_details_screen_destination_default)
 
-    val mapMarkers = remember(viary.id, checkpoints.size, originName, destinationName) {
+    val mapMarkers = remember(viary, checkpoints, originName, destinationName) {
         buildList {
             GeoPoint(viary.latitudeOrigin, viary.longitudeOrigin)
                 .takeIf { it.isSet }
