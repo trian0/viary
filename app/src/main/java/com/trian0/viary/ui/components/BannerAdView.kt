@@ -2,9 +2,9 @@ package com.trian0.viary.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -34,20 +34,18 @@ fun BannerAdView(
         )
     }
 
-    val adView = remember(adUnitId, adSize) {
-        AdView(context).apply {
-            this.adUnitId = adUnitId
-            setAdSize(adSize)
-        }
+    // factory only runs once per AndroidView, so a new size or unit id needs a fresh view
+    key(adUnitId, adSize) {
+        AndroidView(
+            modifier = modifier.fillMaxWidth(),
+            factory = { ctx ->
+                AdView(ctx).apply {
+                    this.adUnitId = adUnitId
+                    setAdSize(adSize)
+                    loadAd(AdRequest.Builder().build())
+                }
+            },
+            onRelease = { it.destroy() }
+        )
     }
-
-    DisposableEffect(adView) {
-        adView.loadAd(AdRequest.Builder().build())
-        onDispose { adView.destroy() }
-    }
-
-    AndroidView(
-        modifier = modifier.fillMaxWidth(),
-        factory = { adView }
-    )
 }

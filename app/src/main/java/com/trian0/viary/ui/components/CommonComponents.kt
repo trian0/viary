@@ -289,11 +289,10 @@ fun ImagePicker(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        selectedImageUri = uri
-    }
-
-    LaunchedEffect(selectedImageUri) {
-        selectedImageUri?.let { onImageSelected(it) }
+        uri?.let {
+            selectedImageUri = it
+            onImageSelected(it)
+        }
     }
 
     val displayModel: Any? = selectedImageUri ?: currentImagePath?.let { File(it) }

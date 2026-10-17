@@ -2,10 +2,8 @@ package com.trian0.viary.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -49,6 +47,8 @@ import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary30
 import com.trian0.viary.ui.theme.White
 
+private val DefaultMaxLength = InputTransformation.maxLength(50)
+
 @Composable
 fun ElevatedOutlinedTextField(
     modifier: Modifier = Modifier,
@@ -56,76 +56,72 @@ fun ElevatedOutlinedTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
-    inputTransformation: InputTransformation = InputTransformation.maxLength(50),
+    inputTransformation: InputTransformation = DefaultMaxLength,
     outputTransformation: OutputTransformation? = null,
     icon: ImageVector? = null,
     label: String = "",
     isError: Boolean = false,
 ) {
-    Box(
+    OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .height(56.dp),
-    ) {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxSize(),
-            scrollState = rememberScrollState(),
-            leadingIcon = if (icon != null) {
-                {
-                    Icon(
-                        modifier = Modifier.size(20.dp),
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = Primary30
-                    )
-                }
-            } else null,
-            inputTransformation = inputTransformation,
-            outputTransformation = outputTransformation,
-            trailingIcon = if (isError) {
-                {
-                    Icon(
-                        modifier = Modifier.size(20.dp),
-                        imageVector = Icons.Filled.Error,
-                        tint = Color.Red,
-                        contentDescription = null
-                    )
-                }
-            } else null,
-            state = state,
-            lineLimits = TextFieldLineLimits.SingleLine,
-            shape = RoundedCornerShape(20.dp),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType
-            ),
-            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = Primary20,
-                fontWeight = FontWeight.Normal
-            ),
-            placeholder = {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Primary20.copy(0.5f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    softWrap = false
+        scrollState = rememberScrollState(),
+        leadingIcon = if (icon != null) {
+            {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Primary30
                 )
-            },
-            colors = colors(
-                focusedBorderColor = Primary30,
-                unfocusedBorderColor = Color.Transparent,
-                unfocusedContainerColor = Neutral90,
-                focusedContainerColor = Neutral90,
-            ),
-            enabled = enabled,
-            readOnly = readOnly,
-            isError = isError,
-        )
-    }
+            }
+        } else null,
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
+        trailingIcon = if (isError) {
+            {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    imageVector = Icons.Filled.Error,
+                    tint = Color.Red,
+                    contentDescription = null
+                )
+            }
+        } else null,
+        state = state,
+        lineLimits = TextFieldLineLimits.SingleLine,
+        shape = RoundedCornerShape(20.dp),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType
+        ),
+        textStyle = MaterialTheme.typography.bodyMedium.copy(
+            color = Primary20,
+            fontWeight = FontWeight.Normal
+        ),
+        placeholder = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Primary20.copy(0.5f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                softWrap = false
+            )
+        },
+        colors = colors(
+            focusedBorderColor = Primary30,
+            unfocusedBorderColor = Color.Transparent,
+            unfocusedContainerColor = Neutral90,
+            focusedContainerColor = Neutral90,
+        ),
+        enabled = enabled,
+        readOnly = readOnly,
+        isError = isError,
+    )
 }
 
 @Composable

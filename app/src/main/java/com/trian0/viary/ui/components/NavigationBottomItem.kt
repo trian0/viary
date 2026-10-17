@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -35,7 +34,6 @@ fun NavigationBottomItem(
     Box(
         modifier = modifier
             .zIndex(if (selected) 1f else 0f)
-            .graphicsLayer { clip = false }
             .selectable(
                 selected = selected,
                 onClick = onClick,
