@@ -71,9 +71,16 @@ android {
 }
 
 // Baseline profile and benchmark builds inherit release config; keep automated runs on AdMob test ids
+// and add the benchmark-only source set (data seeding for the journeys), which release never sees
 androidComponents {
-    onVariants(selector().withBuildType("nonMinifiedRelease")) { it.useTestAdIds() }
-    onVariants(selector().withBuildType("benchmarkRelease")) { it.useTestAdIds() }
+    onVariants(selector().withBuildType("nonMinifiedRelease")) { it.configureForBenchmark() }
+    onVariants(selector().withBuildType("benchmarkRelease")) { it.configureForBenchmark() }
+}
+
+fun com.android.build.api.variant.ApplicationVariant.configureForBenchmark() {
+    sources.java?.addStaticSourceDirectory("src/benchmark/java")
+    sources.manifests.addStaticManifestFile("src/benchmark/AndroidManifest.xml")
+    useTestAdIds()
 }
 
 fun com.android.build.api.variant.ApplicationVariant.useTestAdIds() {
