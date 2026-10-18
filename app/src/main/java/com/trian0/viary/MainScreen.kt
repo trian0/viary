@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,6 +42,8 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
 
     val showBottomBar = currentRoute !in screensWithoutBottomBar
     Scaffold(
+        // Exposes testTags as resource ids so UiAutomator journeys in :baselineprofile can find them
+        modifier = Modifier.semantics { testTagsAsResourceId = true },
         containerColor = Tertiary90.copy(alpha = 0.3f),
         contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
