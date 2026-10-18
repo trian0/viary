@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -128,6 +129,7 @@ private fun ViaryDetailsContent(state: ViaryDetailsContract.ViaryDetailsUiState)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(bottom = 32.dp)
+            .testTag("viary_details")
     ) {
         HeaderSection(viary, state.checkpoints)
         ViaryMap(viary, state.checkpoints, state.route)
