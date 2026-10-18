@@ -18,6 +18,14 @@
 # habilitar R8, adicionar um -keep pontual para a classe específica em vez de
 # um -keep amplo que anularia o shrinking.
 
+# O Firebase instancia os ComponentRegistrar por reflexão (construtor sem
+# argumentos). No full mode do R8 o -keep das consumer rules (BOM 33.7.0)
+# mantém a classe mas não o construtor, e o app fecha no Application.onCreate
+# com "FirebaseCrashlytics component is not present".
+-keep class * implements com.google.firebase.components.ComponentRegistrar {
+    <init>();
+}
+
 # Se o projeto usar WebView com JS, descomentar e informar a classe:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
