@@ -35,6 +35,7 @@
     <string name="home_screen_cta_button">Start New Viary</string>
     <string name="home_screen_last_trip_title">LAST TRIP</string>
     <string name="home_screen_see_history_button">See History</string>
+    <string name="home_screen_ad_label">AD</string>
     <!-- Home Screen -->
 
     <!-- Viary Details Screen -->

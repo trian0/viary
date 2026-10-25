@@ -33,6 +33,7 @@
     <string name="home_screen_cta_button">Iniciar Nueva Viary</string>
     <string name="home_screen_last_trip_title">ÚLTIMO VIAJE</string>
     <string name="home_screen_see_history_button">Ver Historial</string>
+    <string name="home_screen_ad_label">ANUNCIO</string>
     <!-- Home Screen -->
 
     <!-- Viary Details Screen -->
