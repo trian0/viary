@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Schedule
@@ -28,12 +30,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,9 +53,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.trian0.viary.MainViewModel
 import com.trian0.viary.R
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.Viary
+import com.trian0.viary.data.utils.formatDistanceKm
+import com.trian0.viary.data.utils.formatMoney
 import com.trian0.viary.ui.theme.Primary10
 import com.trian0.viary.ui.theme.Primary20
 import com.trian0.viary.ui.theme.Primary30
@@ -57,16 +66,20 @@ import com.trian0.viary.ui.theme.Primary50
 import com.trian0.viary.ui.theme.Primary70
 import com.trian0.viary.ui.theme.Secondary80
 import com.trian0.viary.ui.theme.Secondary90
+import com.trian0.viary.ui.viarydetails.share.ShareViaryDialog
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 
 @Composable
 fun ViaryDetailsScreen(
     viaryId: String,
+    mainViewModel: MainViewModel,
     viewModel: ViaryDetailsViewModel = koinViewModel(),
     onNavigateBack: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val country by mainViewModel.country.collectAsStateWithLifecycle()
+    var showShare by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(viaryId) {
         viewModel.onIntent(ViaryDetailsContract.ViaryDetailsIntent.Load(viaryId))
@@ -76,7 +89,8 @@ fun ViaryDetailsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .padding(horizontal = 24.dp, vertical = 8.dp)
+                .heightIn(min = 48.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -92,6 +106,19 @@ fun ViaryDetailsScreen(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium
             )
+            if (uiState.viary?.status == Viary.ViaryStatus.COMPLETED) {
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = { showShare = true },
+                    modifier = Modifier.testTag("share_viary")
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(R.string.share_dialog_title),
+                        tint = Primary10
+                    )
+                }
+            }
         }
 
         when {
@@ -102,7 +129,7 @@ fun ViaryDetailsScreen(
                 CircularProgressIndicator(color = Primary50)
             }
 
-            uiState.viary != null -> ViaryDetailsContent(state = uiState)
+            uiState.viary != null -> ViaryDetailsContent(state = uiState, currencySymbol = country.symbol)
 
             else -> Box(
                 modifier = Modifier.fillMaxSize(),
@@ -116,10 +143,26 @@ fun ViaryDetailsScreen(
             }
         }
     }
+
+    val viary = uiState.viary
+    if (showShare && viary != null) {
+        ShareViaryDialog(
+            viary = viary,
+            checkpoints = uiState.checkpoints,
+            durationFormatted = uiState.durationFormatted,
+            route = uiState.route,
+            currencySymbol = country.symbol,
+            cover = (viary.selectedImage ?: uiState.allPhotos.firstOrNull())?.let(::resolveImageModel),
+            onDismiss = { showShare = false },
+        )
+    }
 }
 
 @Composable
-private fun ViaryDetailsContent(state: ViaryDetailsContract.ViaryDetailsUiState) {
+private fun ViaryDetailsContent(
+    state: ViaryDetailsContract.ViaryDetailsUiState,
+    currencySymbol: String,
+) {
     val viary = state.viary ?: return
 
     // Few fixed sections: a plain Column keeps the MapView alive while scrolling instead of
@@ -133,8 +176,8 @@ private fun ViaryDetailsContent(state: ViaryDetailsContract.ViaryDetailsUiState)
     ) {
         HeaderSection(viary, state.checkpoints)
         ViaryMap(viary, state.checkpoints, state.route)
-        StatsSection(viary, state.checkpoints, state.durationFormatted)
-        CheckpointLogsSection(viary, state.checkpoints)
+        StatsSection(viary, state.checkpoints, state.durationFormatted, currencySymbol)
+        CheckpointLogsSection(viary, state.checkpoints, currencySymbol)
         if (state.allPhotos.isNotEmpty()) {
             GallerySection(state.allPhotos)
         }
@@ -192,7 +235,9 @@ private fun StatsSection(
     viary: Viary,
     checkpoints: List<Checkpoint>,
     durationFormatted: String,
+    currencySymbol: String,
 ) {
+    val locale = LocalLocale.current.platformLocale
     val budgetSpent = checkpoints.sumOf { it.expense }
 
     Column(
@@ -204,12 +249,12 @@ private fun StatsSection(
         StatCard(
             icon = Icons.Outlined.LocationOn,
             label = stringResource(R.string.viary_details_screen_total_distance),
-            value = "${String.format("%.1f", viary.kmEnd)} km"
+            value = formatDistanceKm(viary.kmEnd, locale)
         )
         StatCard(
             icon = Icons.Outlined.AttachMoney,
             label = stringResource(R.string.viary_details_screen_budget_spent),
-            value = "R$ ${String.format("%.2f", budgetSpent)}"
+            value = formatMoney(budgetSpent, currencySymbol, locale)
         )
         StatCard(
             icon = Icons.Outlined.Schedule,
@@ -248,7 +293,11 @@ private fun StatCard(icon: ImageVector, label: String, value: String) {
 }
 
 @Composable
-private fun CheckpointLogsSection(viary: Viary, checkpoints: List<Checkpoint>) {
+private fun CheckpointLogsSection(
+    viary: Viary,
+    checkpoints: List<Checkpoint>,
+    currencySymbol: String,
+) {
     val locale = LocalLocale.current.platformLocale
     val timeFormat = remember(locale) { SimpleDateFormat("hh:mm a", locale) }
     val hasArrival = viary.latitudeArrival != 0.0 || viary.longitudeArrival != 0.0
@@ -299,7 +348,7 @@ private fun CheckpointLogsSection(viary: Viary, checkpoints: List<Checkpoint>) {
                     )
                     val subtitle = buildString {
                         append(timeFormat.format(cp.time))
-                        if (cp.expense > 0) append(" • R$ ${String.format("%.2f", cp.expense)}")
+                        if (cp.expense > 0) append(" • ${formatMoney(cp.expense, currencySymbol, locale)}")
                     }
                     Text(
                         text = subtitle,

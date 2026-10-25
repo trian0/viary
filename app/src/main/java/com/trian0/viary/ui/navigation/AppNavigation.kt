@@ -82,6 +82,7 @@ fun AppNavigation(
             val viaryId = backStackEntry.arguments?.getString("viaryId") ?: return@composable
             ViaryDetailsScreen(
                 viaryId = viaryId,
+                mainViewModel = viewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

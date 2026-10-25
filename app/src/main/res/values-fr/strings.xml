@@ -98,4 +98,26 @@
     <string name="checkpoint_screen_checkpoint_success_dialog_button">Allons-y !</string>
     <string name="checkpoint_screen_checkpoint_error_dialog_message">Erreur lors de la création du checkpoint !</string>
     <!-- Checkpoint Screen -->
+
+    <!-- Share Card -->
+    <plurals name="share_card_checkpoint_count">
+        <item quantity="one">%1$d checkpoint</item>
+        <item quantity="many">%1$d checkpoints</item>
+        <item quantity="other">%1$d checkpoints</item>
+    </plurals>
+    <string name="share_card_footer">Notez vos voyages avec Viary</string>
+    <string name="share_card_distance">Distance</string>
+    <string name="share_card_duration">Durée</string>
+    <string name="share_card_spent">Dépenses</string>
+    <!-- Share Card -->
+
+    <!-- Share Dialog -->
+    <string name="share_dialog_title">Partager le voyage</string>
+    <string name="share_dialog_include">INCLURE DANS L\'IMAGE</string>
+    <string name="share_option_expenses">Dépenses</string>
+    <string name="share_option_cover">Photo de couverture</string>
+    <string name="share_option_place_names">Noms des lieux</string>
+    <string name="share_dialog_share_button">Partager</string>
+    <string name="share_dialog_error">Impossible de partager l\'image</string>
+    <!-- Share Dialog -->
 </resources>
