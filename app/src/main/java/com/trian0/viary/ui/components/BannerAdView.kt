@@ -44,11 +44,9 @@ fun BannerAdView(
     val canRequestAds by AdsConsentManager.canRequestAds.collectAsState()
     if (!canRequestAds) return
 
-    // factory only runs once per AndroidView, so a new unit id needs a fresh view and a fresh loaded flag
     key(adUnitId) {
         var loaded by remember { mutableStateOf(false) }
-
-        // The ad has to be composed to load, so until it does the card collapses to zero height
+        
         Card(
             modifier = modifier
                 .fillMaxWidth()

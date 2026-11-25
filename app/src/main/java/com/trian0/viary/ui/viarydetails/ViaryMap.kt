@@ -58,6 +58,7 @@ import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.gestures.removeOnMapClickListener
 import com.trian0.viary.R
+import com.trian0.viary.ViaryApplication
 import com.trian0.viary.data.models.Checkpoint
 import com.trian0.viary.data.models.GeoPoint
 import com.trian0.viary.data.models.Viary
@@ -84,9 +85,32 @@ private data class MarkerSelection(val marker: MapMarker, val anchorPx: Offset)
 
 private fun GeoPoint.toPoint(): Point = Point.fromLngLat(longitude, latitude)
 
-@OptIn(MapboxDelicateApi::class)
 @Composable
 fun ViaryMap(viary: Viary, checkpoints: List<Checkpoint>, route: List<GeoPoint>) {
+    if (ViaryApplication.isMapAvailable) {
+        ViaryMapContent(viary, checkpoints, route)
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .height(220.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.viary_details_screen_map_unavailable),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@OptIn(MapboxDelicateApi::class)
+@Composable
+private fun ViaryMapContent(viary: Viary, checkpoints: List<Checkpoint>, route: List<GeoPoint>) {
     val context = LocalContext.current
     val originName = viary.origin.ifEmpty {
         stringResource(R.string.viary_details_screen_departure_point)

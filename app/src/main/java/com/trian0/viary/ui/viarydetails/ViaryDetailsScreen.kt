@@ -129,7 +129,10 @@ fun ViaryDetailsScreen(
                 CircularProgressIndicator(color = Primary50)
             }
 
-            uiState.viary != null -> ViaryDetailsContent(state = uiState, currencySymbol = country.symbol)
+            uiState.viary != null -> ViaryDetailsContent(
+                state = uiState,
+                currencySymbol = country.symbol
+            )
 
             else -> Box(
                 modifier = Modifier.fillMaxSize(),
@@ -152,7 +155,8 @@ fun ViaryDetailsScreen(
             durationFormatted = uiState.durationFormatted,
             route = uiState.route,
             currencySymbol = country.symbol,
-            cover = (viary.selectedImage ?: uiState.allPhotos.firstOrNull())?.let(::resolveImageModel),
+            cover = (viary.selectedImage
+                ?: uiState.allPhotos.firstOrNull())?.let(::resolveImageModel),
             onDismiss = { showShare = false },
         )
     }
@@ -165,8 +169,6 @@ private fun ViaryDetailsContent(
 ) {
     val viary = state.viary ?: return
 
-    // Few fixed sections: a plain Column keeps the MapView alive while scrolling instead of
-    // disposing and rebuilding it when it leaves the viewport
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -348,7 +350,15 @@ private fun CheckpointLogsSection(
                     )
                     val subtitle = buildString {
                         append(timeFormat.format(cp.time))
-                        if (cp.expense > 0) append(" • ${formatMoney(cp.expense, currencySymbol, locale)}")
+                        if (cp.expense > 0) append(
+                            " • ${
+                                formatMoney(
+                                    cp.expense,
+                                    currencySymbol,
+                                    locale
+                                )
+                            }"
+                        )
                     }
                     Text(
                         text = subtitle,
