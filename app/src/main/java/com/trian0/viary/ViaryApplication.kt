@@ -12,8 +12,15 @@ class ViaryApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
-        MapboxOptions.accessToken = BuildConfig.MAPBOX_ACCESS_TOKEN
+        val crashlytics = FirebaseCrashlytics.getInstance()
+        crashlytics.isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
+
+        try {
+            MapboxOptions.accessToken = BuildConfig.MAPBOX_ACCESS_TOKEN
+        } catch (e: Throwable) {
+            isMapAvailable = false
+            crashlytics.recordException(e)
+        }
 
         startKoin {
             androidContext(this@ViaryApplication)
@@ -22,6 +29,12 @@ class ViaryApplication : Application() {
                 appModules,
             )
         }
+    }
+
+    companion object {
+        @Volatile
+        var isMapAvailable = true
+            private set
     }
 
 }
