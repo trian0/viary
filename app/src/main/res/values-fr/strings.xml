@@ -42,6 +42,7 @@
     <string name="viary_details_screen_completed_label">VOYAGE TERMINÉ</string>
     <string name="viary_details_screen_origin_prefix">De %s</string>
     <string name="viary_details_screen_destination_default">Destination Finale</string>
+    <string name="viary_details_screen_map_unavailable">Carte indisponible sur cet appareil</string>
     <string name="viary_details_screen_total_distance">Distance Totale</string>
     <string name="viary_details_screen_budget_spent">Budget Dépensé</string>
     <string name="viary_details_screen_trip_duration">Durée du Voyage</string>
