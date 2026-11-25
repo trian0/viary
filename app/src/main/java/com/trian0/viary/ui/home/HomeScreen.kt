@@ -96,27 +96,25 @@ fun HomeScreen(
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        HomeScreenView(
-            uiState.viaryInProgress,
-            uiState.totalViary,
-            uiState.isLoading,
-            uiState.distanceTraveled,
-            uiState.greaterDistance,
-            uiState.checkpoints,
-            country.symbol,
-            uiState.lastCompletedViary,
-            uiState.lastCompletedCheckpoint,
-            onFinishViary = {
-                viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
-            },
-            onNavigateCheckpoint = { onNavigateCheckpoint() },
-            onNavigateCreate = { onNavigateCreate() },
-            onNavigateHistorical = { onNavigateHistorical() },
-            modifier = Modifier.weight(1f),
-        )
-        BannerAdView()
-    }
+    HomeScreenView(
+        uiState.viaryInProgress,
+        uiState.totalViary,
+        uiState.isLoading,
+        uiState.distanceTraveled,
+        uiState.greaterDistance,
+        uiState.checkpoints,
+        country.symbol,
+        uiState.lastCompletedViary,
+        uiState.lastCompletedCheckpoint,
+        onFinishViary = {
+            viewModel.onIntent(HomeContract.HomeIntent.OnFinishViary)
+        },
+        onNavigateCheckpoint = { onNavigateCheckpoint() },
+        onNavigateCreate = { onNavigateCreate() },
+        onNavigateHistorical = { onNavigateHistorical() },
+        modifier = Modifier.fillMaxSize(),
+        bottomContent = { BannerAdView(modifier = Modifier.padding(top = 24.dp)) },
+    )
 }
 
 @Composable
@@ -135,6 +133,7 @@ fun HomeScreenView(
     onNavigateCreate: () -> Unit = {},
     onNavigateHistorical: () -> Unit = {},
     modifier: Modifier = Modifier,
+    bottomContent: @Composable () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -176,6 +175,8 @@ fun HomeScreenView(
                 )
             }
         }
+
+        bottomContent()
     }
 }
 
